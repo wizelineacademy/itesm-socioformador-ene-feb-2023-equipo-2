@@ -1,19 +1,22 @@
 // TODO:
 // Cambiar los inputs por select boxes
-import React from "react";
 // https://react-select.com/home
+
+import React from "react";
 import * as FaIcons from "react-icons/fa";
 
 const EmployeeSearch = () =>  {
 
+  {/*funtion to filter the list using the data from the inputs*/}
   const handleFilterList = () => {
     alert("se van a buscar los empleados con lo seleccionado");
   };
 
   return (
     <>
-      <div className="container mt-5 mb-5">
+      <div className="container my-5">
 
+        {/*for searching employees by their name*/}
         <div className="row">
           <div className="col-md-4">
             <label className="form-label">
@@ -30,7 +33,7 @@ const EmployeeSearch = () =>  {
           </div>
         </div>
 
-
+        {/*for searching employees in a more general way, by area of development*/}
         <div className="row">
           <div className="col-md-4">
             <label className="form-label">
@@ -45,7 +48,7 @@ const EmployeeSearch = () =>  {
           </div>
         </div>
 
-
+        {/*for searching employees in a more specific way, by specific knowledge or skill*/}
         <div className="row">
           <div className="col-md-4">
             <input

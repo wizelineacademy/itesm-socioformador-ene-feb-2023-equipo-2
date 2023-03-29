@@ -5,6 +5,8 @@
 import React, { useState } from "react";
 // import Select, {ValueType} from "react-select";
 import * as FaIcons from "react-icons/fa";
+import EmployeeSearch from "@/components/EmployeeSearch";
+import EmployeeCard from "@/components/EmployeeCard";
 
 const generarPerfil = () => {
   // React Hooks for managing component state
@@ -30,6 +32,8 @@ const generarPerfil = () => {
 
   return (
     <>
+      <EmployeeSearch />
+      <EmployeeCard />
       <div className="container">
         {/* Experience input field */}
         <label className="form-label">
