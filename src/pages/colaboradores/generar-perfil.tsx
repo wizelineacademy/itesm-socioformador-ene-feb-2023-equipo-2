@@ -1,12 +1,12 @@
 // TODO:
 // 1. Pasar selectedLanguages a un react-select en vez de texto.
 // 2. Permite seleccionar años y meses? 
-
 import React, { useState } from "react";
 // import Select, {ValueType} from "react-select";
 import * as FaIcons from "react-icons/fa";
 import EmployeeSearch from "@/components/EmployeeSearch";
 import EmployeeCard from "@/components/EmployeeCard";
+
 
 const generarPerfil = () => {
   // React Hooks for managing component state
