@@ -19,7 +19,8 @@ const Login = () => {
   };
 
   return (
-    // Login form layout --
+    // Login form layout
+
     <div className="bg-light d-flex justify-content-center align-items-center vh-100 position-relative">
       <div className={`position-absolute w-100 h-100`}>
       <Image
