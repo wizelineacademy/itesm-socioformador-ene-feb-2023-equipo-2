@@ -108,6 +108,18 @@ a {
 
 /* Global CSS */
 
+.makeImageCircular {
+  border-radius:50%  !important; 
+}
+
+#profileCardSize1 {
+  height: 20vh !important;
+}
+
+#profileCardSize2 {
+  height: 16vh !important;
+}
+
 .btn-primary {
   background-color: #e93d44 !important;
   color: white !important;
