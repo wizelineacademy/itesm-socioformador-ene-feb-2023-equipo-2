@@ -2,8 +2,8 @@
 // Cambiar los inputs por select boxes
 // https://react-select.com/home
 
-import React from "react";
-import * as FaIcons from "react-icons/fa";
+import React from 'react';
+import * as FaIcons from 'react-icons/fa';
 
 const EmployeeSearch = () =>  {
 
@@ -20,7 +20,7 @@ const EmployeeSearch = () =>  {
         <div className="row">
           <div className="col-md-4">
             <label className="form-label">
-              Buscar por nombre
+              Buscar por nombre:
             </label>
 
             <input
@@ -39,18 +39,6 @@ const EmployeeSearch = () =>  {
             <label className="form-label">
               Buscar general:
             </label>
-          </div>
-
-          <div className="col-md-4">
-            <label className="form-label">
-              Buscar específica:
-            </label>
-          </div>
-        </div>
-
-        {/*for searching employees in a more specific way, by specific knowledge or skill*/}
-        <div className="row">
-          <div className="col-md-4">
             <input
               className="form-control"
               type="text"
@@ -60,7 +48,11 @@ const EmployeeSearch = () =>  {
             />
           </div>
 
+          {/*for searching employees in a more specific way, by specific knowledge or skill*/}
           <div className="col-md-4">
+            <label className="form-label">
+              Buscar específica:
+            </label>
             <input
               className="form-control"
               type="text"
@@ -70,10 +62,10 @@ const EmployeeSearch = () =>  {
             />
           </div>
 
-          <div className="col-md-4">
-            <button className="btn btn-primary" onClick={handleFilterList}>
+          <div className="col-md-4 mt-auto">
+            <button className="btn btn-primary btn-block" onClick={handleFilterList}>
               <FaIcons.FaSearch className="mb-1" />
-              &nbsp;&nbsp;Hacer Currículum
+              &nbsp;&nbsp;Filtrar
             </button>
           </div>
         </div>
