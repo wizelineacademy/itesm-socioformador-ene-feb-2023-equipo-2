@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import EmployeeSearch from "@/components/EmployeeSearch";
 import EmployeeCard from "@/components/EmployeeCard";
-
+import Menu from "@/components/Menu";
 
 const generarPerfil = () => {
   // React Hooks for managing component state
@@ -32,6 +32,7 @@ const generarPerfil = () => {
 
   return (
     <>
+      <Menu titulo={'Buscar Colaboradores'} descripcion={' '}/>
       <EmployeeSearch />
       <EmployeeCard />
       <div className="container">
