@@ -17,7 +17,7 @@ const Menu = (props: MenuProps) => {
         <Container>
           <Navbar.Brand>
             {/* Image component */}
-            <Image src={logoBtn} height={40}/>
+            <Image src={logoBtn} height={40} alt="Logo Wizeline"/>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

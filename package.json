@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@patternfly/react-core": "^4.276.8",
+    "@patternfly/react-icons": "^4.93.6",
+    "@patternfly/react-styles": "^4.92.6",
     "@types/node": "18.15.10",
     "bootstrap": "^5.2.3",
     "next": "13.2.4",
@@ -19,7 +22,8 @@
     "react-icons": "^4.8.0",
     "react-select": "^5.7.2",
     "stackblur-canvas": "^2.5.0",
-    "typescript": "5.0.2"
+    "typescript": "5.0.2",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.31",
