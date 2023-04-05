@@ -141,3 +141,15 @@ a,h1{
   color:#e93d44 !important;
 }
 
+.dropdown-menu-custom {
+  bottom: auto !important;
+}
+
+.dropdown-item:hover {
+  background-color: #f7f7f7 !important;
+}
+
+.material-icons {
+  font-size: 1.2rem !important;
+  margin-left: 8px !important;
+}
