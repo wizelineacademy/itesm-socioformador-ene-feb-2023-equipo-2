@@ -137,6 +137,19 @@ a {
   box-shadow: 0 0 0 0.2rem rgba(233, 61, 68, 0.25) !important;; /* Add a box shadow to the form control */
 }
 
-a{
-  color:red !important;
+a,h1{
+  color:#e93d44 !important;
+}
+
+.dropdown-menu-custom {
+  bottom: auto !important;
+}
+
+.dropdown-item:hover {
+  background-color: #f7f7f7 !important;
+}
+
+.material-icons {
+  font-size: 1.2rem !important;
+  margin-left: 8px !important;
 }
