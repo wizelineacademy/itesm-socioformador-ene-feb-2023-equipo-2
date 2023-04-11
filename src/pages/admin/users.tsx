@@ -20,6 +20,7 @@ import * as FaIcons from "react-icons/fa";
 import EmployeeSearch from "@/components/EmployeeSearch";
 import EmployeeCard from "@/components/EmployeeCard";
 import Menu from "@/components/Menu";
+import { useHasMounted } from "@/components/useHasMounted";
 
 const users = () => {
   const [id, setId] = useState("");
@@ -38,11 +39,18 @@ const users = () => {
     // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
   };
 
+  // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
+  // For more information, refer to the file inside src/components/useHasMounted.tsx.
+  const hasMounted = useHasMounted();
+  if (!hasMounted) {
+    return null;
+  }
+
   return (
     <>
       <Menu titulo={"Buscar Colaboradores"} descripcion={" "} />
       <EmployeeSearch />
-    {/* componente con los inputs de generar perfil */}
+      {/* componente con los inputs de generar perfil */}
       <div className="bg-light pt-4 pb-4 border-top">
         <div className="container">
           <div className="row">
@@ -194,7 +202,7 @@ const users = () => {
           </div>
         </div>
       </div>
-      <EmployeeCard pageType={'showAll'}/>
+      <EmployeeCard pageType={"showAll"} />
     </>
   );
 };

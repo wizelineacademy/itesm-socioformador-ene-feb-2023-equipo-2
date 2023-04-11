@@ -6,9 +6,6 @@ import React, { Fragment, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import styles from './EmployeeCard.module.css';
 import DataTable, { TableColumn} from 'react-data-table-component';
-import { Divider, Space, Tag } from 'antd';
-
-
 
 interface CardProps {
   pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
@@ -105,7 +102,7 @@ const EmployeeCard = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            <Tag color="magenta">row.employeeArea</Tag>
+            fkjskfjdskljfls
           </Fragment>
         ),
       },
