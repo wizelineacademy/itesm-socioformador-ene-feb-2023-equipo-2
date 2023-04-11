@@ -5,7 +5,7 @@
 import React from 'react';
 import Select from 'react-select'
 import * as FaIcons from 'react-icons/fa';
-
+import { useHasMounted } from "@/components/useHasMounted";
 
 
 const specialityOptions = [
@@ -44,6 +44,13 @@ const locationOptions = [
 ]
 
 const EmployeeSearch = () =>  {
+  // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
+  // For more information, refer to the file inside src/components/useHasMounted.tsx.
+  const hasMounted = useHasMounted();
+  if (!hasMounted) {
+    return null;
+  }
+
   {/*funtion to filter the list using the data from the inputs*/}
   const handleFilterList = () => {
     alert("se van a buscar los empleados con lo seleccionado");

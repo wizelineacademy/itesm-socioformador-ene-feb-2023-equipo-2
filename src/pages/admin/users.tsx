@@ -17,6 +17,10 @@
 import React, { useState } from "react";
 import * as FaIcons from "react-icons/fa";
 
+import EmployeeSearch from "@/components/EmployeeSearch";
+import EmployeeCard from "@/components/EmployeeCard";
+import Menu from "@/components/Menu";
+
 const users = () => {
   const [id, setId] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -36,6 +40,9 @@ const users = () => {
 
   return (
     <>
+      <Menu titulo={"Buscar Colaboradores"} descripcion={" "} />
+      <EmployeeSearch />
+    {/* componente con los inputs de generar perfil */}
       <div className="bg-light pt-4 pb-4 border-top">
         <div className="container">
           <div className="row">
@@ -187,6 +194,7 @@ const users = () => {
           </div>
         </div>
       </div>
+      <EmployeeCard pageType={'showAll'}/>
     </>
   );
 };
