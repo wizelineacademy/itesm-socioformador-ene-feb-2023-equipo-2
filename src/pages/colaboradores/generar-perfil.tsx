@@ -66,7 +66,7 @@ const generarPerfil: React.FC = () => {
     <>
       <Menu titulo={"Buscar Colaboradores"} descripcion={" "} />
       <EmployeeSearch />
-      <EmployeeCard />
+      <EmployeeCard pageType={'showAll'}/>
       <div className="container">
         {/* Experience input field */}
         <label className="form-label">
