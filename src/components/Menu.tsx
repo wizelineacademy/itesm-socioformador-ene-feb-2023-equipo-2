@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Navbar, Nav, Button, Container } from "react-bootstrap";
+import { Navbar, Nav, Button, Modal, Container, NavDropdown } from "react-bootstrap";
 import Link from 'next/link';
 import logoBtn from "src/images/logoSearch.jpg";
 import styles from "src/components/Menu.module.css";
@@ -11,6 +11,22 @@ interface MenuProps {
 }
 
 const Menu = (props: MenuProps) => {
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const handleLogout = () => {
+    setShowModal(true);
+  }
+
+  const handleCancelLogout = () => {
+    setShowModal(false);
+  }
+
+  const handleConfirmLogout = () => {
+    setShowModal(false);
+    window.location.href = '/login';
+  }
+
   return (
     <>
       {/* Navbar component */}
@@ -32,7 +48,7 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/clients">Clients</Link>
+                <Link href="/admin/clients" className="a-navbar" >Clients</Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -42,7 +58,7 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/orders">Orders</Link>
+                <Link href="/admin/orders" className="a-navbar" >Orders</Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -52,7 +68,7 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/teams">Teams</Link>
+                <Link href="/admin/teams" className="a-navbar" >Teams</Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -62,7 +78,7 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/users">Users</Link>
+                <Link href="/admin/users" className="a-navbar" >Users</Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -72,16 +88,38 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/skills">Skills</Link>
+                <Link href="/admin/skills" className="a-navbar" >Skills</Link>
               </Nav.Link>
             </Nav>
-            {/* Button component */}
-            <Button
-              variant="container btn text-dark mr-5"
-              className={styles["btn-custom"]}
-            >
-              Mi cuenta
-            </Button>
+            {/* Dropdown component */}
+            <NavDropdown title="My account" id="basic-nav-dropdown" className="a-navbar">
+              <NavDropdown.Item href="#action/3.1" className="a-navbar">Settings</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2" className="a-navbar">
+                About
+              </NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3" className="a-navbar">Suggestions</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#" className="a-logout" onClick={handleLogout}>
+                Log Out
+              </NavDropdown.Item>
+                <Modal show={showModal && document.querySelector('.a-logout:focus') ? true: false} backdrop="static">
+                  <Modal.Header>
+                    <Modal.Title>Confirm Logout</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>Are you sure you want to logout?</p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCancelLogout}>
+                      Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleConfirmLogout}>
+                      Yes 
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              
+            </NavDropdown>
           </Navbar.Collapse>
         </Container>
       </Navbar>

@@ -137,7 +137,27 @@ a {
   box-shadow: 0 0 0 0.2rem rgba(233, 61, 68, 0.25) !important;; /* Add a box shadow to the form control */
 }
 
-a,h1{
+h1{
+  color:#e93d44 !important;
+}
+
+.a-login{
+  color:#e93d44 !important;  
+}
+
+.a-logout{
+  color: rgb(215, 0, 7) !important;
+  text-size-adjust: 19px;
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+.a-navbar{
+  color: #000 !important;
+  text-decoration: none;
+}
+
+.a-navbar:hover {
   color:#e93d44 !important;
 }
 

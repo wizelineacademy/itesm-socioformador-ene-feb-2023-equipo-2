@@ -66,7 +66,7 @@ const Login = () => {
 
               <Row className="mt-1 d-flex align-items-center">
                 <Col>
-                  <a href="#" style={{ fontSize: 'smaller' }}>Forgot your password?</a>
+                  <a href="#" className="a-login" style={{ fontSize: 'smaller' }}>Forgot your password?</a>
                 </Col>
                 <Col xs="auto">
                   <Form.Check type="checkbox" style={{ fontSize: 'smaller' }} label="Remind me" className="pt-2" />
