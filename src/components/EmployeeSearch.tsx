@@ -13,7 +13,7 @@ const specialityOptions = [
   { value: 'backend', label: 'Backend Developer' },
   { value: 'data', label: 'Data Manager' },
   { value: 'quality', label: 'Quality Manager' },
-  { value: 'cibersec', label: 'Cibersecurity' },
+  { value: 'cibersecurity', label: 'Cibersecurity' },
   { value: 'networks', label: 'Network Administrator' },
   { value: 'mobile', label: 'Mobile Developer' },
 ]

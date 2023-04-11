@@ -1,0 +1,39 @@
+/* Styles for the area tags */
+.working-area-badge {
+  width: fit-content;
+  block-size: fit-content;
+  height: 27px;
+  border-radius: 5px;
+  padding: 5px 10px 5px 10px;
+  font-weight: bold;
+}
+
+.badge-frontend {
+  background-color: #92CAFF;
+  color: #0075FF;
+}
+
+.badge-backend {
+  background-color: #FFAEAE;
+  color: #FF0000;
+}
+
+.badge-data {
+  background-color: #FEB6FF;
+  color: #FF00E5;
+}
+
+.badge-quality {
+  background-color: #ABFFB3;
+  color: #00B212;
+}
+
+.badge-cibersecurity {
+  background-color: #92EBFF;
+  color: #00A3FF;
+}
+
+.badge-mobile {
+  background-color: #D1ACFF;
+  color: #8000FF;
+}
