@@ -5,8 +5,6 @@ import * as FaIcons from "react-icons/fa";
 import Select from "react-select";
 // Remeber to use ValueType and OptionTypeBase. It shows error but it works.
 // import Select, { ValueType, OptionTypeBase } from 'react-select';
-import EmployeeSearch from "@/components/EmployeeSearch";
-import EmployeeCard from "@/components/EmployeeCard";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 
@@ -65,8 +63,6 @@ const generarPerfil: React.FC = () => {
   return (
     <>
       <Menu titulo={"Buscar Colaboradores"} descripcion={" "} />
-      <EmployeeSearch />
-      <EmployeeCard pageType={'showAll'}/>
       <div className="container">
         {/* Experience input field */}
         <label className="form-label">
