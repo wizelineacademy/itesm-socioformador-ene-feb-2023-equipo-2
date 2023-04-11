@@ -4,8 +4,8 @@
 
 import React, { Fragment, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
-import styles from './EmployeeCard.module.css';
 import DataTable, { TableColumn} from 'react-data-table-component';
+import AreaBadge from "./AreaBadge";
 
 interface CardProps {
   pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
@@ -48,12 +48,6 @@ const EmployeeCard = (props: CardProps) => {
     )
   }
 
-  interface DataRow {
-    employeeName: string;
-    employeeLocation: string;
-    employeeArea: string;
-  }
-
   const customStyles = {
     rows: {
         style: {
@@ -67,6 +61,13 @@ const EmployeeCard = (props: CardProps) => {
         },
     },
   };
+
+  interface DataRow {
+    employeeName: string;
+    employeeLocation: string;
+    employeeAreaBadge: string;
+    employeeArea: string;
+  }
 
   const columns: TableColumn<DataRow>[] = React.useMemo(
     () => [
@@ -102,7 +103,7 @@ const EmployeeCard = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            fkjskfjdskljfls
+              <AreaBadge workingAreaBagde={row.employeeAreaBadge} workingArea={row.employeeArea} />
           </Fragment>
         ),
       },
@@ -157,32 +158,38 @@ const EmployeeCard = (props: CardProps) => {
     {
       employeeName: 'Mario Isaí Robles Lozano',
       employeeLocation: 'Monterrey',
-      employeeArea: 'Frontend Developer',
+      employeeAreaBadge: 'Frontend Developer',
+      employeeArea: 'frontend'
     },
     {
       employeeName: 'Jorge Eduardo De Leon Reyna',
       employeeLocation: 'Reynosa',
-      employeeArea: 'Backendend Developer',
+      employeeAreaBadge: 'Backend Developer',
+      employeeArea: 'backend'
     },
     {
       employeeName: 'Andrea Catalina Fernandez Mena',
       employeeLocation: 'La Paz',
-      employeeArea: 'Data Manager',
+      employeeAreaBadge: 'Data Manager',
+      employeeArea: 'data'
     },
     {
       employeeName: 'Andres Fuentes Alanis',
       employeeLocation: 'Guadalajara',
-      employeeArea: 'Quality Manager',
+      employeeAreaBadge: 'Quality Manager',
+      employeeArea: 'quality'
     },
     {
       employeeName: 'Gerardo Mora Beltrán',
       employeeLocation: 'Queretaro',
-      employeeArea: 'Cibersecurity',
+      employeeAreaBadge: 'Cibersecurity',
+      employeeArea: 'cibersecurity'
     },
     {
       employeeName: 'Oscar Alejandro Reyna Mont.',
       employeeLocation: 'Guadalajara',
-      employeeArea: 'Mobile Developer',
+      employeeAreaBadge: 'Mobile Developer',
+      employeeArea: 'mobile'
     },
   ]
 

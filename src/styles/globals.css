@@ -170,16 +170,3 @@ a,h1{
 .state-creating-employee {
   color: #646979;
 }
-
-/* Styles for the area tags */
-.working-area-tag {
-  width: fit-content;
-  block-size: fit-content;
-  height: 20px;
-  border-radius: 5px;
-}
-
-.tag-frontend {
-  background-color: #92CAFF;
-  color: #0075FF;
-}
