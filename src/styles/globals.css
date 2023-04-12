@@ -190,3 +190,12 @@ h1{
 .state-creating-employee {
   color: #646979;
 }
+
+.nav-link {
+  color: black !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #e93d44 !important;
+}
