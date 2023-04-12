@@ -4,7 +4,6 @@
 
 import React from 'react';
 import Select from 'react-select'
-import * as FaIcons from 'react-icons/fa';
 import { useHasMounted } from "@/components/useHasMounted";
 
 
@@ -58,7 +57,7 @@ const EmployeeSearch = () =>  {
 
   return (
     <>
-      <div className="container my-5">
+      <div className="container my-4">
 
         {/*for searching employees by their name*/}
         <div className="row">

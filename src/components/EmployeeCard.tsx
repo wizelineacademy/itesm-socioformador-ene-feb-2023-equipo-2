@@ -8,7 +8,8 @@ import DataTable, { TableColumn} from 'react-data-table-component';
 import AreaBadge from "./AreaBadge";
 
 interface CardProps {
-  pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
+  //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
+  pageType: 'listForAdmin' | 'listForEmployee' | 'addToOrder' | 'OrderSummary' | 'showAll';
 }
 
 const EmployeeCard = (props: CardProps) => {
@@ -18,7 +19,7 @@ const EmployeeCard = (props: CardProps) => {
   const [hidePlusSign] = useState<boolean>(props.pageType === 'addToOrder' ? false : true);
   const [hideMinusSign] = useState<boolean>(props.pageType === 'OrderSummary' ? false : true);*/
 
-  // BORRAR ESTAS 4 AL FINAL, SON PARA MOSTRAR TODAS
+  // BORRAR ESTAS 4 AL FINAL Y PONER LAS 4 DE ARRIBA, SON PARA MOSTRAR TODAS
   const [hideStatusIcon] = useState<boolean>(props.pageType === 'showAll' ? false : true);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'showAll' ? false : true);
   const [hidePlusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
@@ -63,6 +64,7 @@ const EmployeeCard = (props: CardProps) => {
   };
 
   interface DataRow {
+    isActive: 0 | 1;
     employeeName: string;
     employeeLocation: string;
     employeeAreaBadge: string;
@@ -74,7 +76,7 @@ const EmployeeCard = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaRegDotCircle className='status-icon-size state-active-employee'/>
+            <FaIcons.FaRegDotCircle className={`status-icon-size ${row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
           </Fragment>
         ),
         omit: hideStatusIcon,
@@ -91,6 +93,7 @@ const EmployeeCard = (props: CardProps) => {
       {
         name: 'Name',
         selector: row => row.employeeName,
+        sortable: true,
       },
       {
         name: 'Location',
@@ -156,36 +159,42 @@ const EmployeeCard = (props: CardProps) => {
 
   const data = [
     {
+      isActive: 1,
       employeeName: 'Mario Isaí Robles Lozano',
       employeeLocation: 'Monterrey',
       employeeAreaBadge: 'Frontend Developer',
       employeeArea: 'frontend'
     },
     {
+      isActive: 1,
       employeeName: 'Jorge Eduardo De Leon Reyna',
       employeeLocation: 'Reynosa',
       employeeAreaBadge: 'Backend Developer',
       employeeArea: 'backend'
     },
     {
+      isActive: 0,
       employeeName: 'Andrea Catalina Fernandez Mena',
       employeeLocation: 'La Paz',
       employeeAreaBadge: 'Data Manager',
       employeeArea: 'data'
     },
     {
+      isActive: 1,
       employeeName: 'Andres Fuentes Alanis',
       employeeLocation: 'Guadalajara',
       employeeAreaBadge: 'Quality Manager',
       employeeArea: 'quality'
     },
     {
+      isActive: 0,
       employeeName: 'Gerardo Mora Beltrán',
       employeeLocation: 'Queretaro',
       employeeAreaBadge: 'Cibersecurity',
       employeeArea: 'cibersecurity'
     },
     {
+      isActive: 0,
       employeeName: 'Oscar Alejandro Reyna Mont.',
       employeeLocation: 'Guadalajara',
       employeeAreaBadge: 'Mobile Developer',
@@ -202,6 +211,7 @@ const EmployeeCard = (props: CardProps) => {
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover
+          pagination
         />
       </div>
     </>
