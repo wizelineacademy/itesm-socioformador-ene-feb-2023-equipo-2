@@ -153,3 +153,9 @@ a,h1{
   font-size: 1.2rem !important;
   margin-left: 8px !important;
 }
+
+.nav-pills .nav-link.active {
+  background-color: #dc3544 !important;
+  font-weight: 700 !important;
+}
+
