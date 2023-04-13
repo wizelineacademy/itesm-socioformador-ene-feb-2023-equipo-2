@@ -3,9 +3,52 @@
 // https://react-select.com/home
 
 import React from 'react';
-import * as FaIcons from 'react-icons/fa';
+import Select from 'react-select'
+import { useHasMounted } from "@/components/useHasMounted";
+
+
+const specialityOptions = [
+  { value: 'frontend', label: 'Frontend Developer' },
+  { value: 'backend', label: 'Backend Developer' },
+  { value: 'data', label: 'Data Manager' },
+  { value: 'quality', label: 'Quality Manager' },
+  { value: 'cibersecurity', label: 'Cibersecurity' },
+  { value: 'networks', label: 'Network Administrator' },
+  { value: 'mobile', label: 'Mobile Developer' },
+]
+
+const techOptions = [
+  { value: 'c', label: 'C/C++' },
+  { value: 'python', label: 'Python' },
+  { value: 'java', label: 'Java' },
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'html', label: 'HTML' },
+  { value: 'css', label: 'CSS' },
+  { value: 'cs', label: 'C#' },
+  { value: 'react', label: 'REACT' },
+  { value: 'typescript', label: 'TypeScript' },
+  { value: 'tailwind', label: 'Tailwind' },
+  { value: 'remix', label: 'REMIX' },
+  { value: 'nextjs', label: 'Next JS' },
+]
+
+const locationOptions = [
+  { value: 'monterrey', label: 'Monterrey' },
+  { value: 'saltillo', label: 'Saltillo' },
+  { value: 'reynosa', label: 'Reynosa' },
+  { value: 'victoria', label: 'Ciudad Victoria' },
+  { value: 'lapaz', label: 'La Paz' },
+  { value: 'guadalajara', label: 'Guadalajara' },
+  { value: 'queretaro', label: 'Queretaro' },
+]
 
 const EmployeeSearch = () =>  {
+  // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
+  // For more information, refer to the file inside src/components/useHasMounted.tsx.
+  const hasMounted = useHasMounted();
+  if (!hasMounted) {
+    return null;
+  }
 
   {/*funtion to filter the list using the data from the inputs*/}
   const handleFilterList = () => {
@@ -14,13 +57,13 @@ const EmployeeSearch = () =>  {
 
   return (
     <>
-      <div className="container my-5">
+      <div className="container my-4">
 
         {/*for searching employees by their name*/}
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-3">
             <label className="form-label">
-              Buscar por nombre:
+              Nombre:
             </label>
 
             <input
@@ -29,48 +72,44 @@ const EmployeeSearch = () =>  {
               id="nameSearch"
               autoComplete="off"
               required
+              placeholder="Select..."
             />
+          </div>
+
+          <div className="col-md-3">
+            <label className="form-label">
+              Especialidad:
+            </label>
+            <Select 
+              isClearable
+              options={specialityOptions} />
+          </div>
+
+          <div className="col-md-3">
+            <label className="form-label">
+              Tecnologías:
+            </label>
+            <Select 
+              isMulti 
+              options={techOptions} />
+          </div>
+
+          <div className="col-md-3">
+            <label className="form-label">
+              Ubicación:
+            </label>
+            <Select 
+              isClearable
+              options={locationOptions} />
           </div>
         </div>
 
-        {/*for searching employees in a more general way, by area of development*/}
-        <div className="row">
-          <div className="col-md-4">
-            <label className="form-label">
-              Buscar general:
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              id="generalSearch"
-              autoComplete="off"
-              required
-            />
-          </div>
-
-          {/*for searching employees in a more specific way, by specific knowledge or skill*/}
-          <div className="col-md-4">
-            <label className="form-label">
-              Buscar específica:
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              id="specificSearch"
-              autoComplete="off"
-              required
-            />
-          </div>
-
-          <div className="col-md-4 mt-auto">
-            <button className="btn btn-primary btn-block" onClick={handleFilterList}>
-              <FaIcons.FaSearch className="mb-1" />
-              &nbsp;&nbsp;Filtrar
-            </button>
-          </div>
-        </div>
-
-
+        {/*<div className="col-md-4 mt-auto">
+          <button className="btn btn-primary btn-block" onClick={handleFilterList}>
+            <FaIcons.FaSearch className="mb-1" />
+            &nbsp;&nbsp;Filtrar
+          </button>
+        </div>*/}
       </div>
     </>
   );

@@ -137,7 +137,27 @@ a {
   box-shadow: 0 0 0 0.2rem rgba(233, 61, 68, 0.25) !important;; /* Add a box shadow to the form control */
 }
 
-a,h1{
+h1{
+  color:#e93d44 !important;
+}
+
+.a-login{
+  color:#e93d44 !important;  
+}
+
+.a-logout{
+  color: rgb(215, 0, 7) !important;
+  text-size-adjust: 19px;
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+.a-navbar{
+  color: #000 !important;
+  text-decoration: none;
+}
+
+.a-navbar:hover {
   color:#e93d44 !important;
 }
 
@@ -159,3 +179,29 @@ a,h1{
   font-weight: 700 !important;
 }
 
+/* 4 styles for the little status circle on the left side of the employee cards */
+.status-icon-size {
+  font-size: 20px;
+}
+
+.state-active-employee {
+  color: #26C000;
+}
+
+.state-inactive-employee {
+  color: #EA2A00;
+}
+
+.state-creating-employee {
+  color: #646979;
+}
+
+/* 2 styles for the navbar for retrieving the profile information */
+.nav-link {
+  color: black !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #e93d44 !important;
+}
