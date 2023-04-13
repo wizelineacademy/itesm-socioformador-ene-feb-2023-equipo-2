@@ -46,7 +46,7 @@ function LearningPath() {
                                 aria-controls="v-pills-profile"
                                 aria-selected="false"
                                 onClick={() => setSelectedMenu(example._id)}
-                                style={{ color: example._id === selectedMenu ? 'white' : 'black' }}>
+                                style={{ color: example._id === selectedMenu ? 'white !important' : 'black !important' }}>
                                 {example.name}
                             </a>
                         );

@@ -137,7 +137,7 @@ a {
   box-shadow: 0 0 0 0.2rem rgba(233, 61, 68, 0.25) !important;; /* Add a box shadow to the form control */
 }
 
-h1{
+a,h1{
   color:#e93d44 !important;
 }
 
@@ -201,7 +201,6 @@ h1{
   color: black !important;
 }
 
-.nav-link:hover,
 .nav-link.active {
-  color: #e93d44 !important;
+  color: #ffffff !important;
 }
