@@ -202,5 +202,13 @@ a,h1{
 }
 
 .nav-link.active {
-  color: #ffffff !important;
+  color: #EA2A00 !important;
+}
+
+.nav-roadmap {
+  color: black !important;
+}
+
+.nav-roadmap.active {
+  color: #FFFFFF !important;
 }

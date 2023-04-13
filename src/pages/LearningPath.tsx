@@ -4,6 +4,8 @@ import Link from "next/link"
 
 import { useState, useEffect } from 'react';
 
+import { useHasMounted } from "@/components/useHasMounted";
+
 interface apiResponse {
     _id: string
     name: string
@@ -12,6 +14,10 @@ interface apiResponse {
 }
 
 function LearningPath() {
+
+  // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
+  // For more information, refer to the file inside src/components/useHasMounted.tsx.
+  const hasMounted = useHasMounted();
 
     const [selectedMenu, setSelectedMenu] = useState('');
     const [data, setData] = useState<apiResponse[]>([]);
@@ -27,6 +33,10 @@ function LearningPath() {
         setData(json as apiResponse[]);
     };
 
+    if (!hasMounted) {
+      return null;
+    }
+
     return (
     <div>
 
@@ -38,7 +48,7 @@ function LearningPath() {
                 {
                     data.map((example) =>{
                         return (
-                            <a className={example._id == selectedMenu? "nav-link active selectedAncore" : "nav-link"}
+                            <a className={example._id == selectedMenu? "nav-link active selectedAncore nav-roadmap" : "nav-link nav-roadmap"}
                                 id={example._id + "-tab"}
                                 data-toggle="pill"
                                 href={"#"+example._id}
