@@ -124,7 +124,7 @@ const Menu = (props: MenuProps) => {
         </Container>
       </Navbar>
       {/* Content */}
-      <div className="container pt-4 pb-4">
+      <div className="container pt-4 pb-2">
         <h1 className="mb-3">{props.titulo}</h1>
         <p>{props.descripcion}</p>
       </div>
