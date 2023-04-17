@@ -63,7 +63,7 @@ const EmployeeSearch = () =>  {
         <div className="row">
           <div className="col-md-3">
             <label className="form-label">
-              Nombre:
+              Name:
             </label>
 
             <input
@@ -78,7 +78,7 @@ const EmployeeSearch = () =>  {
 
           <div className="col-md-3">
             <label className="form-label">
-              Especialidad:
+              Speciality:
             </label>
             <Select 
               isClearable
@@ -87,7 +87,7 @@ const EmployeeSearch = () =>  {
 
           <div className="col-md-3">
             <label className="form-label">
-              Tecnologías:
+              Technologies:
             </label>
             <Select 
               isMulti 
@@ -96,7 +96,7 @@ const EmployeeSearch = () =>  {
 
           <div className="col-md-3">
             <label className="form-label">
-              Ubicación:
+              Location:
             </label>
             <Select 
               isClearable

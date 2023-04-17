@@ -66,7 +66,7 @@ const EmployeeCreation = () => {
           <div className="row">
             <div className="col-md">
               <label htmlFor="email" className="form-label">
-                Correo Electrónico:
+                Email:
               </label>
               <input
                 className="form-control"
@@ -80,7 +80,7 @@ const EmployeeCreation = () => {
             </div>
             <div className="col-md">
               <label htmlFor="role" className="form-label">
-                Rol:
+                Role:
               </label>
               {/*<input
                 className="form-control"
@@ -96,7 +96,7 @@ const EmployeeCreation = () => {
             </div>
             <div className="col-md">
               <label htmlFor="department" className="form-label">
-                Departamento:
+                Departament:
               </label>
               {/*<input
                 className="form-control"

@@ -39,7 +39,7 @@ const users = () => {
 
   return (
     <>
-      <Menu titulo={"Buscar Colaboradores"} descripcion={" "} />
+      <Menu titulo={"Search Associates"} descripcion={" "} />
       <EmployeeSearch />
       <div className="container my-4">
         <div className="row">
