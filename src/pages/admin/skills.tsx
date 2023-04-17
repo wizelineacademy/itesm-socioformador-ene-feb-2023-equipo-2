@@ -23,7 +23,7 @@ const skills = () => {
         <label htmlFor="department" className="form-label">
           Select department:
         </label>
-        <Select placeholder="Departamento..." />
+        <Select placeholder="Departament..." />
         <label htmlFor="department" className="form-label">
           What skill would you like to add:
         </label>

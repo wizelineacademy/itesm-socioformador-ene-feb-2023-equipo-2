@@ -79,9 +79,9 @@ const generarPerfil: React.FC = () => {
   return (
     <>
       <Menu
-        titulo={"Completar Perfil"}
+        titulo={"Complete Profile"}
         descripcion={
-          "Para que la inteligencia artificial pueda generar un perfil completo, necesitamos que nos proporciones tu información laboral y educativa. Puedes hacerlo de varias maneras: mediante tu perfil de LinkedIn, llenando los campos de nuestra aplicación web o subiendo tu currículum a nuestra plataforma."
+          "In order for artificial intelligence to generate a complete profile, we need you to provide us with your employment and educational information. You can do it in several ways: through your LinkedIn profile, by filling in the fields of our web application or by uploading your resume to our platform."
         }
       />
       <div className="container">
@@ -92,10 +92,10 @@ const generarPerfil: React.FC = () => {
             className="mb-3"
             fill
           >
-            <Tab eventKey="linkedin" title="Perfil de LinkedIn">
+            <Tab eventKey="linkedin" title="LinkedIn Profile">
               <label className="form-label">
-                Por favor, proporcione el enlace a su perfil de LinkedIn para
-                que podamos llevar a cabo un análisis de su cuenta.
+                Please provide the link to your LinkedIn profile for
+                so that we can carry out an analysis of your account.
               </label>
               <input
                 className="form-control"
@@ -108,14 +108,14 @@ const generarPerfil: React.FC = () => {
               {/* Submit button */}
               <button className="btn btn-primary mt-3" onClick={handleSendForm}>
                 <FaIcons.FaLinkedin className="mb-1" />
-                &nbsp;&nbsp;Analizar Perfil
+                &nbsp;&nbsp;Analyse Profile
               </button>
             </Tab>
-            <Tab eventKey="manual" title="Llenado Manual">
+            <Tab eventKey="manual" title="Manual Fill">
               {/* Experience input field */}
               <label className="form-label">
-                ¿Cuántos años de experiencia tienes en desarrollo de software?
-                (Se pueden agregar números decimales)
+                How many years of experience do you have in software development?
+                (Decimal numbers can be added)
               </label>
               <input
                 className="form-control"
@@ -128,8 +128,8 @@ const generarPerfil: React.FC = () => {
               />
               {/* Project type input field */}
               <label className="form-label">
-                ¿Descríbenos en pocas palabras en qué tipo de proyectos has
-                trabajado anteriormente?
+                Describe in a few words what kind of projects you have
+                worked before?
               </label>
               <textarea
                 className="form-control"
@@ -142,8 +142,8 @@ const generarPerfil: React.FC = () => {
               />
               {/* Selected languages input field */}
               <label className="form-label">
-                ¿Qué lenguajes de programación y tecnologías estás más
-                familiarizado?
+                What programming languages and technologies are you most
+                acquainted?
               </label>
               <Select
                 options={options} // sets the available options for the Select component
@@ -152,13 +152,13 @@ const generarPerfil: React.FC = () => {
                 )} // sets the currently selected option(s). Use when isMulti is specified.
                 onChange={handleChangeTechnology} // sets the callback function to handle changes in selected option(s)
                 isMulti // indicates that multiple options can be selected
-                placeholder="Seleccionar tecnologías..."
+                placeholder="Select technologies..."
               />
               {/* <p>{selectedLanguages}</p> */}
               {/* Learning input field */}
               <label className="form-label">
-                ¿Cómo te mantienes actualizado con las últimas tecnologías y
-                tendencias en desarrollo de software?
+                How do you keep up to date with the latest technologies and
+                trends in software development?
               </label>
               <input
                 className="form-control"
@@ -172,14 +172,14 @@ const generarPerfil: React.FC = () => {
               {/* Submit button */}
               <button className="btn btn-primary mt-3" onClick={handleSendForm}>
                 <FaIcons.FaBrain className="mb-1" />
-                &nbsp;&nbsp;Hacer Currículum
+                &nbsp;&nbsp;Make Resume
               </button>
             </Tab>
-            <Tab eventKey="curriculum" title="PDF Currículum">
+            <Tab eventKey="curriculum" title="PDF Resume">
               <Form.Group controlId="formFile" className="mb-3">
                 <Form.Label>
-                  Por favor, proporcione su currículum en formato PDF para poder
-                  revisarlo.
+                  Please provide your resume in PDF format in order to
+                  review it.
                 </Form.Label>
                 <Form.Control type="file" />
               </Form.Group>
