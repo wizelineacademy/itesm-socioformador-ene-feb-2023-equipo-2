@@ -1,34 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { getChatResponse } from "@/openai/openai";
 import { useHasMounted } from "@/components/useHasMounted";
 
-const prueba = async () => {
+const prueba = () => {
   const hasMounted = useHasMounted();
+  const [texto, setTexto] = useState("");
   const [response, setResponse] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { Configuration, OpenAIApi } = require("openai");
-      const configuration = new Configuration({
-        apiKey: "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",
-      });
-      const openai = new OpenAIApi(configuration);
-      try {
-        const result = await openai.createCompletion({
-          model: "text-davinci-003",
-          prompt: "Say this is a test",
-          temperature: 0,
-          max_tokens: 7,
-        });
-        setResponse(result);
-      } catch (error) {
-        console.log(error);
-        setResponse(null); // reset response to null in case of error
-      }
-    };
-    fetchData();
-  }, [])
-  
-  console.log(response)
+  const handleClick = (texto : any) => {
+    const messages = [{ role: "user", content: texto }];
+    getChatResponse(messages).then((res) => {
+      console.log(res);
+      setResponse(res);
+    });
+  };
 
   if (!hasMounted) {
     return null;
@@ -36,7 +21,11 @@ const prueba = async () => {
 
   return (
     <>
-      <div>fdsfdsfdsfsds</div>
+      <input
+        onChange={e => setTexto(e.target.value)}
+      />
+      <button onClick={() => handleClick(texto)}>boton</button>
+      <p>{response}</p>
     </>
   );
 };

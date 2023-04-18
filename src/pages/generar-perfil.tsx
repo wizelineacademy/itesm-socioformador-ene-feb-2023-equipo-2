@@ -1,5 +1,6 @@
 // TODO:
-// 2. Permite seleccionar años y meses?
+// 1. En "Manual Form", hacer que lea todas las preguntas y genere una respuesta en un textarea
+// 2. Pasar lo del textarea a varios fields
 import React, { useState, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
 import Select from "react-select";
@@ -10,7 +11,7 @@ import Head from "next/head";
 // import Select, { ValueType, OptionTypeBase } from 'react-select';
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
-import styles from './GenerarPerfil.module.css'
+import { getChatResponse } from "@/openai/openai";
 
 // 'options' will later be replaced by table skills in database
 const options = [
@@ -28,6 +29,7 @@ const generarPerfil: React.FC = () => {
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [learning, setLearning] = useState<string>("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
+  const [response, setResponse] = useState(null);
 
   const [tarea, setTarea] = useState([]);
 
@@ -40,7 +42,11 @@ const generarPerfil: React.FC = () => {
 
   // handleSendForm is a function that is called when the "Hacer Currículum" button is clicked.
   const handleSendForm = () => {
-    alert("Wizeline debe pagar las juntadas al Toshi Tiger");
+    const messages = [{ role: "user", content: typeProjects }];
+    getChatResponse(messages).then((res) => {
+      console.log(res);
+      setResponse(res);
+    });
   };
 
   // handleYearsExperienceChange is a function that sets the years of experience and ensures that only numbers (including decimal points) are allowed as input.
@@ -68,7 +74,13 @@ const generarPerfil: React.FC = () => {
     setSelectedLanguages(selectedValues);
   };
 
-  console.log(tarea);
+  const handleClick = (texto : any) => {
+    const messages = [{ role: "user", content: texto }];
+    getChatResponse(messages).then((res) => {
+      console.log(res);
+      setResponse(res);
+    });
+  };
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -111,7 +123,7 @@ const generarPerfil: React.FC = () => {
                 &nbsp;&nbsp;Analyse Profile
               </button>
             </Tab>
-            <Tab eventKey="manual" title="Manual Fill">
+            <Tab eventKey="manual" title="Manual Form">
               {/* Experience input field */}
               <label className="form-label">
                 How many years of experience do you have in software development?
@@ -174,6 +186,7 @@ const generarPerfil: React.FC = () => {
                 <FaIcons.FaBrain className="mb-1" />
                 &nbsp;&nbsp;Make Resume
               </button>
+              <p>{response}</p>
             </Tab>
             <Tab eventKey="curriculum" title="PDF Resume">
               <Form.Group controlId="formFile" className="mb-3">
