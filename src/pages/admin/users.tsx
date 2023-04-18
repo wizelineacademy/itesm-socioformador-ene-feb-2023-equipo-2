@@ -15,178 +15,58 @@
 // This table will include basic information about each user, such as their name, email, and role.
 
 import React, { useState } from "react";
+import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from "react-icons/fa";
 
-const users = () => {
-  const [id, setId] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-  const [department, setDepartment] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
+import EmployeeSearch from "@/components/EmployeeSearch";
+import EmployeeCard from "@/components/EmployeeCard";
+import EmployeeCreation from "@/components/EmployeeCreation";
+import Menu from "@/components/Menu";
+import { useHasMounted } from "@/components/useHasMounted";
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    alert("prueba");
-    // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
-  };
+const users = () => {
+  // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
+  // For more information, refer to the file inside src/components/useHasMounted.tsx.
+  const hasMounted = useHasMounted();
+   
+
+  const [alphabeticallyA2Z, setAlphabeticallyA2Z] = useState(true); // True -> A to Z, False -> Z to A
+  const [addEmployee, setAddEmployee] = useState(false); // True -> A to Z, False -> Z to A
+
+  if (!hasMounted) {
+    return null;
+  }
 
   return (
     <>
-      <div className="bg-light pt-4 pb-4 border-top">
-        <div className="container">
-          <div className="row">
-            <div className="col-md">
-              <label htmlFor="id" className="form-label">
-                ID:
-              </label>
-              <input
-                className="form-control"
-                type="number"
-                id="id"
-                onChange={(event) => setId(event.target.value)}
-                value={id}
-                required
-              />
-            </div>
-            <div className="col-md">
-              <label htmlFor="first-name" className="form-label">
-                Nombre:
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="first-name"
-                onChange={(event) => setFirstName(event.target.value)}
-                value={firstName}
-                required
-              />
-            </div>
-            <div className="col-md">
-              <label htmlFor="last-name" className="form-label">
-                Apellido:
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="last-name"
-                onChange={(event) => setLastName(event.target.value)}
-                value={lastName}
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md">
-              <label htmlFor="email" className="form-label">
-                Correo Electrónico:
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                value={email}
-                required
-              />
-            </div>
-            <div className="col-md">
-              <label htmlFor="password" className="form-label">
-                Contraseña:
-              </label>
-              <input
-                className="form-control"
-                type="password"
-                id="password"
-                onChange={(event) => setPassword(event.target.value)}
-                value={password}
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md">
-              <label htmlFor="role" className="form-label">
-                Rol:
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="role"
-                onChange={(event) => setRole(event.target.value)}
-                value={role}
-                required
-              />
-            </div>
-            <div className="col-md">
-              <label htmlFor="department" className="form-label">
-                Departamento:
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="department"
-                onChange={(event) => setDepartment(event.target.value)}
-                value={department}
-                required
-              />
-            </div>
-            <div className="col-md">
-              <label htmlFor="phone" className="form-label">
-                Teléfono:
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="role"
-                onChange={(event) => setPhone(event.target.value)}
-                value={phone}
-                required
-              />
-            </div>
-            <div className="col-md">
-              <label htmlFor="address" className="form-label">
-                Dirección:
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="department"
-                onChange={(event) => setAddress(event.target.value)}
-                value={address}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col">
-              <button
-                className="btn btn-primary w-100 mt-3"
-                onClick={handleSubmit}
-              >
-                <FaIcons.FaUserPlus className="mb-1" />
-                &nbsp;&nbsp;Agregar Usuario
-              </button>
-            </div>
-            <div className="col">
-              <button className="btn btn-primary w-100 mt-3">
-                <FaIcons.FaUserEdit className="mb-1" />
-                &nbsp;&nbsp;Editar Usuario
-              </button>
-            </div>
-            <div className="col">
-              <button className="btn btn-primary w-100 mt-3">
-                <FaIcons.FaArrowLeft className="mb-1" />
-                &nbsp;&nbsp;Regresar
-              </button>
-            </div>
+      <Menu titulo={"Search Associates"} descripcion={" "} />
+      <EmployeeSearch />
+      <div className="container my-4">
+        <div className="row">
+          <div className="d-flex justify-content-between">
+            <button
+              className="btn btn-primary w-10"
+              onClick={() => setAlphabeticallyA2Z(!alphabeticallyA2Z)}>
+              {alphabeticallyA2Z ? <FaIcons.FaSortAlphaDown className="mb-1" /> : <FaIcons.FaSortAlphaUpAlt className="mb-1" />}
+              &nbsp;&nbsp;Sort
+            </button>
+            <button
+              className="btn btn-primary w-10" 
+              onClick={() => setAddEmployee(!addEmployee)}
+              aria-controls="employeeCreation"
+              aria-expanded={addEmployee}>
+              <FaIcons.FaUserPlus className="mb-1" />
+              &nbsp;&nbsp;Add User
+            </button>
           </div>
         </div>
       </div>
+      <Collapse in={addEmployee}>
+        <div id="employeeCreation">
+          <EmployeeCreation />
+        </div>
+      </Collapse>
+      <EmployeeCard pageType={"showAll"} />
     </>
   );
 };

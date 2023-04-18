@@ -141,6 +141,26 @@ a,h1{
   color:#e93d44 !important;
 }
 
+.a-login{
+  color:#e93d44 !important;  
+}
+
+.a-logout{
+  color: rgb(215, 0, 7) !important;
+  text-size-adjust: 19px;
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+.a-navbar{
+  color: #000 !important;
+  text-decoration: none;
+}
+
+.a-navbar:hover {
+  color:#e93d44 !important;
+}
+
 .dropdown-menu-custom {
   bottom: auto !important;
 }
@@ -152,4 +172,43 @@ a,h1{
 .material-icons {
   font-size: 1.2rem !important;
   margin-left: 8px !important;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #dc3544 !important;
+  font-weight: 700 !important;
+}
+
+/* 4 styles for the little status circle on the left side of the employee cards */
+.status-icon-size {
+  font-size: 20px;
+}
+
+.state-active-employee {
+  color: #26C000;
+}
+
+.state-inactive-employee {
+  color: #EA2A00;
+}
+
+.state-creating-employee {
+  color: #646979;
+}
+
+/* 2 styles for the navbar for retrieving the profile information */
+.nav-link {
+  color: black !important;
+}
+
+.nav-link.active {
+  color: #EA2A00 !important;
+}
+
+.nav-roadmap {
+  color: black !important;
+}
+
+.nav-roadmap.active {
+  color: #FFFFFF !important;
 }

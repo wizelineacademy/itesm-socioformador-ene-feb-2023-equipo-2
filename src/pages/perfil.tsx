@@ -40,12 +40,12 @@ const perfil = () => {
             <div className="row vh-25 m-2">
               <div id="profileCardSize1" className="col-6">
                 <div className="card w-100 h-100 align-items-center">
-                  <div className="card-body">ANDRES SE LA PELA</div>
+                  <div className="card-body"></div>
                 </div>
               </div>
               <div id="profileCardSize1" className="col-6">
                 <div className="card w-100 h-100 align-items-center">
-                  <div className="card-body">ANDRES SE LA PELA</div>
+                  <div className="card-body"></div>
                 </div>
               </div>
             </div>
@@ -53,14 +53,14 @@ const perfil = () => {
           <div className="row m-3">
             <div id="profileCardSize2" className="col-12">
               <div className="card w-100 h-100 align-items-center">
-                <div className="card-body">ANDRES SE LA PELA</div>
+                <div className="card-body"></div>
               </div>
             </div>
           </div>
           <div className="row m-3">
             <div id="profileCardSize2" className="col-12">
               <div className="card w-100 h-100 align-items-center">
-                <div className="card-body">MARIO SE LA PELA</div>
+                <div className="card-body"></div>
               </div>
             </div>
           </div>

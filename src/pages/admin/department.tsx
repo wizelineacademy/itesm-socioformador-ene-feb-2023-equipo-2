@@ -1,49 +1,45 @@
 import React, { useState } from "react";
-import Select from "react-select";
-import * as FaIcons from 'react-icons/fa';
+import * as FaIcons from "react-icons/fa";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 
-const skills = () => {
+const department = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
-  const [skill, setSkill] = useState("");
+  const [name, setName] = useState("")
 
   if (!hasMounted) {
     return null;
   }
+
   return (
     <>
       <Menu
-        titulo="Skills"
-        descripcion="To utilize the following section, it is necessary to have already created the Departments in the database or to have them established beforehand."
+        titulo="Department"
+        descripcion="In order to establish a connection between skills and departments, it is necessary for them to be directly linked. Create a department to be later linked to various skills"
       />
       <div className="container">
-        <label htmlFor="department" className="form-label">
-          Select department:
-        </label>
-        <Select placeholder="Departament..." />
-        <label htmlFor="department" className="form-label">
-          What skill would you like to add:
+        <label htmlFor="name" className="form-label">
+          Department name:
         </label>
         <input
           className="form-control"
           type={"text"}
-          id="skill"
+          id="name"
           autoComplete="off"
-          onChange={(e) => setSkill(e.target.value)}
-          value={skill}
+          onChange={(e) => setName(e.target.value)}
+          value={name}
           required
         />
         {/* Submit button */}
         <button className="btn btn-primary mt-3">
           <FaIcons.FaPlus className="mb-1" />
-          &nbsp;&nbsp;Add Skill
+          &nbsp;&nbsp;Add Department
         </button>
       </div>
     </>
   );
 };
 
-export default skills;
+export default department;
