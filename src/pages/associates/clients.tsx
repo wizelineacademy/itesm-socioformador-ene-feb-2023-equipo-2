@@ -2,7 +2,7 @@ import React from 'react'
 import MenuAssociates from '@/components/MenuAssociates'
 import { useHasMounted } from "@/components/useHasMounted";
 
-const teams = () => {
+const clients = () => {
   const hasMounted = useHasMounted();
   if (!hasMounted) {
     return null;
@@ -18,4 +18,4 @@ const teams = () => {
   )
 }
 
-export default teams
+export default clients
