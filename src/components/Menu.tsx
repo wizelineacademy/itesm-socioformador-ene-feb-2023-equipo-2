@@ -88,16 +88,23 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
+                <Link href="/admin/department" className="a-navbar" >Department</Link>
+              </Nav.Link>
+              <Nav.Link
+                className="text-dark"
+                style={{
+                  fontSize: "17px",
+                  fontWeight: "semi-bold",
+                  marginRight: "20px",
+                }}
+              >
                 <Link href="/admin/skills" className="a-navbar" >Skills</Link>
               </Nav.Link>
             </Nav>
             {/* Dropdown component */}
-            <NavDropdown title="My account" id="basic-nav-dropdown" className="a-navbar">
-              <NavDropdown.Item href="#action/3.1" className="a-navbar">Settings</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2" className="a-navbar">
-                About
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3" className="a-navbar">Suggestions</NavDropdown.Item>
+            <NavDropdown title="My Account" id="basic-nav-dropdown" className="a-navbar">
+              <NavDropdown.Item href="settings" className="a-navbar">Settings</NavDropdown.Item>
+              <NavDropdown.Item href="roadmap" className="a-navbar">Roadmap</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#" className="a-logout" onClick={handleLogout}>
                 Log Out
