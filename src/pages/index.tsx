@@ -6,6 +6,7 @@ import Image from 'next/image';
 import transLogo from 'src/images/transLogo.jpg';
 import bg from 'src/images/wbg.webp';
 
+
 export default function Home() {
   // define state variables for email and password inputs
   const [email, setEmail] = useState('');
