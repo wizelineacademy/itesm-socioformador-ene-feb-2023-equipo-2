@@ -104,7 +104,7 @@ const Menu = (props: MenuProps) => {
             {/* Dropdown component */}
             <NavDropdown title="My Account" id="basic-nav-dropdown" className="a-navbar">
               <NavDropdown.Item href="settings" className="a-navbar">Settings</NavDropdown.Item>
-              <NavDropdown.Item href="roadmap" className="a-navbar">Roadmap</NavDropdown.Item>
+              <NavDropdown.Item href="learning-path" className="a-navbar">RoadMap</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#" className="a-logout" onClick={handleLogout}>
                 Log Out
