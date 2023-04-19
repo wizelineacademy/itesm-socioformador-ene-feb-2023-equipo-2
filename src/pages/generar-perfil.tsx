@@ -74,14 +74,6 @@ const generarPerfil: React.FC = () => {
     setSelectedLanguages(selectedValues);
   };
 
-  const handleClick = (texto : any) => {
-    const messages = [{ role: "user", content: texto }];
-    getChatResponse(messages).then((res) => {
-      console.log(res);
-      setResponse(res);
-    });
-  };
-
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   if (!hasMounted) {
