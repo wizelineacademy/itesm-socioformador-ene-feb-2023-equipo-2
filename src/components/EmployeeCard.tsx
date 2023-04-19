@@ -25,29 +25,22 @@ const EmployeeCard = (props: CardProps) => {
   const [hidePlusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
   const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
 
-  const handleEmployeeDelete = () => {
-    alert("se va a eliminar el usuario del sistema");
-  };
 
   const handleEmployeeSeeInfo = () => {
     alert("se va a redireccionar al perfil del usuario");
   };
 
-  const handleEmployeeEraseFromProject = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
+  const handleEmployeeDelete = () => {
+    alert("se va a eliminar el usuario del sistema");
   };
 
   const handleEmployeeAddToProject = () => {
     alert("se van a agregar el usuario a la lista de la orden");
   };
-
-  const workAreaTag = () => {
-    return (
-      <>
-        <div className='working-area-tag'> Frontend Developer</div>
-      </>
-    )
-  }
+  
+  const handleEmployeeEraseFromProject = () => {
+    alert("se va a eliminar el usuario de la lista de la orden");
+  };
 
   const customStyles = {
     rows: {
