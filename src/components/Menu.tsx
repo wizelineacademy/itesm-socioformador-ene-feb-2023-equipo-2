@@ -24,7 +24,7 @@ const Menu = (props: MenuProps) => {
 
   const handleConfirmLogout = () => {
     setShowModal(false);
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 
   return (
