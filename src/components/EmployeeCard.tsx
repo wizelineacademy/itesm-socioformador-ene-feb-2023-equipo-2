@@ -14,16 +14,16 @@ interface CardProps {
 
 const EmployeeCard = (props: CardProps) => {
 
-  /*const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
+  const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
   const [hidePlusSign] = useState<boolean>(props.pageType === 'addToOrder' ? false : true);
-  const [hideMinusSign] = useState<boolean>(props.pageType === 'OrderSummary' ? false : true);*/
+  const [hideMinusSign] = useState<boolean>(props.pageType === 'OrderSummary' ? false : true);
 
   // BORRAR ESTAS 4 AL FINAL Y PONER LAS 4 DE ARRIBA, SON PARA MOSTRAR TODAS
-  const [hideStatusIcon] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  const [hideTrashCan] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  const [hidePlusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
+  // const [hideStatusIcon] = useState<boolean>(props.pageType === 'showAll' ? false : true);
+  // const [hideTrashCan] = useState<boolean>(props.pageType === 'showAll' ? false : true);
+  // const [hidePlusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
+  // const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
 
 
   const handleEmployeeSeeInfo = () => {

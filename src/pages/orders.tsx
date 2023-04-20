@@ -90,14 +90,14 @@ const orders = () => {const hasMounted = useHasMounted();
               <label className="form-label">
                 Descripción de la orden
               </label>
-              <input
+              <textarea
                 className="form-control"
-                type="text"
                 id="projectDescription"
                 autoComplete="off"
                 onChange={(e) => setProjectDescription(e.target.value)}
                 value={projectDescription}
                 placeholder="Descripción general del proyecto..."
+                rows="6"
                 required
               />
               {/* Submit button */}
@@ -126,11 +126,11 @@ const orders = () => {const hasMounted = useHasMounted();
               
               <br></br>
 
-              <div class = "container">
-                <div class = "row">
+              <div className = "container">
+                <div className = "row">
 
                   {/* Start date calendar */}
-                  <div class = "col-sm">
+                  <div className = "col-sm">
                     <label className = "form-label">
                     Fecha de inicio de la orden
                     </label> 
@@ -138,12 +138,11 @@ const orders = () => {const hasMounted = useHasMounted();
                     <DatePicker
                     selected={startDate}
                     onChange={(date: Date) => setStartDate(date)}
-                    inline
                     />
                   </div>
 
                   {/* End date calendar */}
-                  <div class = "col-sm">
+                  <div className = "col-sm">
                     <label className = "form-label">
                     Fecha de fin de la orden
                     </label> 
@@ -151,12 +150,11 @@ const orders = () => {const hasMounted = useHasMounted();
                     <DatePicker
                     selected={endDate}
                     onChange={(date: Date) => setEndDate(date)}
-                    inline
                     />
                   </div>
 
                   {/* Order status buttons */}
-                  <div class = "col-sm">
+                  <div className = "col-sm">
                     <Stack direction="column" spacing={6}>  
                     <label style = {{className: "form-label", textAlign: "center"}}>
                     Estatus de la orden

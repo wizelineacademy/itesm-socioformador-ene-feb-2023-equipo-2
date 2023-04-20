@@ -48,7 +48,7 @@ const MenuAssociates = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/clients" className="a-navbar" >Clients</Link>
+                <Link href="/associates/clients" className="a-navbar" >Clients</Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -58,7 +58,7 @@ const MenuAssociates = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/orders" className="a-navbar" >Orders</Link>
+                <Link href="/associates/orders" className="a-navbar" >Orders</Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -68,7 +68,7 @@ const MenuAssociates = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/teams" className="a-navbar" >Teams</Link>
+                <Link href="/associates/teams" className="a-navbar" >Teams</Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -78,7 +78,7 @@ const MenuAssociates = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/users" className="a-navbar" >Users</Link>
+                <Link href="/associates/users" className="a-navbar" >Users</Link>
               </Nav.Link>
               
             </Nav>
