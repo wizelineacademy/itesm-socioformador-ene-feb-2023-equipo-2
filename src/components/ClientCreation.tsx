@@ -15,9 +15,9 @@
 // This table will include basic information about each user, such as their name, email, and role.
 
 import React, { useState } from "react";
-import Select from 'react-select'
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import * as FaIcons from "react-icons/fa";
-
 import { useHasMounted } from "@/components/useHasMounted";
 
 const ClientCreation = () => {
@@ -25,9 +25,9 @@ const ClientCreation = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [department, setDepartment] = useState("");
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -35,25 +35,25 @@ const ClientCreation = () => {
     // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
   };
 
-  const roleOptions = [
-    { value: 'monterrey', label: 'Monterrey' },
-    { value: 'saltillo', label: 'Saltillo' },
-    { value: 'reynosa', label: 'Reynosa' },
-    { value: 'victoria', label: 'Ciudad Victoria' },
-    { value: 'lapaz', label: 'La Paz' },
-    { value: 'guadalajara', label: 'Guadalajara' },
-    { value: 'queretaro', label: 'Queretaro' },
-  ]
+  const companyOptions = [
+    { value: "monterrey", label: "Monterrey" },
+    { value: "saltillo", label: "Saltillo" },
+    { value: "reynosa", label: "Reynosa" },
+    { value: "victoria", label: "Ciudad Victoria" },
+    { value: "lapaz", label: "La Paz" },
+    { value: "guadalajara", label: "Guadalajara" },
+    { value: "queretaro", label: "Queretaro" },
+  ];
 
-  const departmentOptions = [
-    { value: 'monterrey', label: 'Monterrey' },
-    { value: 'saltillo', label: 'Saltillo' },
-    { value: 'reynosa', label: 'Reynosa' },
-    { value: 'victoria', label: 'Ciudad Victoria' },
-    { value: 'lapaz', label: 'La Paz' },
-    { value: 'guadalajara', label: 'Guadalajara' },
-    { value: 'queretaro', label: 'Queretaro' },
-  ]
+  const locationOptions = [
+    { value: "monterrey", label: "Monterrey" },
+    { value: "saltillo", label: "Saltillo" },
+    { value: "reynosa", label: "Reynosa" },
+    { value: "victoria", label: "Ciudad Victoria" },
+    { value: "lapaz", label: "La Paz" },
+    { value: "guadalajara", label: "Guadalajara" },
+    { value: "queretaro", label: "Queretaro" },
+  ];
 
   if (!hasMounted) {
     return null;
@@ -62,75 +62,62 @@ const ClientCreation = () => {
   return (
     <>
       {/* componente con los inputs de generar perfil */}
-        <div className="container">
-          <div className="row">
-            <div className="col-md-3">
-              <label htmlFor="email" className="form-label">
-                Email:
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                value={email}
-                placeholder="Select..."
-                required
-              />
-            </div>
-            <div className="col-md-3">
-              <label htmlFor="role" className="form-label">
-                Role:
-              </label>
-              {/*<input
-                className="form-control"
-                type="text"
-                id="role"
-                onChange={(event) => setRole(event.target.value)}
-                value={role}
-                required
-              />*/}
-              <Select 
-                isClearable
-                options={roleOptions} />
-            </div>
-            <div className="col-md-3">
-              <label htmlFor="email" className="form-label">
-                Company:
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                value={email}
-                placeholder="Select..."
-                required
-              />
-            </div>
-
-            <div className="col-md-3 mt-auto">
-              <div className="d-flex flex-row-reverse justify-content-start">
-                <div className="col-md mt-auto">
-                  <button
-                    className="btn btn-primary w-90"
-                    onClick={handleSubmit} >
-                    <FaIcons.FaTimes className="mb-1" />
-                    &nbsp;&nbsp;Cancel
-                  </button>
-                  </div>
-                <div className="col-md mt-auto">
-                  <button
-                    className="btn btn-primary w-90 mr-3"
-                    onClick={handleSubmit} >
-                    <FaIcons.FaPlus className="mb-1" />
-                    &nbsp;&nbsp;Add
-                  </button>
-                </div>
-              </div>
-            </div>
+      <div className="container bg-light border p-4">
+        <div className="row">
+          <div className="col-md">
+            <label htmlFor="name" className="form-label">
+              Name:
+            </label>
+            <input
+              className="form-control"
+              type="name"
+              id="name"
+              onChange={(event) => setName(event.target.value)}
+              value={name}
+              required
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="company" className="form-label">
+              Company:
+            </label>
+            <CreatableSelect
+              isClearable
+              options={companyOptions}
+              placeholder="Select or create company..."
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="location" className="form-label">
+              Location:
+            </label>
+            <CreatableSelect
+              isClearable
+              options={locationOptions}
+              placeholder="Select or create location..."
+            />
           </div>
         </div>
+
+        {/* Segunda línea */}
+        <div className="row mt-3">
+          <div className="col-md">
+            <span>&nbsp;</span>
+          </div>
+          <div className="col-md">
+            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+              <FaIcons.FaTimes className="mb-1" />
+              &nbsp;&nbsp;Cancel
+            </button>
+          </div>
+          <div className="col-md">
+            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+              <FaIcons.FaPlus className="mb-1" />
+              &nbsp;&nbsp;Add
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

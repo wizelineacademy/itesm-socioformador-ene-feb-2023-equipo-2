@@ -61,42 +61,49 @@ const EmployeeSearch = () =>  {
 
         {/*for searching employees by their name*/}
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md">
             <label className="form-label">
               Name:
             </label>
-
             <input
               className="form-control"
               type="text"
               id="nameSearch"
               autoComplete="off"
-              required
-              placeholder="Select..."
             />
           </div>
 
-          <div className="col-md-3">
+          <div className="col-md">
             <label className="form-label">
-              Speciality:
+              Department:
             </label>
             <Select 
               isClearable
-              options={specialityOptions} />
+              options={specialityOptions} 
+              isMulti/>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-md">
             <label className="form-label">
-              Technologies:
+              Skills:
             </label>
             <Select 
               isMulti 
-              options={techOptions} />
+              options={techOptions}
+              isClearable />
           </div>
 
-          <div className="col-md-3">
+          <div className="col-md">
             <label className="form-label">
               Location:
+            </label>
+            <Select 
+              isClearable
+              options={locationOptions} />
+          </div>
+          <div className="col-md">
+            <label className="form-label">
+              Role:
             </label>
             <Select 
               isClearable

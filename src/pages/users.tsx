@@ -17,7 +17,6 @@
 import React, { useState } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from "react-icons/fa";
-
 import EmployeeSearch from "@/components/EmployeeSearch";
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeeCreation from "@/components/EmployeeCreation";
