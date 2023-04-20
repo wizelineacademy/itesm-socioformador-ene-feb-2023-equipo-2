@@ -15,7 +15,7 @@
 // This table will include basic information about each user, such as their name, email, and role.
 
 import React, { useState } from "react";
-import Select from 'react-select'
+import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 
 import { useHasMounted } from "@/components/useHasMounted";
@@ -25,6 +25,7 @@ const EmployeeCreation = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [department, setDepartment] = useState("");
@@ -36,24 +37,24 @@ const EmployeeCreation = () => {
   };
 
   const roleOptions = [
-    { value: 'monterrey', label: 'Monterrey' },
-    { value: 'saltillo', label: 'Saltillo' },
-    { value: 'reynosa', label: 'Reynosa' },
-    { value: 'victoria', label: 'Ciudad Victoria' },
-    { value: 'lapaz', label: 'La Paz' },
-    { value: 'guadalajara', label: 'Guadalajara' },
-    { value: 'queretaro', label: 'Queretaro' },
-  ]
+    { value: "monterrey", label: "Monterrey" },
+    { value: "saltillo", label: "Saltillo" },
+    { value: "reynosa", label: "Reynosa" },
+    { value: "victoria", label: "Ciudad Victoria" },
+    { value: "lapaz", label: "La Paz" },
+    { value: "guadalajara", label: "Guadalajara" },
+    { value: "queretaro", label: "Queretaro" },
+  ];
 
   const departmentOptions = [
-    { value: 'monterrey', label: 'Monterrey' },
-    { value: 'saltillo', label: 'Saltillo' },
-    { value: 'reynosa', label: 'Reynosa' },
-    { value: 'victoria', label: 'Ciudad Victoria' },
-    { value: 'lapaz', label: 'La Paz' },
-    { value: 'guadalajara', label: 'Guadalajara' },
-    { value: 'queretaro', label: 'Queretaro' },
-  ]
+    { value: "monterrey", label: "Monterrey" },
+    { value: "saltillo", label: "Saltillo" },
+    { value: "reynosa", label: "Reynosa" },
+    { value: "victoria", label: "Ciudad Victoria" },
+    { value: "lapaz", label: "La Paz" },
+    { value: "guadalajara", label: "Guadalajara" },
+    { value: "queretaro", label: "Queretaro" },
+  ];
 
   if (!hasMounted) {
     return null;
@@ -62,70 +63,55 @@ const EmployeeCreation = () => {
   return (
     <>
       {/* componente con los inputs de generar perfil */}
-        <div className="container">
-          <div className="row">
-            <div className="col-md">
-              <label htmlFor="email" className="form-label">
-                Email:
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                value={email}
-                placeholder="Select..."
-                required
-              />
-            </div>
-            <div className="col-md">
-              <label htmlFor="role" className="form-label">
-                Role:
-              </label>
-              {/*<input
-                className="form-control"
-                type="text"
-                id="role"
-                onChange={(event) => setRole(event.target.value)}
-                value={role}
-                required
-              />*/}
-              <Select 
-                isClearable
-                options={roleOptions} />
-            </div>
-            <div className="col-md">
-              <label htmlFor="department" className="form-label">
-                Departament:
-              </label>
-              {/*<input
-                className="form-control"
-                type="text"
-                id="department"
-                onChange={(event) => setDepartment(event.target.value)}
-                value={department}
-                required
-              />*/}
-              <Select 
-                isClearable
-                options={departmentOptions} />
-            </div>
-            <div className="col-md mt-auto justify-content-end">
-              <button
-                className="btn btn-primary w-50"
-                onClick={handleSubmit} >
-                <FaIcons.FaTimes className="mb-1" />
-                &nbsp;&nbsp;Cancel
-              </button>
-              <button
-                className="btn btn-primary w-50"
-                onClick={handleSubmit} >
-                <FaIcons.FaPlus className="mb-1" />
-                &nbsp;&nbsp;Add
-              </button>
-            </div>
+      <div className="container bg-light border p-4">
+        <div className="row">
+          <div className="col-md">
+            <label htmlFor="name" className="form-label">
+              Name:
+            </label>
+            <input
+              className="form-control"
+              type="name"
+              id="name"
+              onChange={(event) => setName(event.target.value)}
+              value={email}
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="email" className="form-label">
+              Email:
+            </label>
+            <input
+              className="form-control"
+              type="email"
+              id="email"
+              onChange={(event) => setName(event.target.value)}
+              value={email}
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="role" className="form-label">
+              Role:
+            </label>
+            <Select isClearable options={roleOptions} />
           </div>
         </div>
+        <div className="row mt-3">
+          <div className="col-md"></div>
+          <div className="col-md">
+            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+              <FaIcons.FaTimes className="mb-1" />
+              &nbsp;&nbsp;Cancel
+            </button>
+          </div>
+          <div className="col-md">
+            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+              <FaIcons.FaPlus className="mb-1" />
+              &nbsp;&nbsp;Add
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

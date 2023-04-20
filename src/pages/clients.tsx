@@ -41,8 +41,17 @@ const clients = () => {
               onClick={() => setAddEmployee(!addEmployee)}
               aria-controls="employeeCreation"
               aria-expanded={addEmployee}>
-              <FaIcons.FaUserPlus className="mb-1" />
-              &nbsp;&nbsp;Add User
+              {addEmployee ? (
+                <>
+                  <FaIcons.FaTimes className="mb-1" />
+                  &nbsp;&nbsp;Close
+                </>
+              ) : (
+                <>
+                  <FaIcons.FaUsers className="mb-1" />
+                  &nbsp;&nbsp;Add Clients
+                </>
+              )}
             </button>
           </div>
         </div>
