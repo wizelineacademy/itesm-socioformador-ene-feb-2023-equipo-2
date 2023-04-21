@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { getChatResponse } from "@/openai/openai";
 
 // 'options' will later be replaced by table skills in database
 const listOfClients = [
@@ -21,14 +22,24 @@ const ProjectCreation = () => {
   const [client, setClient] = useState<string>("");
   const [projectDescription, setProjectDescription] = useState<string>("");
   //const [typeProjects, setTypeProjects] = useState<string>("");
+  const [response, setResponse] = useState("");
 
   const [tarea, setTarea] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
-  const handleSendForm = () => {
+  /*const handleSendForm = () => {
     alert("Wizeline debe pagar las juntadas al Toshi Tiger");
+  };*/
+
+  const handleSendForm = () => {
+    const messages = [{ role: "user", content: "En mi empresa estamos a punto de realizar un proyecto. La descripción es la siguiente: " + projectDescription + ". Antes que nada, necesito que tu respuesta esté en texto pero siguiendo el formato JSON. Bajo esta descripción necesito que primero escribas una sección llamada \"Descripción del proyecto\" donde optimices la descripción del proyecto que te mencioné, después necesito que me enlistes los requerimientos funcionales con sus historias de usuario y cada una con sus listas de casos de uso y criterios de aceptación, finaliza con los requerimientos no funcionales con lo mismo que los requerimientos funcionales. A los requerimientos funcionales dales un nombre y un identificador iniciando con RF, mientras que los requerimientos no funcionales RNF, las historias de usuario iniciando con HU, los casos de uso iniciando con CU y a cada criterio de aceptación dale un identificador iniciando con CA."}];
+    getChatResponse(messages).then((res) => {
+      console.log(res);
+      setResponse(res);
+    });
   };
+
 
   // const handleChangeTechnology = (selectedOptions: ValueType<OptionTypeBase>) works as well but with the error.
   // The above commented out code can be used as an alternative, but it may result in an error.
@@ -85,11 +96,8 @@ const ProjectCreation = () => {
             className="form-control"
             id="projectDescription"
             autoComplete="off"
-            onChange={(e) => setProjectDescription(e.target.value)}
-            value={
-              "Project description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nFunctional requirements:\n\nNon-functional requirements:\n\nUser stories:\n\nAcceptance criteria:\n\nTest cases:"
-            }
-            required
+            value={response}
+            placeholder="AI's response will generate after clicking the Generate button..."
           />
 
           <br></br>
