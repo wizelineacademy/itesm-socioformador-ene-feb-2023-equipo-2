@@ -74,7 +74,7 @@ const users = () => {
           <EmployeeCreation />
         </div>
       </Collapse>
-      <EmployeeCard pageType={"listForAdmin"} />
+      <EmployeeCard pageType={"listForEmployee"} />
     </>
   );
 };

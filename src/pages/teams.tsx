@@ -1,10 +1,12 @@
 import React, {useState} from "react";
 import Menu from "@/components/Menu";
+import { Container, Row, Col, Collapse } from "react-bootstrap";
+import * as FaIcons from "react-icons/fa";
+
 import TeamSearch from "@/components/TeamSearch";
 import TeamCreation from "@/components/TeamCreation";
-import { Container, Row, Col, Collapse } from "react-bootstrap";
+import TeamList from "@/components/TeamList";
 import { useHasMounted } from "@/components/useHasMounted";
-import * as FaIcons from "react-icons/fa";
 
 const teams = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -13,6 +15,8 @@ const teams = () => {
 
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
+
+  var isAdmin:Boolean = true;
 
   if (!hasMounted) {
     return null;
@@ -26,10 +30,8 @@ const teams = () => {
         }
       />
       <TeamSearch />
-      <Container className="mt-3">
+      {isAdmin ? <Container className="mt-3">
         <Row>
-          <Col></Col>
-          <Col></Col>
           <Col className="d-flex flex-row-reverse">
             <button
               className="btn btn-primary"
@@ -51,12 +53,13 @@ const teams = () => {
             </button>
           </Col>
         </Row>
-      </Container>
-      <Collapse in={collapse}>
+      </Container> : <div></div>}
+      {isAdmin ? <Collapse in={collapse}>
         <div id="collapseProjectCreation" className="my-3">
           <TeamCreation />
         </div>
-      </Collapse>
+      </Collapse> : <div></div>}
+      <TeamList teamName={"Team 1"} />
     </>
   );
 };
