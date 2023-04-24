@@ -13,10 +13,22 @@ export default function Home() {
   const [password, setPassword] = useState('');
 
   // function to handle form submission
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log('Email:', email);
     console.log('Password:', password);
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: password })
+    };
+
+  fetch('http://localhost:3000/api/login', requestOptions)
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+
   };
 
   return (

@@ -12,6 +12,7 @@ import Head from "next/head";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 import { getChatResponse } from "@/openai/openai";
+import { propTypes } from "react-bootstrap/esm/Image";
 
 // 'options' will later be replaced by table skills in database
 const options = [
@@ -33,19 +34,28 @@ const generarPerfil: React.FC = () => {
 
   const [tarea, setTarea] = useState([]);
 
-  // // TAREA ANDRÉS FUENTES
   useEffect(() => {
     fetch("https://admin.marco.org.mx/api/expos/current")
       .then((res) => res.json())
       .then((data) => setTarea(data[0].images));
   }, []);
 
-  // handleSendForm is a function that is called when the "Hacer Currículum" button is clicked.
-  const handleSendForm = () => {
-    const messages = [{ role: "user", content: typeProjects }];
+  const handleSendForm = async () => {
+    const auxMessage = `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma, los conocimientos previos necesarios para aprenderla y algún sitio de internet, libro o recurso para aprenderlo tomando en cuenta que es para` + typeProjects + `. Finalmente, dame unicamente y exclusivamente los elementos acomodados en formato json con esta estructura:{“Herramientas”: [{  “nombre” ,“descripcion” ,“conocimientos_previos” “recursos”},{“nombre” ,“descripcion” ,“conocimientos_previos” ,“recursos”},]}`
+    const messages = [{ role: "user", content: auxMessage }];
+    
     getChatResponse(messages).then((res) => {
-      console.log(res);
-      setResponse(res);
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inforoadmap: res})
+      };
+  
+        fetch('http://localhost:3000/api/saveRoadMap', requestOptions)
+        .then(response => response.json())
+        .then(data => console.log("Ruta de aprendizaje guardada exitosamente"))
+        .catch(error => console.error("Error al guardar ruta de aprendizaje"));
+      
     });
   };
 
