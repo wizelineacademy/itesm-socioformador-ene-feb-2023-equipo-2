@@ -64,6 +64,9 @@ const ClientCreation = () => {
       {/* componente con los inputs de generar perfil */}
       <div className="container bg-light border p-4">
         <div className="row">
+          <h4 className="mb-3"> Create new client account </h4>
+        </div>
+        <div className="row">
           <div className="col-md">
             <label htmlFor="name" className="form-label">
               Name:

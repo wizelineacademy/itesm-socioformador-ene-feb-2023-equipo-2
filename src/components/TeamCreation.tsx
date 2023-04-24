@@ -35,6 +35,9 @@ const TeamCreation = () => {
     <>
       <Container className="bg-light border p-4">
         <Row>
+          <h4 className="mb-3"> Create new team </h4>
+        </Row>
+        <Row>
           <Col>
             <label htmlFor="name" className="form-label">
               Name:
