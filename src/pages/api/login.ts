@@ -5,14 +5,15 @@ const prisma = new PrismaClient()
 
 export default async function handler(req: any, res: any) {
   const { email, password } = req.body;
+  console.log(req.body)
 
   try {
     const newUser = await prisma.employees.create({
       data: {
         name: "nametest",  
-        linkedinlink: null,
-        cvfile: null,
-        profileimage: null,
+        linkedinlink: '',
+        cvfile: '',
+        profileimage: '',
         inforoadmap: '',
         idposition: 1,
         email: email,

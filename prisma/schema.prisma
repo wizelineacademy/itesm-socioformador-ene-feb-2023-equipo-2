@@ -16,7 +16,7 @@ model employees {
   linkedinlink String
   cvfile      String
   profileimage String
-  inforoadmap String
+  inforoadmap String  
   idposition  Int
   email       String  @unique
   password    String
