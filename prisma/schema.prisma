@@ -11,7 +11,7 @@ datasource db {
 }
 
 model employees {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement()) @unique
   name        String
   linkedinlink String
   cvfile      String
@@ -27,6 +27,7 @@ model teams {
   id Int @id @default(autoincrement()) @unique
   name String
   employees teamemployees[]
+  orders orders[]
 }
 
 model teamemployees {
@@ -36,5 +37,14 @@ model teamemployees {
   idemployee Int
 
   @@id([idteam, idemployee])
+}
 
+model orders {
+  id Int @id @default(autoincrement()) @unique
+  orderstatus String
+  orderdesc String
+  orderdate DateTime @default(now())
+  idclient Int
+  team teams @relation(fields: [idteam], references: [id])
+  idteam Int
 }

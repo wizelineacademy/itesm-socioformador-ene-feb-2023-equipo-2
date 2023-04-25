@@ -18,28 +18,45 @@ const listOfClients = [
 const ProjectCreation = () => {
   const hasMounted = useHasMounted();
   // React Hooks for managing component state
-  //const [listOfClients, setClients] = useState<string[]>([]);
   const [client, setClient] = useState<string>("");
   const [projectDescription, setProjectDescription] = useState<string>("");
-  //const [typeProjects, setTypeProjects] = useState<string>("");
   const [response, setResponse] = useState("");
-
-  const [tarea, setTarea] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
-  /*const handleSendForm = () => {
-    alert("Wizeline debe pagar las juntadas al Toshi Tiger");
-  };*/
-
   const handleSendForm = () => {
-    const messages = [{ role: "user", content: "En mi empresa estamos a punto de realizar un proyecto. La descripción es la siguiente: " + projectDescription + ". Antes que nada, necesito que tu respuesta esté en texto pero siguiendo el formato JSON. Bajo esta descripción necesito que primero escribas una sección llamada \"Descripción del proyecto\" donde optimices la descripción del proyecto que te mencioné, después necesito que me enlistes los requerimientos funcionales con sus historias de usuario y cada una con sus listas de casos de uso y criterios de aceptación, finaliza con los requerimientos no funcionales con lo mismo que los requerimientos funcionales. A los requerimientos funcionales dales un nombre y un identificador iniciando con RF, mientras que los requerimientos no funcionales RNF, las historias de usuario iniciando con HU, los casos de uso iniciando con CU y a cada criterio de aceptación dale un identificador iniciando con CA."}];
+    const messages = [
+      {
+        role: "user",
+        content:
+          "In my company we are about to do a project. Its description is the following:" +
+          projectDescription +
+          'Following the project description above I need you to write a section named “Project description” where you optimize the project’s description I told you, after that I need you to list the functional requirements with its user stories and each of them with their lists of use cases and acceptance criteria; finalize with the non-functional requirements with the same things as the functional ones. I need your response to be a JSON and to be indented properly to improve readability, follow the following example: {"Project description":"Our mission is to design a hospital system that simplifies the process of finding donors for people on the waiting list for transplants. The system will ensure that all necessary information is kept organized and up-to-date in order to reduce wait times and improve success rates.","Functional requirements":[{"ID":"FR001","Name":"Functional requirement name","User stories":[{"ID":"US001","Description":"Functional requirement description"},{"ID":"US002","Description":"Functional requirement description"}],"Use cases":[{"ID":"UC001","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"Acceptance criteria description"},{"ID":"AC002","Description":"Acceptance criteria description"}]},{"ID":"UC002","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"All required fields must be completed"},{"ID":"AC002","Description":"Information must be validated before submission"}]}]}],"Non-functional requirements":[{"ID":"NFR001","Name":"Non-functional requirement name","Use cases":[{"ID":"UC005","Description":"Use case description","Acceptance criteria":[{"ID":"AC007","Description":"Acceptance criteria description"},{"ID":"AC008","Description":"Acceptance criteria description"}]}]},{"ID":"NFR002","Name":"Performance","Use cases":[{"ID":"UC006","Description":"Use case description","Acceptance criteria":[{"ID":"AC009","Description":"Acceptance criteria description"},{"ID":"AC010","Description":"Acceptance criteria description"}]}]}]}',
+      },
+    ];
     getChatResponse(messages).then((res) => {
       console.log(res);
       setResponse(res);
+
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aidescription: res }),
+      };
+
+      fetch(
+        "http://localhost:3000/api/saveAIRequirementDocumentation",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((data) =>
+          console.log("Esqueleto de requerimientos guardados exitosamente")
+        )
+        .catch((error) =>
+          console.error("Error al guardar esqueleto de requerimientos")
+        );
     });
   };
-
 
   // const handleChangeTechnology = (selectedOptions: ValueType<OptionTypeBase>) works as well but with the error.
   // The above commented out code can be used as an alternative, but it may result in an error.
@@ -106,9 +123,7 @@ const ProjectCreation = () => {
             <div className="row">
               {/* Start date calendar */}
               <div className="col-sm">
-                <label className="form-label">
-                  Order Start Date
-                </label>
+                <label className="form-label">Order Start Date</label>
 
                 <DatePicker
                   selected={startDate}
@@ -144,7 +159,6 @@ const ProjectCreation = () => {
                   <Button variant="contained" color="error">
                     Rejected
                   </Button>
-
                 </Stack>
               </div>
             </div>
