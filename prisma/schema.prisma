@@ -1,12 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,18 +17,10 @@ model employees {
   cvfile      String
   profileimage String
   inforoadmap String  
-  position employeeposition @relation(fields: [idposition], references[id])
   idposition  Int
   email       String  @unique
   password    String
   teams teamemployees[]
-  department departmentemployees[]
-}
-
-model employeeposition {
-  id Int @id @default(autoincrement()) @unique
-  name String
-  employee employees[]
 }
 
 model teams {
@@ -58,36 +44,7 @@ model orders {
   orderstatus String
   orderdesc String
   orderdate DateTime @default(now())
-  client client @relation(fields: [idclient], references: [id])
   idclient Int
   team teams @relation(fields: [idteam], references: [id])
   idteam Int
-}
-
-model client {
-  id Int @id @default(autoincrement()) @unique
-  name String
-  orders orders[]
-}
-
-model department {
-  id Int @id @default(autoincrement()) @unique
-  name String 
-  employees departmentemployees[]
-}
-
-model departmentemployees {
-  department department  @relation(fields: [iddepartment], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  iddepartment Int
-  employee employees  @relation(fields: [idemployee], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  idemployee Int
-
-  @@id([iddepartment, idemployee])
-}
-
-model skills {
-  id Int @id @default(autoincrement()) @unique
-  name String
-  department department  @relation(fields: [iddepartment], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  iddepartment Int
 }
