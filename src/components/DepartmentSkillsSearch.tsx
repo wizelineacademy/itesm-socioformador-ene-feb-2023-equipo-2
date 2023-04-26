@@ -5,12 +5,20 @@ import { useHasMounted } from "@/components/useHasMounted";
 
 import { departmentContext } from '@/context/departmentContext';
 
-const options = [
-  { value: "juan-garcia", label: "Juan García" },
-  { value: "ana-gonzalez", label: "Ana González" },
-  { value: "jose-martinez", label: "José Martínez" },
-  { value: "maria-hernandez", label: "María Hernández" },
-  { value: "carlos-perez", label: "Carlos Pérez" },
+const deptOptions = [
+  { value: "software-engineering", label: "Software Engineering" },
+  { value: "security-engineering", label: "Security Engineering" },
+  { value: "mobile-engineering", label: "Mobile Engineering" },
+  { value: "technology", label: "Technology" },
+  { value: "learning-program-management", label: "Learning Program Management" },
+];
+
+const skillOptions = [
+  { value: "php", label: "PHP" },
+  { value: "sales", label: "Sales" },
+  { value: "java", label: "Java" },
+  { value: "javascript", label: "JavaScript" },
+  { value: "postgresql", label: "PostgreSQL" },
 ];
 
 const DepartmentSkillsSearch = () => {
@@ -44,11 +52,11 @@ const DepartmentSkillsSearch = () => {
         <Row>
           <Col>
             <label className="form-label">Department Name:</label>
-            <Select isClearable options={options} onChange={handleDepartmentSelection}/>
+            <Select isClearable options={deptOptions} onChange={handleDepartmentSelection}/>
           </Col>
           <Col>
             <label className="form-label">Skills:</label>
-            <Select isClearable options={options} />
+            <Select isClearable options={skillOptions} />
           </Col>
         </Row>
       </Container>
