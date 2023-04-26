@@ -17,7 +17,6 @@
 import React, { useState } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from "react-icons/fa";
-
 import EmployeeSearch from "@/components/EmployeeSearch";
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeeCreation from "@/components/EmployeeCreation";
@@ -55,8 +54,17 @@ const users = () => {
               onClick={() => setAddEmployee(!addEmployee)}
               aria-controls="employeeCreation"
               aria-expanded={addEmployee}>
-              <FaIcons.FaUserPlus className="mb-1" />
-              &nbsp;&nbsp;Add User
+              {addEmployee ? (
+                <>
+                  <FaIcons.FaTimes className="mb-1" />
+                  &nbsp;&nbsp;Close
+                </>
+              ) : (
+                <>
+                  <FaIcons.FaUsers className="mb-1" />
+                  &nbsp;&nbsp;Add User
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -66,7 +74,7 @@ const users = () => {
           <EmployeeCreation />
         </div>
       </Collapse>
-      <EmployeeCard pageType={"showAll"} />
+      <EmployeeCard pageType={"listForEmployee"} />
     </>
   );
 };

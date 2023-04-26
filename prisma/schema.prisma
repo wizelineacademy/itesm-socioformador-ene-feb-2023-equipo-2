@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model employees {
+  id          Int      @id @default(autoincrement()) @unique
+  name        String
+  linkedinlink String
+  cvfile      String
+  profileimage String
+  inforoadmap String  
+  position employeeposition @relation(fields: [idposition], references: [id])
+  idposition  Int
+  email       String  @unique
+  password    String
+  teams teamemployees[]
+  departments departmentemployees[]
+}
+
+model teams {
+  id Int @id @default(autoincrement()) @unique
+  name String
+  employees teamemployees[]
+  orders orders[]
+}
+
+model teamemployees {
+  team teams  @relation(fields: [idteam], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  idteam  Int
+  employee employees  @relation(fields: [idemployee], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  idemployee Int
+
+  @@id([idteam, idemployee])
+}
+
+model orders {
+  id Int @id @default(autoincrement()) @unique
+  orderstatus String
+  orderdesc String
+  orderdate DateTime @default(now())
+  client client @relation(fields: [idclient], references: [id])
+  idclient Int
+  team teams @relation(fields: [idteam], references: [id])
+  idteam Int
+}
+
+model client {
+  id Int @id @default(autoincrement()) @unique
+  name String
+  orders orders[]
+}
+
+model employeeposition {
+  id Int @id @default(autoincrement()) @unique
+  name String
+  employees employees[]
+}
+
+model department {
+  id Int @id @default(autoincrement()) @unique 
+  name String 
+  employees departmentemployees[]
+  skills skills[]
+}
+
+model departmentemployees {
+  department department @relation(fields: [iddepartment], references: [id])
+  iddepartment Int
+  employee employees @relation(fields: [idemployee], references: [id])
+  idemployee Int
+
+  @@id([iddepartment, idemployee])
+}
+
+model skills {
+  id Int @id @default(autoincrement()) @unique 
+  name String
+  department department @relation(fields: [iddepartment], references:[id])
+  iddepartment Int
+}

@@ -13,7 +13,7 @@ interface apiResponse {
   virtualTourURL: string;
 }
 
-function LearningPath() {
+function Roadmap() {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
@@ -109,4 +109,4 @@ function LearningPath() {
   );
 }
 
-export default LearningPath;
+export default Roadmap;
