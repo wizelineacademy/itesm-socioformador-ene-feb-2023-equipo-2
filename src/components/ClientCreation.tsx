@@ -31,8 +31,30 @@ const ClientCreation = () => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    alert("prueba");
-    // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
+
+    let link = process.env.NEXT_PUBLIC_API_URL;
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
+    };
+    fetch(link + "/createClient", requestOptions)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        alert(data);
+        console.log(data);
+      })
+      .catch((error) => console.error("Error", error));
   };
 
   const companyOptions = [
@@ -80,7 +102,7 @@ const ClientCreation = () => {
               required
             />
           </div>
-          <div className="col-md">
+          {/* <div className="col-md">
             <label htmlFor="company" className="form-label">
               Company:
             </label>
@@ -99,7 +121,7 @@ const ClientCreation = () => {
               options={locationOptions}
               placeholder="Select or create location..."
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Segunda línea */}

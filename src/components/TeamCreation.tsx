@@ -21,11 +21,9 @@ const TeamCreation = () => {
 
   const [name, setName] = useState("");
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    alert("prueba");
-    // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
-  };
+  const handleAddTeam = (e : any) => {
+    alert("prueba")
+  }
 
   if (!hasMounted) {
     return null;
@@ -61,7 +59,7 @@ const TeamCreation = () => {
             <label className="form-label">
               &nbsp;
             </label>
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+            <button className="btn btn-primary w-100" onClick={handleAddTeam}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>

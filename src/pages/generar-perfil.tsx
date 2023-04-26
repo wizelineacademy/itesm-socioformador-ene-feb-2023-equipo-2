@@ -82,6 +82,7 @@ const generarPerfil: React.FC = () => {
     //   selectedOptions as Array<{ value: string; label: string }>
     // ).map((option) => option.value);
     setSelectedLanguages(selectedValues);
+    console.log(selectedValues);
   };
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
