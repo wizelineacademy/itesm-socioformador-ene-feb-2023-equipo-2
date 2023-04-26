@@ -108,7 +108,7 @@ a {
 
 /* Global CSS */
 
-.makeImageCircular {
+.image-circle {
   border-radius:50%  !important; 
 }
 

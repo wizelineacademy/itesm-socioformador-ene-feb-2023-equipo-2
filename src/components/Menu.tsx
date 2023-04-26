@@ -125,6 +125,9 @@ const Menu = (props: MenuProps) => {
               id="basic-nav-dropdown"
               className="a-navbar"
             >
+              <NavDropdown.Item href="perfil" className="a-navbar">
+                Profile
+              </NavDropdown.Item>
               <NavDropdown.Item href="settings" className="a-navbar">
                 Settings
               </NavDropdown.Item>

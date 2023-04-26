@@ -5,7 +5,7 @@ import * as FaIcons from "react-icons/fa";
 
 import TeamSearch from "@/components/TeamSearch";
 import TeamCreation from "@/components/TeamCreation";
-import EmployeeCard from "@/components/EmployeeCard";
+import EmployeeCard from "@/components/EmployeeTable";
 import { useHasMounted } from "@/components/useHasMounted";
 
 interface CardProps {
