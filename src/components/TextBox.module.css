@@ -1,11 +1,16 @@
 /* Styles for the area tags */
-.working-area-badge {
+.text-box {
   width: fit-content;
   block-size: fit-content;
-  height: 27px;
+  height: fit-content;
   border-radius: 5px;
   padding: 5px 10px 5px 10px;
   font-weight: bold;
+}
+
+.badge-skill {
+  background-color: #FFAEB3;
+  color: #E93D44;
 }
 
 .badge-frontend {

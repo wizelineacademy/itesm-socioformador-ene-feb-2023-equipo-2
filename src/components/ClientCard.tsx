@@ -5,7 +5,6 @@
 import React, { Fragment, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
-import AreaBadge from "./AreaBadge";
 
 
 const ClientCard = () => {
