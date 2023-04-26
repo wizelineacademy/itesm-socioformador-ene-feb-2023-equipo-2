@@ -25,6 +25,7 @@ import { Container, Row, Col, Collapse } from "react-bootstrap";
 import Menu from "@/components/Menu";
 import ProjectSearch from "@/components/ProjectSearch";
 import ProjectCreation from "@/components/ProjectCreation";
+import ProjectTable from "@/components/ProjectTable";
 import { useHasMounted } from "@/components/useHasMounted";
 
 // 'options' will later be replaced by table skills in database
@@ -86,6 +87,7 @@ const projects = () => {
           <ProjectCreation />
         </div>
       </Collapse>
+      <ProjectTable />
     </>
   );
 };

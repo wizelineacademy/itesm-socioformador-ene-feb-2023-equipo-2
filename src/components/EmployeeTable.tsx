@@ -5,14 +5,14 @@
 import React, { Fragment, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
-import AreaBadge from "./AreaBadge";
+import TextBox from "./TextBox";
 
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
   pageType: 'listForAdmin' | 'listForEmployee' | 'addToOrder' | 'OrderSummary' | 'showAll';
 }
 
-const EmployeeCard = (props: CardProps) => {
+const EmployeeTable = (props: CardProps) => {
 
   const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
@@ -99,7 +99,7 @@ const EmployeeCard = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-              <AreaBadge workingAreaBagde={row.employeeAreaBadge} workingArea={row.employeeArea} />
+              <TextBox textBoxText={row.employeeAreaBadge} textBoxColorScheme={row.employeeArea} />
           </Fragment>
         ),
       },
@@ -211,4 +211,4 @@ const EmployeeCard = (props: CardProps) => {
   )
 }
 
-export default EmployeeCard
+export default EmployeeTable

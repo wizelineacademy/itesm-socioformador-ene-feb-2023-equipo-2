@@ -18,7 +18,7 @@ import React, { useState } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from "react-icons/fa";
 import EmployeeSearch from "@/components/EmployeeSearch";
-import EmployeeCard from "@/components/EmployeeCard";
+import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeCreation from "@/components/EmployeeCreation";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
@@ -74,7 +74,7 @@ const users = () => {
           <EmployeeCreation />
         </div>
       </Collapse>
-      <EmployeeCard pageType={"listForEmployee"} />
+      <EmployeeTable pageType={"listForEmployee"} />
     </>
   );
 };
