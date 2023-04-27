@@ -1,16 +1,16 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 export default async function handler(req: any, res: any) {
-  const { skillName } = req.body;
+  const { iddepartment, skillName } = req.body;
 
   try {
     const newUser = await prisma.skills.create({
       data: {
-        name: skillName,  
-        iddepartment: 1
+        name: skillName,
+        iddepartment: iddepartment,
       },
     });
 

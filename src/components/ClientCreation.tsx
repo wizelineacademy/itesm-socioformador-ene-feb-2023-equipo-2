@@ -51,7 +51,7 @@ const ClientCreation = () => {
         throw new Error("Network response was not ok.");
       })
       .then((data) => {
-        alert(data);
+        alert("Exito");
         console.log(data);
       })
       .catch((error) => console.error("Error", error));
@@ -86,12 +86,9 @@ const ClientCreation = () => {
       {/* componente con los inputs de generar perfil */}
       <div className="container bg-light border p-4">
         <div className="row">
-          <h4 className="mb-3"> Create new client account </h4>
-        </div>
-        <div className="row">
           <div className="col-md">
             <label htmlFor="name" className="form-label">
-              Name:
+              Write name / company of new client:
             </label>
             <input
               className="form-control"
@@ -102,40 +99,10 @@ const ClientCreation = () => {
               required
             />
           </div>
-          {/* <div className="col-md">
-            <label htmlFor="company" className="form-label">
-              Company:
+          <div className="col-md">
+            <label htmlFor="name" className="form-label">
+              &nbsp;
             </label>
-            <CreatableSelect
-              isClearable
-              options={companyOptions}
-              placeholder="Select or create company..."
-            />
-          </div>
-          <div className="col-md">
-            <label htmlFor="location" className="form-label">
-              Location:
-            </label>
-            <CreatableSelect
-              isClearable
-              options={locationOptions}
-              placeholder="Select or create location..."
-            />
-          </div> */}
-        </div>
-
-        {/* Segunda línea */}
-        <div className="row mt-3">
-          <div className="col-md">
-            <span>&nbsp;</span>
-          </div>
-          <div className="col-md">
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
-              <FaIcons.FaTimes className="mb-1" />
-              &nbsp;&nbsp;Cancel
-            </button>
-          </div>
-          <div className="col-md">
             <button className="btn btn-primary w-100" onClick={handleSubmit}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add

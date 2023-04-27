@@ -24,9 +24,9 @@ const TeamList = (props: CardProps) => {
   return (
     <>
       <div className='container my-4'>
-        <div className="row">
+        {/* <div className="row">
           <h4 className="mb-3"> Team: {props.teamName} </h4>
-        </div>
+        </div> */}
         <EmployeeCard pageType={"listForEmployee"} />
       </div>
     </>
