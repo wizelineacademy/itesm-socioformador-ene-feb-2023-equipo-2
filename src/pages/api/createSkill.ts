@@ -10,6 +10,7 @@ export default async function handler(req: any, res: any) {
     const newUser = await prisma.skills.create({
       data: {
         name: skillName,  
+        iddepartment: 1
       },
     });
 
