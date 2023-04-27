@@ -7,6 +7,8 @@ import Menu from "@/components/Menu";
 import ProfileTextBox from "@/components/ProfileTextBox";
 import ProfileListBox from "@/components/ProfileListBox";
 import { useHasMounted } from "@/components/useHasMounted";
+import * as FaIcons from "react-icons/fa";
+import Link from "next/link";
 
 const profileData = [
   {
@@ -46,6 +48,12 @@ const perfil = () => {
                 <h5 className="ml-5">Senior Software Engineer</h5>
                 <h6 className="ml-5">Guadalajara</h6>
                 <h6 className="ml-5">correo@gmail.com</h6>
+                <Link href="/generar-perfil" className="a-navbar">
+                  <button className="btn btn-primary w-10 mt-auto">
+                    <FaIcons.FaUserAlt className="mb-1" />
+                      &nbsp;&nbsp;Editar perfíl
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
