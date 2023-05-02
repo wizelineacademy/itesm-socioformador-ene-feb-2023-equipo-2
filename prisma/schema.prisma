@@ -21,6 +21,8 @@ model employees {
   idposition  Int
   email       String  @unique
   password    String
+  location String
+  infoabout String
   teams teamemployees[]
   departments departmentemployees[]
 }
@@ -45,16 +47,21 @@ model orders {
   id Int @id @default(autoincrement()) @unique
   orderstatus String
   orderdesc String
-  orderdate DateTime @default(now())
   client client @relation(fields: [idclient], references: [id])
   idclient Int
   team teams @relation(fields: [idteam], references: [id])
   idteam Int
+  orderstartdate DateTime @default(now())
+  orderenddate DateTime
+  erased Boolean @default(false)
 }
 
 model client {
   id Int @id @default(autoincrement()) @unique
   name String
+  email String
+  phone String
+  erased Boolean @default(false)
   orders orders[]
 }
 
