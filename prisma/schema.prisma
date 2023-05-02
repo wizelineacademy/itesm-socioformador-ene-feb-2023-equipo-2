@@ -21,8 +21,7 @@ model employees {
   idposition  Int
   email       String  @unique
   password    String
-  location String
-  infoabout String
+  infoabout   String
   teams teamemployees[]
   departments departmentemployees[]
 }
