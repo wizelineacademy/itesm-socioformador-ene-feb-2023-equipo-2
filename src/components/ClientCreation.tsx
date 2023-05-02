@@ -26,8 +26,8 @@ const ClientCreation = () => {
   const hasMounted = useHasMounted();
 
   const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
-  const [location, setLocation] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -86,9 +86,12 @@ const ClientCreation = () => {
       {/* componente con los inputs de generar perfil */}
       <div className="container bg-light border p-4">
         <div className="row">
+          <p>Please fill out the following fields to create a client:</p>
+        </div>
+        <div className="row">
           <div className="col-md">
             <label htmlFor="name" className="form-label">
-              Write name / company of new client:
+              Name:
             </label>
             <input
               className="form-control"
@@ -96,6 +99,32 @@ const ClientCreation = () => {
               id="name"
               onChange={(event) => setName(event.target.value)}
               value={name}
+              required
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="email" className="form-label">
+              Email:
+            </label>
+            <input
+              className="form-control"
+              type="email"
+              id="email"
+              onChange={(event) => setEmail(event.target.value)}
+              value={email}
+              required
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="phone" className="form-label">
+              Phone Number:
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              id="phone"
+              onChange={(event) => setPhone(event.target.value)}
+              value={email}
               required
             />
           </div>

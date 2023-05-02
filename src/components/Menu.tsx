@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment  } from "react";
 import Image from "next/image";
 import {
   Navbar,
@@ -8,6 +8,7 @@ import {
   Container,
   NavDropdown,
 } from "react-bootstrap";
+import * as FaIcons from "react-icons/fa";
 import Link from "next/link";
 import logoBtn from "src/images/logoSearch.jpg";
 import styles from "src/components/Menu.module.css";
@@ -55,7 +56,8 @@ const Menu = (props: MenuProps) => {
                 }}
               >
                 <Link href="/clients" className="a-navbar">
-                  Clients
+                  <FaIcons.FaUserTie className="mb-1" />
+                  &nbsp;&nbsp;Clients
                 </Link>
               </Nav.Link>
               <Nav.Link
@@ -67,7 +69,8 @@ const Menu = (props: MenuProps) => {
                 }}
               >
                 <Link href="/projects" className="a-navbar">
-                  Projects
+                  <FaIcons.FaClipboardList className="mb-1" />
+                  &nbsp;&nbsp;Projects
                 </Link>
               </Nav.Link>
               <Nav.Link
@@ -79,7 +82,8 @@ const Menu = (props: MenuProps) => {
                 }}
               >
                 <Link href="/teams" className="a-navbar">
-                  Teams
+                  <FaIcons.FaUsers className="mb-1" />
+                  &nbsp;&nbsp;Teams
                 </Link>
               </Nav.Link>
               <Nav.Link
@@ -90,8 +94,9 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/users" className="a-navbar">
-                  Users
+                <Link href="/employees" className="a-navbar">
+                  <FaIcons.FaUserCog className="mb-1" />
+                  &nbsp;&nbsp;Employees
                 </Link>
               </Nav.Link>
               <Nav.Link
@@ -103,36 +108,33 @@ const Menu = (props: MenuProps) => {
                 }}
               >
                 <Link href="/department" className="a-navbar">
-                  Department
-                </Link>
-              </Nav.Link>
-              <Nav.Link
-                className="text-dark"
-                style={{
-                  fontSize: "17px",
-                  fontWeight: "semi-bold",
-                  marginRight: "20px",
-                }}
-              >
-                <Link href="/skills" className="a-navbar">
-                  Skills
+                  <FaIcons.FaBriefcase className="mb-1" />
+                  &nbsp;&nbsp;Department
                 </Link>
               </Nav.Link>
             </Nav>
             {/* Dropdown component */}
             <NavDropdown
-              title="My Account"
+              title={
+                <Fragment>
+                  <FaIcons.FaUser className="mb-1"/>
+                  &nbsp;&nbsp;My Account
+                </Fragment>
+              }
               id="basic-nav-dropdown"
               className="a-navbar"
             >
               <NavDropdown.Item href="perfil" className="a-navbar">
-                Profile
+                <FaIcons.FaUser className="mb-1"/>
+                &nbsp;&nbsp;Profile
               </NavDropdown.Item>
               <NavDropdown.Item href="settings" className="a-navbar">
-                Settings
+                <FaIcons.FaCog className="mb-1"/>
+                &nbsp;&nbsp;Settings
               </NavDropdown.Item>
               <NavDropdown.Item href="roadmap" className="a-navbar">
-                Roadmap
+                <FaIcons.FaSitemap className="mb-1" />
+                &nbsp;&nbsp;Roadmap
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item
@@ -140,7 +142,8 @@ const Menu = (props: MenuProps) => {
                 className="a-logout"
                 onClick={handleLogout}
               >
-                Log Out
+                <FaIcons.FaDoorOpen className="mb-1"/>
+                &nbsp;&nbsp;Log Out
               </NavDropdown.Item>
               <Modal
                 show={

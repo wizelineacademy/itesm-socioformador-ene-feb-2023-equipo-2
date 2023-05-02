@@ -25,6 +25,10 @@ const options = [
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
   // React Hooks for managing component state
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
+  const [jobExperience, setJobExperience] = useState("");
+  const [skills, setSkills] = useState("");
   const [yearsExperience, setYearsExperience] = useState<string>();
   const [typeProjects, setTypeProjects] = useState<string>("");
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
@@ -40,49 +44,30 @@ const generarPerfil: React.FC = () => {
       .then((data) => setTarea(data[0].images));
   }, []);
 
-  const handleSendForm = async () => {
-    const auxMessage = `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma, los conocimientos previos necesarios para aprenderla y algún sitio de internet, libro o recurso para aprenderlo tomando en cuenta que es para` + typeProjects + `. Finalmente, dame unicamente y exclusivamente los elementos acomodados en formato json con esta estructura:{“Herramientas”: [{  “nombre” ,“descripcion” ,“conocimientos_previos” “recursos”},{“nombre” ,“descripcion” ,“conocimientos_previos” ,“recursos”},]}`
+  const handleSendFormManual = async () => {
+    const auxMessage =
+      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma, los conocimientos previos necesarios para aprenderla y algún sitio de internet, libro o recurso para aprenderlo tomando en cuenta que es para` +
+      skills +
+      `. Finalmente, dame unicamente y exclusivamente los elementos acomodados en formato json con esta estructura:{“Herramientas”: [{  “nombre” ,“descripcion” ,“conocimientos_previos” “recursos”},{“nombre” ,“descripcion” ,“conocimientos_previos” ,“recursos”},]}`;
     const messages = [{ role: "user", content: auxMessage }];
-    
+
     getChatResponse(messages).then((res) => {
+      setResponse(res);
       const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inforoadmap: res})
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inforoadmap: res }),
       };
-  
-        fetch('http://localhost:3000/api/saveRoadMap', requestOptions)
-        .then(response => response.json())
-        .then(data => console.log("Ruta de aprendizaje guardada exitosamente"))
-        .catch(error => console.error("Error al guardar ruta de aprendizaje"));
-      
+
+      fetch("http://localhost:3000/api/saveRoadMap", requestOptions)
+        .then((response) => response.json())
+        .then((data) =>
+          console.log("Ruta de aprendizaje guardada exitosamente")
+        )
+        .catch((error) =>
+          console.error("Error al guardar ruta de aprendizaje")
+        );
     });
-  };
-
-  // handleYearsExperienceChange is a function that sets the years of experience and ensures that only numbers (including decimal points) are allowed as input.
-  const handleYearsExperienceChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value;
-    // Check if the input value is a valid number
-    if (!isNaN(Number(value))) {
-      setYearsExperience(value);
-    }
-  };
-
-  // const handleChangeTechnology = (selectedOptions: ValueType<OptionTypeBase>) works as well but with the error.
-  // The above commented out code can be used as an alternative, but it may result in an error.
-  // In this implementation, the type of `selectedOptions` is set to `any` to prevent the error.
-  const handleChangeTechnology = (selectedOptions: any) => {
-    const selectedValues = (selectedOptions as any[]).map(
-      (option) => option.value
-    ); // allows multiple values to be selected and saved inside the useState hook
-    // The same code written differently
-    // const selectedValues = (
-    //   selectedOptions as Array<{ value: string; label: string }>
-    // ).map((option) => option.value);
-    setSelectedLanguages(selectedValues);
-    console.log(selectedValues);
   };
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -100,7 +85,38 @@ const generarPerfil: React.FC = () => {
         }
       />
       <div className="container">
-        <div className="mb-4">
+        <div className="row">
+          <div className="col-md">
+            <label className="form-label">Name:</label>
+            <input
+              className="form-control"
+              type="text"
+              onChange={(e: any) => setName(e.target.value)}
+              value={name}
+            />
+          </div>
+          <div className="col-md">
+            <label className="form-label">Position:</label>
+            <input
+              className="form-control"
+              type="text"
+              onChange={(e: any) => setName(e.target.value)}
+              value={name}
+              disabled
+            />
+          </div>
+          <div className="col-md">
+            <label className="form-label">Location:</label>
+            <input
+              className="form-control"
+              type="text"
+              onChange={(e: any) => setLocation(e.target.value)}
+              value={location}
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 mb-4">
           <Tabs
             defaultActiveKey="linkedin"
             id="fill-tab-generar-perfil"
@@ -109,8 +125,8 @@ const generarPerfil: React.FC = () => {
           >
             <Tab eventKey="linkedin" title="LinkedIn Profile">
               <label className="form-label">
-                Please provide the link to your LinkedIn profile for
-                so that we can carry out an analysis of your account.
+                Please provide the link to your LinkedIn profile for so that we
+                can carry out an analysis of your account.
               </label>
               <input
                 className="form-control"
@@ -121,71 +137,30 @@ const generarPerfil: React.FC = () => {
                 value={linkLinkedin}
               />
               {/* Submit button */}
-              <button className="btn btn-primary mt-3" onClick={handleSendForm}>
+              <button className="btn btn-primary mt-3" onClick={handleSendFormManual}>
                 <FaIcons.FaLinkedin className="mb-1" />
                 &nbsp;&nbsp;Analyse Profile
               </button>
             </Tab>
             <Tab eventKey="manual" title="Manual Form">
-              {/* Experience input field */}
               <label className="form-label">
-                How many years of experience do you have in software development?
-                (Decimal numbers can be added)
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="yearsExperience"
-                autoComplete="off"
-                onChange={handleYearsExperienceChange}
-                value={yearsExperience}
-                required
-              />
-              {/* Project type input field */}
-              <label className="form-label">
-                Describe in a few words what kind of projects you have
-                worked before?
+                Please write about your job experience, specifying your
+                position, the company, and how long you worked there.
               </label>
               <textarea
                 className="form-control"
-                rows={2}
-                id="typeProjects"
-                autoComplete="off"
-                onChange={(e) => setTypeProjects(e.target.value)}
-                value={typeProjects}
-                required
+                onChange={(e: any) => setJobExperience(e.target.value)}
+                value={jobExperience}
               />
-              {/* Selected languages input field */}
               <label className="form-label">
-                What programming languages and technologies are you most
-                acquainted?
+                Please write about your skills:
               </label>
-              <Select
-                options={options} // sets the available options for the Select component
-                value={options.filter((obj) =>
-                  selectedLanguages.includes(obj.value)
-                )} // sets the currently selected option(s). Use when isMulti is specified.
-                onChange={handleChangeTechnology} // sets the callback function to handle changes in selected option(s)
-                isMulti // indicates that multiple options can be selected
-                placeholder="Select technologies..."
-              />
-              {/* <p>{selectedLanguages}</p> */}
-              {/* Learning input field */}
-              <label className="form-label">
-                How do you keep up to date with the latest technologies and
-                trends in software development?
-              </label>
-              <input
+              <textarea
                 className="form-control"
-                type={"text"}
-                id="learning"
-                autoComplete="off"
-                onChange={(e) => setLearning(e.target.value)}
-                value={learning}
-                required
+                onChange={(e: any) => setSkills(e.target.value)}
+                value={skills}
               />
-              {/* Submit button */}
-              <button className="btn btn-primary mt-3" onClick={handleSendForm}>
+              <button className="btn btn-primary mt-3" onClick={handleSendFormManual}>
                 <FaIcons.FaBrain className="mb-1" />
                 &nbsp;&nbsp;Make Resume
               </button>
@@ -194,8 +169,8 @@ const generarPerfil: React.FC = () => {
             <Tab eventKey="curriculum" title="PDF Resume">
               <Form.Group controlId="formFile" className="mb-3">
                 <Form.Label>
-                  Please provide your resume in PDF format in order to
-                  review it.
+                  Please provide your resume in PDF format in order to review
+                  it.
                 </Form.Label>
                 <Form.Control type="file" />
               </Form.Group>

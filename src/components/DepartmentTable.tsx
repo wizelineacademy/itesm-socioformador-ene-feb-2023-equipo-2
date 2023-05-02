@@ -30,14 +30,14 @@ const DepartmentTable = (props: tableProps) => {
   };
 
   interface DataRow {
-    id: string;
+    department: string;
     skill: string;
   }
 
   const columns: TableColumn<DataRow>[] = [
       {
-        selector: row => row.id,
-        width: '50px',
+        name: 'Department',
+        selector: row => row.department,
       },
       {
         name: 'Skill',
@@ -47,11 +47,11 @@ const DepartmentTable = (props: tableProps) => {
 
   const data = [
     {
-      id: '1',
+      department: '1',
       skill: 'c++',
     },
     {
-      id: '2',
+      department: '2',
       skill: 'c#',
     },
   ]

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Select from "react-select";
+import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 
 const clientOptions = [
@@ -11,13 +12,37 @@ const clientOptions = [
   { value: "carlos-perez", label: "Carlos Pérez" },
 ];
 
+const estatusOptions = [
+  {value: 2, label: "Aprobado"},
+  {value: 1, label: "Pendiente"},
+  {value: 0, label: "Cancelado"}
+];
+
 const ProjectSearch = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
   // React Hooks
-  const [name, setName] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [estatus, setEstatus] = useState("");
+
+  const handleChangeSelectProjectName = (e: any | null) => {
+    e === null ? setProjectName("") : setProjectName(e.value);
+  };
+
+  const handleChangeSelectClientName = (e: any | null) => {
+    e === null ? setClientName("") : setClientName(e.value)
+  }
+
+  const handleChangeSelectEstatus = (e : any | null) => {
+    e === null ? setEstatus("") : setEstatus(e.value)
+  }
+
+  const handleSearch = (e : any) => {
+    alert("buscando")
+  }
 
   if (!hasMounted) {
     return null;
@@ -28,23 +53,38 @@ const ProjectSearch = () => {
       <Container>
         <Row>
           <Col>
-            <label className="form-label">Name:</label>
-            <input
-              className="form-control"
-              onChange={(e) => e.target.value}
-              value={name}
-              type="text"
-              id="nameSearch"
-              autoComplete="off"
+            <label className="form-label">Project Name:</label>
+            <Select
+              onChange={handleChangeSelectProjectName}
+              value={clientOptions.find((obj) => obj.value === projectName)}
+              options={clientOptions}
+              isClearable
             />
           </Col>
           <Col>
             <label className="form-label">Client:</label>
-            <Select isClearable isMulti options={clientOptions} />
+            <Select
+              onChange={handleChangeSelectClientName}
+              value={clientOptions.find((obj) => obj.value === clientName)}
+              options={clientOptions}
+              isClearable
+            />
           </Col>
           <Col>
-            <label className="form-label">Company:</label>
-            <Select isClearable isMulti options={clientOptions} />
+            <label className="form-label">Estatus:</label>
+            <Select
+              onChange={handleChangeSelectEstatus}
+              value={estatusOptions.find((obj) => obj.value === estatus)}
+              options={estatusOptions}
+              isClearable
+            />
+          </Col>
+          <Col>
+            <label className="form-label">&nbsp;</label>
+            <button className="btn btn-primary w-100" onClick={handleSearch}>
+              <FaIcons.FaSearch className="mb-1" />
+              &nbsp;&nbsp;Search
+            </button>
           </Col>
         </Row>
       </Container>

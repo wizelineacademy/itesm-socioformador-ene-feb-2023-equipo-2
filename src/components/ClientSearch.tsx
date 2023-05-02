@@ -1,26 +1,10 @@
-import React, {useState} from "react";
+// TODO: 
+// 1. get con clientes
+// 2. post con busqueda de clientes
+import React, { useState } from "react";
 import Select from "react-select";
+import * as FaIcons from 'react-icons/fa';
 import { useHasMounted } from "@/components/useHasMounted";
-
-const companyOptions = [
-  { value: "softek", label: "Softek" },
-  { value: "microsoft", label: "Microsoft" },
-  { value: "macrohard", label: "Macrohard" },
-  { value: "meta", label: "Meta" },
-  { value: "google", label: "Google" },
-  { value: "youtube", label: "Youtube" },
-  { value: "twitter", label: "Twitter" },
-];
-
-const locationOptions = [
-  { value: "monterrey", label: "Monterrey" },
-  { value: "saltillo", label: "Saltillo" },
-  { value: "reynosa", label: "Reynosa" },
-  { value: "victoria", label: "Ciudad Victoria" },
-  { value: "lapaz", label: "La Paz" },
-  { value: "guadalajara", label: "Guadalajara" },
-  { value: "queretaro", label: "Queretaro" },
-];
 
 const ClientSearch = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -29,12 +13,22 @@ const ClientSearch = () => {
 
   const [name, setName] = useState("");
 
-  {
-    /*funtion to filter the list using the data from the inputs*/
-  }
-  const handleFilterList = () => {
-    alert("se van a buscar los empleados con lo seleccionado");
+  const options = [
+    { value: "1", label: "one" },
+    { value: "2", label: "two" },
+  ];
+
+  const handleChangeSelect = (e : any | null) => {
+    if (e === null) {
+      setName("");
+    } else {
+      setName(e.value);
+    }
   };
+
+  const handleSearch = (e : any) => {
+    alert("buscando")
+  }
 
   if (!hasMounted) {
     return null;
@@ -45,27 +39,21 @@ const ClientSearch = () => {
       <div className="container">
         {/*for searching employees by their name*/}
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-10">
             <label className="form-label">Name:</label>
-
-            <input
-              className="form-control"
-              onChange={e => e.target.value}
-              value={name}
-              type="text"
-              id="nameSearch"
-              autoComplete="off"
+            <Select
+              onChange={handleChangeSelect}
+              value={options.find((obj) => obj.value === name)}
+              options={options}
+              isClearable
             />
           </div>
-
-          <div className="col-md-4">
-            <label className="form-label">Company:</label>
-            <Select isClearable options={companyOptions} />
-          </div>
-
-          <div className="col-md-4">
-            <label className="form-label">Location:</label>
-            <Select isClearable options={locationOptions} />
+          <div className="col-md-2">
+            <label className="form-label">&nbsp;</label>
+            <button className="btn btn-primary w-100" onClick={handleSearch}>
+              <FaIcons.FaSearch className="mb-1" />
+              &nbsp;&nbsp;Search
+            </button>
           </div>
         </div>
       </div>
