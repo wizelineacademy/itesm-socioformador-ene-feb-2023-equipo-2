@@ -35,6 +35,7 @@ const generarPerfil: React.FC = () => {
   const [learning, setLearning] = useState<string>("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
   const [responseRoadmap, setResponseRoadmap] = useState(null);
+  const [responseCV, setResponseCV] = useState(null);
 
   const [tarea, setTarea] = useState([]);
 
@@ -82,7 +83,7 @@ const generarPerfil: React.FC = () => {
     ];
 
     getChatResponse(messages).then((about) => {
-      setResponse(about);
+      setResponseCV(about);
 
       const requestOptions = {
         method: "POST",
