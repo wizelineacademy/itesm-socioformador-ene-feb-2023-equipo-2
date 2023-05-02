@@ -22,6 +22,7 @@ model employees {
   email       String  @unique
   password    String
   infoabout   String
+  location String
   teams teamemployees[]
   departments departmentemployees[]
 }
