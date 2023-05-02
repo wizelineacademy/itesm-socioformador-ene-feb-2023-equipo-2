@@ -184,12 +184,16 @@ a,h1,h4 {
   font-size: 20px;
 }
 
-.state-active-employee {
+.state-active {
   color: #26C000;
 }
 
-.state-inactive-employee {
+.state-inactive {
   color: #EA2A00;
+}
+
+.state-pending {
+  color: yellow;
 }
 
 .state-creating-employee {
