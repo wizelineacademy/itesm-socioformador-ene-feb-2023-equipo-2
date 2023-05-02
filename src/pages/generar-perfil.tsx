@@ -30,7 +30,7 @@ const generarPerfil: React.FC = () => {
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [learning, setLearning] = useState<string>("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
-  const [response, setResponse] = useState(null);
+  const [responseRoadmap, setResponseRoadmap] = useState(null);
 
   const [tarea, setTarea] = useState([]);
 
@@ -45,6 +45,10 @@ const generarPerfil: React.FC = () => {
     const messages = [{ role: "user", content: auxMessage }];
     
     getChatResponse(messages).then((res) => {
+<<<<<<< Updated upstream
+=======
+      setResponseRoadmap(res);
+>>>>>>> Stashed changes
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -189,7 +193,7 @@ const generarPerfil: React.FC = () => {
                 <FaIcons.FaBrain className="mb-1" />
                 &nbsp;&nbsp;Make Resume
               </button>
-              <p>{response}</p>
+              <p>{responseRoadmap}</p>
             </Tab>
             <Tab eventKey="curriculum" title="PDF Resume">
               <Form.Group controlId="formFile" className="mb-3">
