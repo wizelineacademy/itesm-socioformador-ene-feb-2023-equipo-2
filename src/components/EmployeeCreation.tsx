@@ -32,8 +32,31 @@ const EmployeeCreation = () => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    alert("prueba");
-    // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
+
+    let link = process.env.NEXT_PUBLIC_API_URL;
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email
+      }),
+    };
+    fetch(link + "/createEmployee", requestOptions)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        alert("Exito");
+        console.log(data);
+      })
+      .catch((error) => console.error("Error", error));
   };
 
   const roleOptions = [
@@ -65,19 +88,16 @@ const EmployeeCreation = () => {
       {/* componente con los inputs de generar perfil */}
       <div className="container bg-light border p-4">
         <div className="row">
-          <h4 className="mb-3"> Create new associate account </h4>
-        </div>
-        <div className="row">
           <div className="col-md">
             <label htmlFor="name" className="form-label">
               Name:
             </label>
             <input
               className="form-control"
-              type="name"
+              type="text"
               id="name"
               onChange={(event) => setName(event.target.value)}
-              value={email}
+              value={name}
             />
           </div>
           <div className="col-md">
@@ -88,7 +108,7 @@ const EmployeeCreation = () => {
               className="form-control"
               type="email"
               id="email"
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               value={email}
             />
           </div>
@@ -101,12 +121,7 @@ const EmployeeCreation = () => {
         </div>
         <div className="row mt-3">
           <div className="col-md"></div>
-          <div className="col-md">
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
-              <FaIcons.FaTimes className="mb-1" />
-              &nbsp;&nbsp;Cancel
-            </button>
-          </div>
+          <div className="col-md"></div>
           <div className="col-md">
             <button className="btn btn-primary w-100" onClick={handleSubmit}>
               <FaIcons.FaPlus className="mb-1" />

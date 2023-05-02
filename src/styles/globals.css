@@ -184,12 +184,16 @@ a,h1,h4 {
   font-size: 20px;
 }
 
-.state-active-employee {
+.state-active {
   color: #26C000;
 }
 
-.state-inactive-employee {
+.state-inactive {
   color: #EA2A00;
+}
+
+.state-pending {
+  color: yellow;
 }
 
 .state-creating-employee {
@@ -212,3 +216,68 @@ a,h1,h4 {
 .nav-roadmap.active {
   color: #FFFFFF !important;
 }
+
+/*Alerta para generación correcto*/
+.alert-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(5px);
+  background-color: #00000068;
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-alert {
+  background-color: #FFFFFF;
+  color: #e93d44;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.custom-alert h2 {
+  margin-top: 0;
+}
+
+.custom-alert button {
+  background-color: #e93d44;
+  color: #FFFFFF;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/*Alerta para Generacion Error*/
+
+.custom-alert2 {
+  background-color: #e93d44;
+  color: #FFFFFF;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+
+.custom-alert2 button {
+  background-color: #FFFFFF;
+  color: #e93d44;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+

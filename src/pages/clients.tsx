@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from 'react-icons/fa';
-
 import ClientSearch from "@/components/ClientSearch";
 import ClientCard from "@/components/ClientCard";
 import ClientCreation from "@/components/ClientCreation";
@@ -12,9 +11,6 @@ const clients = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
-  const [name, setName] = useState("");
-
-  const [alphabeticallyA2Z, setAlphabeticallyA2Z] = useState(true); // True -> A to Z, False -> Z to A
   const [addEmployee, setAddEmployee] = useState(false); 
 
   if (!hasMounted) {
@@ -29,15 +25,9 @@ const clients = () => {
       <ClientSearch />
       <div className="container mt-4">
         <div className="row">
-          <div className="d-flex justify-content-between">
+          <div className="d-flex flex-row-reverse">
             <button
-              className="btn btn-primary w-10"
-              onClick={() => setAlphabeticallyA2Z(!alphabeticallyA2Z)}>
-              {alphabeticallyA2Z ? <FaIcons.FaSortAlphaDown className="mb-1" /> : <FaIcons.FaSortAlphaUpAlt className="mb-1" />}
-              &nbsp;&nbsp;Sort
-            </button>
-            <button
-              className="btn btn-primary w-10" 
+              className="btn btn-primary" 
               onClick={() => setAddEmployee(!addEmployee)}
               aria-controls="employeeCreation"
               aria-expanded={addEmployee}>
@@ -48,7 +38,7 @@ const clients = () => {
                 </>
               ) : (
                 <>
-                  <FaIcons.FaUsers className="mb-1" />
+                  <FaIcons.FaUserTie className="mb-1" />
                   &nbsp;&nbsp;Add Clients
                 </>
               )}
