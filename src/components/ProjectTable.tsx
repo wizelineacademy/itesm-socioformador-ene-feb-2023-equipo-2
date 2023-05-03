@@ -5,6 +5,7 @@
 import React, { Fragment, useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
+import Link from "next/link";
 
 const ProjectTable = () => {
   const handleSeeProjects = () => {
@@ -30,6 +31,7 @@ const ProjectTable = () => {
   };
 
   interface DataRow {
+    id: number;
     isActive: 0 | 1 | 2;
     projectName: string;
     clientName: string;
@@ -77,10 +79,13 @@ const ProjectTable = () => {
     {
       cell: (row) => (
         <Fragment>
-          <FaIcons.FaInfoCircle
+          <Link href="/project-overview">
+            <FaIcons.FaInfoCircle style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
+          </Link>
+          {/*<FaIcons.FaInfoCircle
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleSeeProjects()}
-          />
+      />*/}
         </Fragment>
       ),
       width: "50px",
@@ -100,6 +105,7 @@ const ProjectTable = () => {
 
   const data = [
     {
+      id: 1,
       isActive: 2,
       projectName: "project name",
       clientName: "client name",
@@ -108,6 +114,7 @@ const ProjectTable = () => {
       endDate: "2019-01-16",
     },
     {
+      id: 2,
       isActive: 1,
       projectName: "project name",
       clientName: "client name",
@@ -116,6 +123,7 @@ const ProjectTable = () => {
       endDate: "2019-01-16",
     },
     {
+      id: 3,
       isActive: 0,
       projectName: "project name",
       clientName: "client name",
