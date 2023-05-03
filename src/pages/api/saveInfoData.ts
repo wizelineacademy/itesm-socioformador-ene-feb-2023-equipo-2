@@ -4,8 +4,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default async function handler(req: any, res: any) {
-  const { inforoadmap, infoabout } = req.body;
-  const inforoadmap_string = JSON.stringify(inforoadmap);
+  const { infoabout } = req.body;
   const infoabout_string = JSON.stringify(infoabout);
 
   //TODO: ID FIJO PROVISIONAL MIENTRAS IMPLEMENTAMOS AUTH0
@@ -21,7 +20,7 @@ export default async function handler(req: any, res: any) {
     
         const updatedRecord = await prisma.employees.update({
           where: { id },
-          data: {inforoadmap: inforoadmap_string, infoabout: infoabout_string},
+          data: {infoabout: infoabout_string},
         });
     
         return updatedRecord;

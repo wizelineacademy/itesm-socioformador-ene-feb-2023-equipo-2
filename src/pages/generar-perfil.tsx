@@ -12,15 +12,8 @@ import Head from "next/head";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 import { getChatResponse } from "@/openai/openai";
+import { setTimeout } from "timers/promises";
 import { propTypes } from "react-bootstrap/esm/Image";
-
-// 'options' will later be replaced by table skills in database
-const options = [
-  { value: "javascript", label: "JavaScript" },
-  { value: "python", label: "Python" },
-  { value: "java", label: "Java" },
-  { value: "csharp", label: "C#" },
-];
 
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
@@ -29,75 +22,60 @@ const generarPerfil: React.FC = () => {
   const [location, setLocation] = useState("");
   const [jobExperience, setJobExperience] = useState("");
   const [skills, setSkills] = useState("");
-  const [yearsExperience, setYearsExperience] = useState<string>();
-  const [typeProjects, setTypeProjects] = useState<string>("");
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [learning, setLearning] = useState<string>("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
   const [responseRoadmap, setResponseRoadmap] = useState(null);
   const [responseCV, setResponseCV] = useState(null);
 
-  const [tarea, setTarea] = useState([]);
+  const handleOpenAIResponse = (e: any) => {
+    console.log(e.target.id);
 
-  useEffect(() => {
-    fetch("https://admin.marco.org.mx/api/expos/current")
-      .then((res) => res.json())
-      .then((data) => setTarea(data[0].images));
-  }, []);
+    let text = "";
+    if (e.target.id === "buttonManual") {
+      text = jobExperience + "and" + skills;
+    } else {
+      text = linkLinkedin;
+    }
 
-  const handleSendFormManual = async () => {
-    const auxMessage =
-      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma, los conocimientos previos necesarios para aprenderla y algún sitio de internet, libro o recurso para aprenderlo tomando en cuenta que es para` +
-      skills +
-      `. Finalmente, dame unicamente y exclusivamente los elementos acomodados en formato json con esta estructura:{“Herramientas”: [{  “nombre” ,“descripcion” ,“conocimientos_previos” “recursos”},{“nombre” ,“descripcion” ,“conocimientos_previos” ,“recursos”},]}`;
-    const messages = [{ role: "user", content: auxMessage }];
-
-    getChatResponse(messages).then((res) => {
-      setResponseRoadmap(res);
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ inforoadmap: res }),
-      };
-
-      fetch("http://localhost:3000/api/saveRoadMap", requestOptions)
-        .then((response) => response.json())
-        .then((data) =>
-          console.log("Ruta de aprendizaje guardada exitosamente")
-        )
-        .catch((error) =>
-          console.error("Error al guardar ruta de aprendizaje")
-        );
-    });
-  };
-
-  const handleSendFormLinkedInput = () => {
-    const messages = [
+    const messageCV = [
       {
         role: "user",
         content:
           "I need a summerized CV based on the information I will give you, and do not use a codebox. This is the following information:" +
-          linkLinkedin +
+          text +
           'Following the previous information, I need your response to be a JSON and to be indented properly to improve readability, if the location on the experience is missing then do not write "job_location": location, ignore the start time and end time and only write the time duration of the experience on "job_duration": duration" and write it on english, follow the following example: {"name": name, "position": ocupation, "location": location, "Experience": [{"job_title": job title, "job_company": company_name, "job_duration": duration, "job_location": "location"}],"Skills": [skill#1, Skill#2, Skill#3, Skill#4, Skill#5, etc.]}',
       },
     ];
 
-    getChatResponse(messages).then((about) => {
+    getChatResponse(messageCV).then((about) => {
       setResponseCV(about);
-
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ infoabout: about }),
-      };
-
-      fetch('http://localhost:3000/api/saveInfoData', requestOptions)
-        .then(response => response.json())
-        .then(data => console.log("Ruta de aprendizaje guardada exitosamente"))
-        .catch(error => console.error("Error al guardar ruta de aprendizaje"));
-
     });
-  }
+
+    const auxMessage =
+      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma, los conocimientos previos necesarios para aprenderla y algún sitio de internet, libro o recurso para aprenderlo tomando en cuenta que tiene las siguientes habilidades:` +
+      text +
+      `. Tienen que ser otros lenguajes de programación, no puenden ser los mismos escritos. Finalmente, dame unicamente y exclusivamente los elementos acomodados en formato json con esta estructura:{“Roadmap”: [{  “name” ,“description” ,“previous_knowledge” “resources”},{  “name” ,“description” ,“previous_knowledge” “resources”},]}. La respuesta debe de ser en ingles.`;
+    const messageRoadmap = [{ role: "user", content: auxMessage }];
+
+    getChatResponse(messageRoadmap).then((res) => {
+      setResponseRoadmap(res);
+    });
+  };
+
+  const handleSubmit = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        inforoadmap: responseRoadmap,
+        infoabout: responseCV,
+      }),
+    };
+
+    fetch("http://localhost:3000/api/saveRoadMap", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  };
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -166,7 +144,11 @@ const generarPerfil: React.FC = () => {
                 value={linkLinkedin}
               />
               {/* Submit button */}
-              <button className="btn btn-primary mt-3" onClick={handleSendFormLinkedInput}>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={handleOpenAIResponse}
+                id="buttonLinkedin"
+              >
                 <FaIcons.FaLinkedin className="mb-1" />
                 &nbsp;&nbsp;Analyse Profile
               </button>
@@ -174,20 +156,29 @@ const generarPerfil: React.FC = () => {
               <br></br>
               <br></br>
 
-              {/* CV from LinkedIn generated by AI */}
-              <label className="form-label">
-                AI-generated CV Summary...
-              </label>
+              <label className="form-label">AI-generated CV Summary...</label>
 
               <textarea
-                rows="15"
+                rows="7"
                 className="form-control"
                 id="projectDescription"
                 autoComplete="off"
-                value={response}
+                value={responseCV}
+                onChange={(e: any) => setResponseCV(e.target.value)}
                 placeholder="AI's response will generate after clicking the Generate button..."
               />
 
+              {/* CV from LinkedIn generated by AI */}
+              <label className="form-label">AI-generated Roadmap...</label>
+              <textarea
+                rows="7"
+                className="form-control"
+                id="projectDescription"
+                autoComplete="off"
+                value={responseRoadmap}
+                onChange={(e: any) => setResponseRoadmap(e.target.value)}
+                placeholder="AI's response will generate after clicking the Generate button..."
+              />
             </Tab>
             <Tab eventKey="manual" title="Manual Form">
               <label className="form-label">
@@ -207,11 +198,41 @@ const generarPerfil: React.FC = () => {
                 onChange={(e: any) => setSkills(e.target.value)}
                 value={skills}
               />
-              <button className="btn btn-primary mt-3" onClick={handleSendFormManual}>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={handleOpenAIResponse}
+                id="buttonManual"
+              >
                 <FaIcons.FaBrain className="mb-1" />
                 &nbsp;&nbsp;Make Resume
               </button>
-              <p>{responseRoadmap}</p>
+
+              <br></br>
+              <br></br>
+
+              <label className="form-label">AI-generated CV Summary...</label>
+
+              <textarea
+                rows="7"
+                className="form-control"
+                id="projectDescription"
+                autoComplete="off"
+                value={responseCV}
+                onChange={(e: any) => setResponseCV(e.target.value)}
+                placeholder="AI's response will generate after clicking the Generate button..."
+              />
+
+              {/* CV from LinkedIn generated by AI */}
+              <label className="form-label">AI-generated Roadmap...</label>
+              <textarea
+                rows="7"
+                className="form-control"
+                id="projectDescription"
+                autoComplete="off"
+                value={responseRoadmap}
+                onChange={(e: any) => setResponseRoadmap(e.target.value)}
+                placeholder="AI's response will generate after clicking the Generate button..."
+              />
             </Tab>
             <Tab eventKey="curriculum" title="PDF Resume">
               <Form.Group controlId="formFile" className="mb-3">
@@ -223,6 +244,14 @@ const generarPerfil: React.FC = () => {
               </Form.Group>
             </Tab>
           </Tabs>
+          <button
+            className="btn btn-primary mt-3"
+            onClick={handleSubmit}
+            id="buttonManual"
+          >
+            <FaIcons.FaSave className="mb-1" />
+            &nbsp;&nbsp;Guardar
+          </button>
         </div>
       </div>
     </>
