@@ -23,6 +23,7 @@ model employees {
   password    String
   infoabout   String
   location String
+  status Boolean
   teams teamemployees[]
   departments departmentemployees[]
 }
@@ -54,6 +55,7 @@ model orders {
   orderstartdate DateTime @default(now())
   orderenddate DateTime
   erased Boolean @default(false)
+  name String
 }
 
 model client {
