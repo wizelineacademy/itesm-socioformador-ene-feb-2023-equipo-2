@@ -15,9 +15,9 @@
 // This table will include basic information about each user, such as their name, email, and role.
 
 import React, { useState } from "react";
-import Select from 'react-select'
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import * as FaIcons from "react-icons/fa";
-
 import { useHasMounted } from "@/components/useHasMounted";
 
 const ClientCreation = () => {
@@ -25,35 +25,57 @@ const ClientCreation = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [department, setDepartment] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    alert("prueba");
-    // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
+
+    let link = process.env.NEXT_PUBLIC_API_URL;
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
+    };
+    fetch(link + "/createClient", requestOptions)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        alert("Exito");
+        console.log(data);
+      })
+      .catch((error) => console.error("Error", error));
   };
 
-  const roleOptions = [
-    { value: 'monterrey', label: 'Monterrey' },
-    { value: 'saltillo', label: 'Saltillo' },
-    { value: 'reynosa', label: 'Reynosa' },
-    { value: 'victoria', label: 'Ciudad Victoria' },
-    { value: 'lapaz', label: 'La Paz' },
-    { value: 'guadalajara', label: 'Guadalajara' },
-    { value: 'queretaro', label: 'Queretaro' },
-  ]
+  const companyOptions = [
+    { value: "monterrey", label: "Monterrey" },
+    { value: "saltillo", label: "Saltillo" },
+    { value: "reynosa", label: "Reynosa" },
+    { value: "victoria", label: "Ciudad Victoria" },
+    { value: "lapaz", label: "La Paz" },
+    { value: "guadalajara", label: "Guadalajara" },
+    { value: "queretaro", label: "Queretaro" },
+  ];
 
-  const departmentOptions = [
-    { value: 'monterrey', label: 'Monterrey' },
-    { value: 'saltillo', label: 'Saltillo' },
-    { value: 'reynosa', label: 'Reynosa' },
-    { value: 'victoria', label: 'Ciudad Victoria' },
-    { value: 'lapaz', label: 'La Paz' },
-    { value: 'guadalajara', label: 'Guadalajara' },
-    { value: 'queretaro', label: 'Queretaro' },
-  ]
+  const locationOptions = [
+    { value: "monterrey", label: "Monterrey" },
+    { value: "saltillo", label: "Saltillo" },
+    { value: "reynosa", label: "Reynosa" },
+    { value: "victoria", label: "Ciudad Victoria" },
+    { value: "lapaz", label: "La Paz" },
+    { value: "guadalajara", label: "Guadalajara" },
+    { value: "queretaro", label: "Queretaro" },
+  ];
 
   if (!hasMounted) {
     return null;
@@ -62,75 +84,61 @@ const ClientCreation = () => {
   return (
     <>
       {/* componente con los inputs de generar perfil */}
-        <div className="container">
-          <div className="row">
-            <div className="col-md-3">
-              <label htmlFor="email" className="form-label">
-                Email:
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                value={email}
-                placeholder="Select..."
-                required
-              />
-            </div>
-            <div className="col-md-3">
-              <label htmlFor="role" className="form-label">
-                Role:
-              </label>
-              {/*<input
-                className="form-control"
-                type="text"
-                id="role"
-                onChange={(event) => setRole(event.target.value)}
-                value={role}
-                required
-              />*/}
-              <Select 
-                isClearable
-                options={roleOptions} />
-            </div>
-            <div className="col-md-3">
-              <label htmlFor="email" className="form-label">
-                Company:
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                value={email}
-                placeholder="Select..."
-                required
-              />
-            </div>
-
-            <div className="col-md-3 mt-auto">
-              <div className="d-flex flex-row-reverse justify-content-start">
-                <div className="col-md mt-auto">
-                  <button
-                    className="btn btn-primary w-90"
-                    onClick={handleSubmit} >
-                    <FaIcons.FaTimes className="mb-1" />
-                    &nbsp;&nbsp;Cancel
-                  </button>
-                  </div>
-                <div className="col-md mt-auto">
-                  <button
-                    className="btn btn-primary w-90 mr-3"
-                    onClick={handleSubmit} >
-                    <FaIcons.FaPlus className="mb-1" />
-                    &nbsp;&nbsp;Add
-                  </button>
-                </div>
-              </div>
-            </div>
+      <div className="container bg-light border p-4">
+        <div className="row">
+          <p>Please fill out the following fields to create a client:</p>
+        </div>
+        <div className="row">
+          <div className="col-md">
+            <label htmlFor="name" className="form-label">
+              Name:
+            </label>
+            <input
+              className="form-control"
+              type="name"
+              id="name"
+              onChange={(event) => setName(event.target.value)}
+              value={name}
+              required
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="email" className="form-label">
+              Email:
+            </label>
+            <input
+              className="form-control"
+              type="email"
+              id="email"
+              onChange={(event) => setEmail(event.target.value)}
+              value={email}
+              required
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="phone" className="form-label">
+              Phone Number:
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              id="phone"
+              onChange={(event) => setPhone(event.target.value)}
+              value={email}
+              required
+            />
+          </div>
+          <div className="col-md">
+            <label htmlFor="name" className="form-label">
+              &nbsp;
+            </label>
+            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+              <FaIcons.FaPlus className="mb-1" />
+              &nbsp;&nbsp;Add
+            </button>
           </div>
         </div>
+      </div>
     </>
   );
 };

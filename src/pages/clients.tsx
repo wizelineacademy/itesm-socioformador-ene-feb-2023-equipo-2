@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from 'react-icons/fa';
-
 import ClientSearch from "@/components/ClientSearch";
 import ClientCard from "@/components/ClientCard";
 import ClientCreation from "@/components/ClientCreation";
@@ -12,10 +11,7 @@ const clients = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
-  const [name, setName] = useState("");
-
-  const [alphabeticallyA2Z, setAlphabeticallyA2Z] = useState(true); // True -> A to Z, False -> Z to A
-  const [addEmployee, setAddEmployee] = useState(false); // True -> A to Z, False -> Z to A
+  const [addEmployee, setAddEmployee] = useState(false); 
 
   if (!hasMounted) {
     return null;
@@ -24,50 +20,34 @@ const clients = () => {
     <>
       <Menu
         titulo="Clients"
-        descripcion="To create orders, kindly create a client account first."
+        descripcion="Proper project management requires effective client administration. You can administer your existing clients and create new ones to ensure the success of your projects."
       />
-      {/*<div className="container">
-        <label htmlFor="name" className="form-label">
-          Full name:
-        </label>
-        <input
-          className="form-control"
-          type={"text"}
-          id="name"
-          autoComplete="off"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          required
-      />*/}
-        {/* Submit button */}
-       {/*  <button className="btn btn-primary mt-3">
-          <FaIcons.FaPlus className="mb-1" />
-          &nbsp;&nbsp;Add Skill
-        </button>
-      </div>*/}
       <ClientSearch />
-      <div className="container my-4">
+      <div className="container mt-4">
         <div className="row">
-          <div className="d-flex justify-content-between">
+          <div className="d-flex flex-row-reverse">
             <button
-              className="btn btn-primary w-10"
-              onClick={() => setAlphabeticallyA2Z(!alphabeticallyA2Z)}>
-              {alphabeticallyA2Z ? <FaIcons.FaSortAlphaDown className="mb-1" /> : <FaIcons.FaSortAlphaUpAlt className="mb-1" />}
-              &nbsp;&nbsp;Sort
-            </button>
-            <button
-              className="btn btn-primary w-10" 
+              className="btn btn-primary" 
               onClick={() => setAddEmployee(!addEmployee)}
               aria-controls="employeeCreation"
               aria-expanded={addEmployee}>
-              <FaIcons.FaUserPlus className="mb-1" />
-              &nbsp;&nbsp;Add User
+              {addEmployee ? (
+                <>
+                  <FaIcons.FaTimes className="mb-1" />
+                  &nbsp;&nbsp;Close
+                </>
+              ) : (
+                <>
+                  <FaIcons.FaUserTie className="mb-1" />
+                  &nbsp;&nbsp;Add Clients
+                </>
+              )}
             </button>
           </div>
         </div>
       </div>
       <Collapse in={addEmployee}>
-        <div id="employeeCreation">
+        <div id="employeeCreation" className="my-3">
           <ClientCreation />
         </div>
       </Collapse>

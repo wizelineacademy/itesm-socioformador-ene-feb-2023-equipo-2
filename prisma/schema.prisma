@@ -11,13 +11,85 @@ datasource db {
 }
 
 model employees {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement()) @unique
   name        String
   linkedinlink String
   cvfile      String
   profileimage String
   inforoadmap String  
+  position employeeposition @relation(fields: [idposition], references: [id])
   idposition  Int
   email       String  @unique
   password    String
+  infoabout   String
+  location String
+  teams teamemployees[]
+  departments departmentemployees[]
+}
+
+model teams {
+  id Int @id @default(autoincrement()) @unique
+  name String
+  employees teamemployees[]
+  orders orders[]
+}
+
+model teamemployees {
+  team teams  @relation(fields: [idteam], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  idteam  Int
+  employee employees  @relation(fields: [idemployee], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  idemployee Int
+
+  @@id([idteam, idemployee])
+}
+
+model orders {
+  id Int @id @default(autoincrement()) @unique
+  orderstatus String
+  orderdesc String
+  client client @relation(fields: [idclient], references: [id])
+  idclient Int
+  team teams @relation(fields: [idteam], references: [id])
+  idteam Int
+  orderstartdate DateTime @default(now())
+  orderenddate DateTime
+  erased Boolean @default(false)
+}
+
+model client {
+  id Int @id @default(autoincrement()) @unique
+  name String
+  email String
+  phone String
+  erased Boolean @default(false)
+  orders orders[]
+}
+
+model employeeposition {
+  id Int @id @default(autoincrement()) @unique
+  name String
+  employees employees[]
+}
+
+model department {
+  id Int @id @default(autoincrement()) @unique 
+  name String 
+  employees departmentemployees[]
+  skills skills[]
+}
+
+model departmentemployees {
+  department department @relation(fields: [iddepartment], references: [id])
+  iddepartment Int
+  employee employees @relation(fields: [idemployee], references: [id])
+  idemployee Int
+
+  @@id([iddepartment, idemployee])
+}
+
+model skills {
+  id Int @id @default(autoincrement()) @unique 
+  name String
+  department department @relation(fields: [iddepartment], references:[id])
+  iddepartment Int
 }

@@ -1,7 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, Fragment  } from "react";
 import Image from "next/image";
-import { Navbar, Nav, Button, Modal, Container, NavDropdown } from "react-bootstrap";
-import Link from 'next/link';
+import {
+  Navbar,
+  Nav,
+  Button,
+  Modal,
+  Container,
+  NavDropdown,
+} from "react-bootstrap";
+import * as FaIcons from "react-icons/fa";
+import Link from "next/link";
 import logoBtn from "src/images/logoSearch.jpg";
 import styles from "src/components/Menu.module.css";
 
@@ -11,21 +19,20 @@ interface MenuProps {
 }
 
 const Menu = (props: MenuProps) => {
-
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleLogout = () => {
     setShowModal(true);
-  }
+  };
 
   const handleCancelLogout = () => {
     setShowModal(false);
-  }
+  };
 
   const handleConfirmLogout = () => {
     setShowModal(false);
-    window.location.href = '/';
-  }
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -48,7 +55,10 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/clients" className="a-navbar" >Clients</Link>
+                <Link href="/clients" className="a-navbar">
+                  <FaIcons.FaUserTie className="mb-1" />
+                  &nbsp;&nbsp;Clients
+                </Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -58,7 +68,10 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/orders" className="a-navbar" >Orders</Link>
+                <Link href="/projects" className="a-navbar">
+                  <FaIcons.FaClipboardList className="mb-1" />
+                  &nbsp;&nbsp;Projects
+                </Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -68,7 +81,10 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/teams" className="a-navbar" >Teams</Link>
+                <Link href="/teams" className="a-navbar">
+                  <FaIcons.FaUsers className="mb-1" />
+                  &nbsp;&nbsp;Teams
+                </Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -78,7 +94,10 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/users" className="a-navbar" >Users</Link>
+                <Link href="/employees" className="a-navbar">
+                  <FaIcons.FaUserCog className="mb-1" />
+                  &nbsp;&nbsp;Employees
+                </Link>
               </Nav.Link>
               <Nav.Link
                 className="text-dark"
@@ -88,44 +107,67 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/admin/department" className="a-navbar" >Department</Link>
-              </Nav.Link>
-              <Nav.Link
-                className="text-dark"
-                style={{
-                  fontSize: "17px",
-                  fontWeight: "semi-bold",
-                  marginRight: "20px",
-                }}
-              >
-                <Link href="/admin/skills" className="a-navbar" >Skills</Link>
+                <Link href="/department" className="a-navbar">
+                  <FaIcons.FaBriefcase className="mb-1" />
+                  &nbsp;&nbsp;Department
+                </Link>
               </Nav.Link>
             </Nav>
             {/* Dropdown component */}
-            <NavDropdown title="My Account" id="basic-nav-dropdown" className="a-navbar">
-              <NavDropdown.Item href="settings" className="a-navbar">Settings</NavDropdown.Item>
-              <NavDropdown.Item href="learning-path" className="a-navbar">RoadMap</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#" className="a-logout" onClick={handleLogout}>
-                Log Out
+            <NavDropdown
+              title={
+                <Fragment>
+                  <FaIcons.FaUser className="mb-1"/>
+                  &nbsp;&nbsp;My Account
+                </Fragment>
+              }
+              id="basic-nav-dropdown"
+              className="a-navbar"
+            >
+              <NavDropdown.Item href="perfil" className="a-navbar">
+                <FaIcons.FaUser className="mb-1"/>
+                &nbsp;&nbsp;Profile
               </NavDropdown.Item>
-                <Modal show={showModal && document.querySelector('.a-logout:focus') ? true: false} backdrop="static">
-                  <Modal.Header>
-                    <Modal.Title>Confirm Logout</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <p>Are you sure you want to logout?</p>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCancelLogout}>
-                      Cancel
-                    </Button>
-                    <Button variant="primary" onClick={handleConfirmLogout}>
-                      Yes 
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
-              
+              <NavDropdown.Item href="settings" className="a-navbar">
+                <FaIcons.FaCog className="mb-1"/>
+                &nbsp;&nbsp;Settings
+              </NavDropdown.Item>
+              <NavDropdown.Item href="roadmap" className="a-navbar">
+                <FaIcons.FaSitemap className="mb-1" />
+                &nbsp;&nbsp;Roadmap
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item
+                href="#"
+                className="a-logout"
+                onClick={handleLogout}
+              >
+                <FaIcons.FaDoorOpen className="mb-1"/>
+                &nbsp;&nbsp;Log Out
+              </NavDropdown.Item>
+              <Modal
+                show={
+                  showModal && document.querySelector(".a-logout:focus")
+                    ? true
+                    : false
+                }
+                backdrop="static"
+              >
+                <Modal.Header>
+                  <Modal.Title>Confirm Logout</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <p>Are you sure you want to logout?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCancelLogout}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleConfirmLogout}>
+                    Yes
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </NavDropdown>
           </Navbar.Collapse>
         </Container>

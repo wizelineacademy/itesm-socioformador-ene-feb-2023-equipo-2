@@ -17,14 +17,13 @@
 import React, { useState } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from "react-icons/fa";
-
 import EmployeeSearch from "@/components/EmployeeSearch";
-import EmployeeCard from "@/components/EmployeeCard";
+import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeCreation from "@/components/EmployeeCreation";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 
-const users = () => {
+const employees = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
@@ -43,20 +42,23 @@ const users = () => {
       <EmployeeSearch />
       <div className="container my-4">
         <div className="row">
-          <div className="d-flex justify-content-between">
-            <button
-              className="btn btn-primary w-10"
-              onClick={() => setAlphabeticallyA2Z(!alphabeticallyA2Z)}>
-              {alphabeticallyA2Z ? <FaIcons.FaSortAlphaDown className="mb-1" /> : <FaIcons.FaSortAlphaUpAlt className="mb-1" />}
-              &nbsp;&nbsp;Sort
-            </button>
+          <div className="d-flex flex-row-reverse">
             <button
               className="btn btn-primary w-10" 
               onClick={() => setAddEmployee(!addEmployee)}
               aria-controls="employeeCreation"
               aria-expanded={addEmployee}>
-              <FaIcons.FaUserPlus className="mb-1" />
-              &nbsp;&nbsp;Add User
+              {addEmployee ? (
+                <>
+                  <FaIcons.FaTimes className="mb-1" />
+                  &nbsp;&nbsp;Close
+                </>
+              ) : (
+                <>
+                  <FaIcons.FaUserCog className="mb-1" />
+                  &nbsp;&nbsp;Add Employee
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -66,9 +68,9 @@ const users = () => {
           <EmployeeCreation />
         </div>
       </Collapse>
-      <EmployeeCard pageType={"listForAdmin"} />
+      <EmployeeTable pageType={"listForAdmin"} />
     </>
   );
 };
 
-export default users;
+export default employees;

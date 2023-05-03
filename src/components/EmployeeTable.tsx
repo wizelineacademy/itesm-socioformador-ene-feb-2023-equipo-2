@@ -5,14 +5,14 @@
 import React, { Fragment, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
-import AreaBadge from "./AreaBadge";
+import TextBox from "./TextBox";
 
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
   pageType: 'listForAdmin' | 'listForEmployee' | 'addToOrder' | 'OrderSummary' | 'showAll';
 }
 
-const EmployeeCard = (props: CardProps) => {
+const EmployeeTable = (props: CardProps) => {
 
   const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
@@ -59,8 +59,8 @@ const EmployeeCard = (props: CardProps) => {
   interface DataRow {
     isActive: 0 | 1;
     employeeName: string;
-    employeeLocation: string;
-    employeeAreaBadge: string;
+    employeeTeam: string;
+    employeeAreaRole: string;
     employeeArea: string;
   }
 
@@ -89,17 +89,13 @@ const EmployeeCard = (props: CardProps) => {
         sortable: true,
       },
       {
-        name: 'Location',
-        selector: row => row.employeeLocation,
+        name: 'Team',
+        selector: row => row.employeeTeam,
       },
-      /*{
-        name: 'Area',
-        selector: row => row.employeeArea,
-      },*/
       {
         cell: (row) => (
           <Fragment>
-              <AreaBadge workingAreaBagde={row.employeeAreaBadge} workingArea={row.employeeArea} />
+              <TextBox textBoxText={row.employeeAreaBadge} textBoxColorScheme={row.employeeArea} />
           </Fragment>
         ),
       },
@@ -154,42 +150,42 @@ const EmployeeCard = (props: CardProps) => {
     {
       isActive: 1,
       employeeName: 'Mario Isaí Robles Lozano',
-      employeeLocation: 'Monterrey',
+      employeeTeam: 'Monterrey',
       employeeAreaBadge: 'Frontend Developer',
       employeeArea: 'frontend'
     },
     {
       isActive: 1,
       employeeName: 'Jorge Eduardo De Leon Reyna',
-      employeeLocation: 'Reynosa',
+      employeeTeam: 'Reynosa',
       employeeAreaBadge: 'Backend Developer',
       employeeArea: 'backend'
     },
     {
       isActive: 0,
       employeeName: 'Andrea Catalina Fernandez Mena',
-      employeeLocation: 'La Paz',
+      employeeTeam: 'La Paz',
       employeeAreaBadge: 'Data Manager',
       employeeArea: 'data'
     },
     {
       isActive: 1,
       employeeName: 'Andres Fuentes Alanis',
-      employeeLocation: 'Guadalajara',
+      employeeTeam: 'Guadalajara',
       employeeAreaBadge: 'Quality Manager',
       employeeArea: 'quality'
     },
     {
       isActive: 0,
       employeeName: 'Gerardo Mora Beltrán',
-      employeeLocation: 'Queretaro',
+      employeeTeam: 'Queretaro',
       employeeAreaBadge: 'Cibersecurity',
       employeeArea: 'cibersecurity'
     },
     {
       isActive: 0,
       employeeName: 'Oscar Alejandro Reyna Mont.',
-      employeeLocation: 'Guadalajara',
+      employeeTeam: 'Guadalajara',
       employeeAreaBadge: 'Mobile Developer',
       employeeArea: 'mobile'
     },
@@ -211,4 +207,4 @@ const EmployeeCard = (props: CardProps) => {
   )
 }
 
-export default EmployeeCard
+export default EmployeeTable

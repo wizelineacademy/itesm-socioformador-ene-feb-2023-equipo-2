@@ -6,16 +6,12 @@ import React, { Fragment, useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 
-const ClientCard = () => {
-  const handleClientSeeProjects = () => {
+const ProjectTable = () => {
+  const handleSeeProjects = () => {
     alert("se va a redireccionar al perfil del usuario");
   };
 
-  const handleClientEdit = () => {
-    alert("editar")
-  }
-
-  const handleClientEraseFromSystem = () => {
+  const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
   };
 
@@ -34,10 +30,13 @@ const ClientCard = () => {
   };
 
   interface DataRow {
-    isActive: 0 | 1;
+    isActive: 0 | 1 | 2;
+    projectName: string;
     clientName: string;
-    clientEmail: string;
-    clientPhone: string;
+    clientCompany: string;
+    teamName: string;
+    startDate: string;
+    endDate: string;
   }
 
   const columns: TableColumn<DataRow>[] = [
@@ -46,9 +45,7 @@ const ClientCard = () => {
         <Fragment>
           <FaIcons.FaRegDotCircle
             className={`status-icon-size ${
-              row.isActive === 1
-                ? "state-active"
-                : "state-inactive"
+              row.isActive === 2 ? "state-active" : row.isActive === 1 ? "state-pending" : "state-inactive"
             }`}
           />
         </Fragment>
@@ -56,43 +53,33 @@ const ClientCard = () => {
       width: "50px",
     },
     {
-      cell: (row) => (
-        <Fragment>
-          <FaIcons.FaCircle style={{ color: "black", fontSize: "50px" }} />
-        </Fragment>
-      ),
-      width: "50px",
-    },
-    {
-      name: "Name",
-      selector: (row) => row.clientName,
+      name: "Project",
+      selector: (row) => row.projectName,
       sortable: true,
     },
     {
-      name: "Email",
-      selector: (row) => row.clientEmail,
+      name: "Client",
+      selector: (row) => row.clientName,
     },
     {
-      name: "Phone Number",
-      selector: (row) => row.clientPhone,
+      name: "Team",
+      selector: (row) => row.teamName,
+    },
+    {
+      name: "Start Date",
+      selector: (row) => row.startDate,
+    },
+    {
+      name: "End Date",
+      selector: (row) => row.endDate,
+      //selector: row => row.endDate.getDate() + '/' + row.endDate.getMonth() + '/' + row.endDate.getFullYear(),
     },
     {
       cell: (row) => (
         <Fragment>
-          <FaIcons.FaClipboardList
+          <FaIcons.FaInfoCircle
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleClientSeeProjects()}
-          />
-        </Fragment>
-      ),
-      width: "50px",
-    },
-    {
-      cell: (row) => (
-        <Fragment>
-          <FaIcons.FaPencilAlt
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleClientEdit()}
+            onClick={() => handleSeeProjects()}
           />
         </Fragment>
       ),
@@ -103,7 +90,7 @@ const ClientCard = () => {
         <Fragment>
           <FaIcons.FaTrash
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleClientEraseFromSystem()}
+            onClick={() => handleEraseFromSystem()}
           />
         </Fragment>
       ),
@@ -113,40 +100,28 @@ const ClientCard = () => {
 
   const data = [
     {
-      isActive: 1,
-      clientName: "Mario Isaí Robles Lozano",
-      clientEmail: "Monterrey",
-      clientPhone: "Microsoft",
+      isActive: 2,
+      projectName: "project name",
+      clientName: "client name",
+      teamName: "team 1",
+      startDate: "2019-01-16",
+      endDate: "2019-01-16",
     },
     {
       isActive: 1,
-      clientName: "Jorge Eduardo De Leon Reyna",
-      clientEmail: "Reynosa",
-      clientPhone: "Macrohard",
+      projectName: "project name",
+      clientName: "client name",
+      teamName: "team 1",
+      startDate: "2019-01-16",
+      endDate: "2019-01-16",
     },
     {
       isActive: 0,
-      clientName: "Andrea Catalina Fernandez Mena",
-      clientEmail: "La Paz",
-      clientPhone: "Meta",
-    },
-    {
-      isActive: 1,
-      clientName: "Andres Fuentes Alanis",
-      clientEmail: "Guadalajara",
-      clientPhone: "Google",
-    },
-    {
-      isActive: 0,
-      clientName: "Gerardo Mora Beltrán",
-      clientEmail: "Queretaro",
-      clientPhone: "Softek",
-    },
-    {
-      isActive: 0,
-      clientName: "Oscar Alejandro Reyna Mont.",
-      clientEmail: "Guadalajara",
-      clientPhone: "Youtube",
+      projectName: "project name",
+      clientName: "client name",
+      teamName: "team 1",
+      startDate: "2019-01-16",
+      endDate: "2019-01-16",
     },
   ];
 
@@ -166,4 +141,4 @@ const ClientCard = () => {
   );
 };
 
-export default ClientCard;
+export default ProjectTable;
