@@ -2,10 +2,22 @@
 // Poner una imagen de placeholden en caso de que no haya foto de perfil
 // Arreglar para la vista tipo telefono
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
+
+interface DataRow {
+  id: number;
+  isActive: 0 | 1 | 2;
+  projectName: string;
+  clientName: string;
+  clientCompany: string;
+  teamName: string;
+  startDate: string;
+  endDate: string;
+  name: string;
+}
 
 const ProjectTable = () => {
   const handleSeeProjects = () => {
@@ -29,17 +41,6 @@ const ProjectTable = () => {
       },
     },
   };
-
-  interface DataRow {
-    id: number;
-    isActive: 0 | 1 | 2;
-    projectName: string;
-    clientName: string;
-    clientCompany: string;
-    teamName: string;
-    startDate: string;
-    endDate: string;
-  }
 
   const columns: TableColumn<DataRow>[] = [
     {

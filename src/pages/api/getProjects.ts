@@ -5,20 +5,12 @@ const prisma = new PrismaClient();
 
 export default async function handler(req: any, res: any) {
   try {
-    const orders = await prisma.orders.findMany({
-      select: {
-        id: true,
-        name: true,
-        orderstatus: true,
-        orderstartdate: true,
-        orderenddate: true,
-        erased: true,
-        idclient: true,
-        idteam: true,
-      },
+    const orders = await prisma.orders.findMany();
+    const projectSelectList = orders.map((project) => {
+      return { value: project.id, label: project.name}
     });
     const response = {
-      orders: orders,
+      orders: projectSelectList,
     };
     console.log(JSON.stringify(response));
     res.status(201).json(response);
