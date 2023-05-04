@@ -44,8 +44,6 @@ const DepartmentSkillsSearch = () => {
     return null;
   }
 
-  //useEffect(() => {console.log(selectedField)}, [selectedField]);
-
   return (
     <>
       <Container>

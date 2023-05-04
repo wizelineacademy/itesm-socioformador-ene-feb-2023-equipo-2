@@ -26,6 +26,8 @@ const generarPerfil: React.FC = () => {
   const [responseRoadmap, setResponseRoadmap] = useState(null);
   const [responseCV, setResponseCV] = useState(null);
 
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
   const handleOpenAIResponse = (e: any) => {
     console.log(e.target.id);
 
@@ -71,7 +73,7 @@ const generarPerfil: React.FC = () => {
       }),
     };
 
-    fetch("http://localhost:3000/api/saveRoadMap", requestOptions)
+    fetch(link + "/save-employee-information", requestOptions)
       .then((response) => response.json())
       .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
       .catch((error) => console.error("Error al guardar ruta de aprendizaje"));

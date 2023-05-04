@@ -14,7 +14,7 @@
 // We will display a table showing all the users in the system.
 // This table will include basic information about each user, such as their name, email, and role.
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from "react-icons/fa";
 import EmployeeSearch from "@/components/EmployeeSearch";
@@ -28,8 +28,6 @@ const employees = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
    
-
-  const [alphabeticallyA2Z, setAlphabeticallyA2Z] = useState(true); // True -> A to Z, False -> Z to A
   const [addEmployee, setAddEmployee] = useState(false); // True -> A to Z, False -> Z to A
 
   if (!hasMounted) {
@@ -38,7 +36,7 @@ const employees = () => {
 
   return (
     <>
-      <Menu titulo={"Search Associates"} descripcion={" "} />
+      <Menu titulo={"Employees"} descripcion={" "} />
       <EmployeeSearch />
       <div className="container my-4">
         <div className="row">
