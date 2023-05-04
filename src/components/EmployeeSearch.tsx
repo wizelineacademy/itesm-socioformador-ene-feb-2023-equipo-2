@@ -2,7 +2,7 @@
 // Cambiar los inputs por select boxes
 // https://react-select.com/home
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
@@ -47,6 +47,8 @@ const EmployeeSearch = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
   const [employeeName, setEmployeeName] = useState("");
   const [teamName, setTeamName] = useState("");
   const [role, setRole] = useState("");
@@ -56,17 +58,29 @@ const EmployeeSearch = () => {
     e === null ? setEmployeeName("") : setEmployeeName(e.value);
   };
 
-  const handleChangeSelectTeamName = (e) => {
+  const handleChangeSelectTeamName = (e: any | null) => {
     e === null ? setTeamName("") : setTeamName(e.value);
   };
 
-  const handleChangeSelectRole = (e) => {
+  const handleChangeSelectRole = (e: any | null) => {
     e === null ? setRole("") : setRole(e.value);
   };
 
-  const handleChangeSelectDepartment = (e) => {
+  const handleChangeSelectDepartment = (e: any | null) => {
     e === null ? setDepartment("") : setDepartment(e.value);
   };
+
+  const [employeesList, setEmployeesList] = useState([]);
+
+  // fetch of employees to later place in react-select.
+  useEffect(() => {
+    fetch(link + '/get-employees')
+      .then(res => res.json())
+      .then(data => {
+        setEmployeesList(data.employees)
+      })
+      .catch(error => console.log("Error", error))
+  }, [])
 
   const handleSearch = (e: any) => {
     alert("buscando");
@@ -85,10 +99,10 @@ const EmployeeSearch = () => {
             <label className="form-label">Employee Name:</label>
             <Select
               onChange={handleChangeSelectEmployeeName}
-              value={specialityOptions.find(
+              value={employeesList.find(
                 (obj) => obj.value === employeeName
               )}
-              options={specialityOptions}
+              options={employeesList}
               isClearable
             />
           </div>
