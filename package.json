@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.0.2",
     "@auth0/nextjs-auth0": "^2.5.0",
     "@patternfly/react-core": "^4.276.8",
     "@patternfly/react-icons": "^4.93.6",
