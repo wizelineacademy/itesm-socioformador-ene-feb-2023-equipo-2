@@ -12,25 +12,10 @@ export default async function handler(req: any, res: any) {
       INNER JOIN client
         ON orders.idclient = client.id
       INNER JOIN teams
-        ON orders.idteam = teams.id;
+        ON orders.idteam = teams.id
+      WHERE orders.erased = false;
     `
-    /*const orders = await prisma.orders.findMany({
-      select: {
-        id: true,
-        name: true,
-        orderstatus: true,
-        orderstartdate: true,
-        orderenddate: true,
-        client: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      include: {
-        client: true,
-      },
-    });*/
+
     const response = {
       orders: orders,
     };

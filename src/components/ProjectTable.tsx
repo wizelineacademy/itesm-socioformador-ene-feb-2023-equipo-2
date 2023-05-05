@@ -2,7 +2,7 @@
 // Poner una imagen de placeholden en caso de que no haya foto de perfil
 // Arreglar para la vista tipo telefono
 
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
@@ -19,6 +19,16 @@ interface DataRow {
   name: string;
 }
 
+interface projectListInterface {
+  id: number;
+  ordername: string;
+  orderstatus: string;
+  orderstartdate: string; 
+  orderenddate: string; 
+  clientname: string; 
+  teamname: string;
+}
+
 const ProjectTable = () => {
   const handleSeeProjects = () => {
     alert("se va a redireccionar al perfil del usuario");
@@ -27,6 +37,19 @@ const ProjectTable = () => {
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
   };
+
+  const [projectList, setProjectList] = useState<projectListInterface[]>([]);
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    fetch(link + '/getProjectList')
+      .then(res => res.json())
+      .then(data => {
+        setProjectList(data.orders)
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
 
   const customStyles = {
     rows: {
@@ -42,13 +65,13 @@ const ProjectTable = () => {
     },
   };
 
-  const columns: TableColumn<DataRow>[] = [
+  const columns: TableColumn<projectListInterface>[] = [
     {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
             className={`status-icon-size ${
-              row.isActive === 2 ? "state-active" : row.isActive === 1 ? "state-pending" : "state-inactive"
+              row.orderstatus === "Approved" ? "state-active" : row.orderstatus === "Pending" ? "state-pending" : "state-inactive"
             }`}
           />
         </Fragment>
@@ -57,24 +80,24 @@ const ProjectTable = () => {
     },
     {
       name: "Project",
-      selector: (row) => row.projectName,
+      selector: (row) => row.ordername,
       sortable: true,
     },
     {
       name: "Client",
-      selector: (row) => row.clientName,
+      selector: (row) => row.clientname,
     },
     {
       name: "Team",
-      selector: (row) => row.teamName,
+      selector: (row) => row.teamname,
     },
     {
       name: "Start Date",
-      selector: (row) => row.startDate,
+      selector: (row) => row.orderstartdate,
     },
     {
       name: "End Date",
-      selector: (row) => row.endDate,
+      selector: (row) => row.orderenddate,
       //selector: row => row.endDate.getDate() + '/' + row.endDate.getMonth() + '/' + row.endDate.getFullYear(),
     },
     {
@@ -106,15 +129,15 @@ const ProjectTable = () => {
 
   const data = [
     {
-      id: 1,
-      isActive: 2,
-      projectName: "project name",
-      clientName: "client name",
-      teamName: "team 1",
-      startDate: "2019-01-16",
-      endDate: "2019-01-16",
+      "id": 1,
+      "isActive": 2,
+      "projectName": "project namesss",
+      "clientName": "client name",
+      "teamName": "team 1",
+      "startDate": "2019-01-16",
+      "endDate": "2019-01-16",
     },
-    {
+    /*{
       id: 2,
       isActive: 1,
       projectName: "project name",
@@ -131,7 +154,7 @@ const ProjectTable = () => {
       teamName: "team 1",
       startDate: "2019-01-16",
       endDate: "2019-01-16",
-    },
+    },*/
   ];
 
   return (
@@ -139,7 +162,7 @@ const ProjectTable = () => {
       <div className="container my-4">
         <DataTable
           columns={columns}
-          data={data}
+          data={projectList}
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover
