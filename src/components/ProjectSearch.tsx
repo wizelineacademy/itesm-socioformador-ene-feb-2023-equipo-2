@@ -10,18 +10,6 @@ const estatusOptions = [
   {value: 0, label: "Rejected"}
 ];
 
-interface projectListInterface {
-  id: number;
-  orderstatus: string;
-  orderdesc: string;
-  idclient: number;
-  idteam: number;
-  orderstartdate: string;
-  orderenddate: string;
-  erased: boolean;
-  name: string;
-}
-
 interface projectListSelectionInterface {
   value: string;
   label: string;
