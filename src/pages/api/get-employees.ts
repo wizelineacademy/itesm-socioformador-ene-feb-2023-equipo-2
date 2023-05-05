@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export default async function handler(req: any, res: any) {
   try {
     const employees = await prisma.employees.findMany();
-    const employeeData = employees.map((employee) => {
+    const employeeData = employees.map((employee : any) => {
       return { value: employee.id, label: employee.name };
     });
     const response = {
