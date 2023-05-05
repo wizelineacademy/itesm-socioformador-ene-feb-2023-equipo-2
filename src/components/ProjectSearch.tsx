@@ -4,14 +4,6 @@ import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 
-const clientOptions = [
-  { value: "juan-garcia", label: "Juan García" },
-  { value: "ana-gonzalez", label: "Ana González" },
-  { value: "jose-martinez", label: "José Martínez" },
-  { value: "maria-hernandez", label: "María Hernández" },
-  { value: "carlos-perez", label: "Carlos Pérez" },
-];
-
 const estatusOptions = [
   {value: 2, label: "Approved"},
   {value: 1, label: "Pending"},
@@ -43,8 +35,9 @@ const ProjectSearch = () => {
   // React Hooks
   const [projectName, setProjectName] = useState("");
   const [projectNameList, setProjectNameList] = useState<projectListSelectionInterface[]>([]);
-  const [clientName, setClientName] = useState("");
+  const [client, setClient] = useState<number>();
   const [estatus, setEstatus] = useState("");
+  const [listOfClients, setClientsList] = useState([])
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -57,9 +50,22 @@ const ProjectSearch = () => {
       .catch(error => console.log("Error ", error))
   }, [])
 
+  useEffect(() => {
+    fetch(link + '/get-clients')
+    .then((res) => res.json())
+    .then((data) => {
+      setClientsList(data.client) 
+    })
+    .catch((error) => console.log("Error", error))
+  }, [])
+
   const handleChangeSelectProjectName = (e: any | null) => {
     e === null ? setProjectName("") : setProjectName(e.value);
   };
+
+  const handleFetchClients = (e: any | null) => {
+    e === null ? setClient("") : setClient(e.value)
+  }
 
   const handleSearch = (e : any) => {
     alert("buscando")
@@ -85,9 +91,10 @@ const ProjectSearch = () => {
           <Col>
             <label className="form-label">Client:</label>
             <Select
-              //onChange={handleChangeSelectClientName}
-              //value={clientOptions.find((obj) => obj.value === clientName)}
-              options={clientOptions}
+              onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
+              value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
+              options={listOfClients} // sets the available options for the Select component
+              placeholder="Select client..."
               isClearable
             />
           </Col>
