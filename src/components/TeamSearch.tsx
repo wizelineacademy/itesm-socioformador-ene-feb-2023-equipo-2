@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Select from "react-select";
+import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 
 const options = [
@@ -16,8 +17,24 @@ const TeamSearch = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
-  // React Hooks
   const [name, setName] = useState("");
+
+  const options = [
+    { value: "1", label: "one" },
+    { value: "2", label: "two" },
+  ];
+
+  const handleChangeSelect = (e : any | null) => {
+    if (e === null) {
+      setName("");
+    } else {
+      setName(e.value);
+    }
+  };
+
+  const handleSearch = (e : any) => {
+    alert("buscando")
+  }
 
   if (!hasMounted) {
     return null;
@@ -25,29 +42,37 @@ const TeamSearch = () => {
 
   return (
     <>
-      <Container>
-        <Row>
-          <Col>
+      <div className="container">
+        {/*for searching employees by their name*/}
+        <div className="row">
+          <div className="col-md">
             <label className="form-label">Name:</label>
-            <input
-              className="form-control"
-              onChange={(e) => e.target.value}
-              value={name}
-              type="text"
-              id="nameSearch"
-              autoComplete="off"
+            <Select
+              onChange={handleChangeSelect}
+              value={options.find((obj) => obj.value === name)}
+              options={options}
+              isClearable
             />
-          </Col>
-          <Col>
-            <label className="form-label">Team Name:</label>
-            <Select isClearable isMulti options={options} />
-          </Col>
-          <Col>
-            <label className="form-label">Linked Company:</label>
-            <Select isClearable isMulti options={options} />
-          </Col>
-        </Row>
-      </Container>
+          </div>
+          <div className="col-md">
+            <label className="form-label">Members</label>
+            <Select
+              onChange={handleChangeSelect}
+              value={options.find((obj) => obj.value === name)}
+              options={options}
+              isClearable
+              isMulti
+            />
+          </div>
+          <div className="col-md-2">
+            <label className="form-label">&nbsp;</label>
+            <button className="btn btn-primary w-100" onClick={handleSearch}>
+              <FaIcons.FaSearch className="mb-1" />
+              &nbsp;&nbsp;Search
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

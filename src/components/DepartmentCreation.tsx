@@ -4,24 +4,22 @@ import * as FaIcons from "react-icons/fa";
 const DepartmentCreation = () => {
   const [name, setName] = useState("");
 
-  const handleNewDepartments = async () => 
-  {
+  const handleNewDepartments = async () => {
     let link = process.env.NEXT_PUBLIC_API_URL;
 
-
     const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ department: name})
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ department: name }),
     };
 
-      fetch(link + '/createDepartment', requestOptions)
-      .then(response => response.json())
-      .then(data => {
-        const alertContainer = document.createElement('div');
-        alertContainer.classList.add('alert-container');
-        const customAlert = document.createElement('div');
-        customAlert.classList.add('custom-alert');
+    fetch(link + "/createDepartment", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        const alertContainer = document.createElement("div");
+        alertContainer.classList.add("alert-container");
+        const customAlert = document.createElement("div");
+        customAlert.classList.add("custom-alert");
         customAlert.innerHTML = `
           <h2>Success!</h2>
           <p>Department saved sucessfully</p>
@@ -29,19 +27,19 @@ const DepartmentCreation = () => {
         `;
         alertContainer.appendChild(customAlert);
         document.body.appendChild(alertContainer);
-    
-        const okButton = document.getElementById('ok-button');
-        okButton.addEventListener('click', () => {
+
+        const okButton = document.getElementById("ok-button");
+        okButton.addEventListener("click", () => {
           alertContainer.remove();
         });
-    
-        alertContainer.style.display = 'flex';
+
+        alertContainer.style.display = "flex";
       })
-      .catch(error => {
-        const alertContainer = document.createElement('div');
-        alertContainer.classList.add('alert-container');
-        const customAlert = document.createElement('div');
-        customAlert.classList.add('custom-alert2');
+      .catch((error) => {
+        const alertContainer = document.createElement("div");
+        alertContainer.classList.add("alert-container");
+        const customAlert = document.createElement("div");
+        customAlert.classList.add("custom-alert2");
         customAlert.innerHTML = `
           <h2>Error</h2>
           <p>Error saving department</p>
@@ -49,18 +47,15 @@ const DepartmentCreation = () => {
         `;
         alertContainer.appendChild(customAlert);
         document.body.appendChild(alertContainer);
-    
-        const okButton = document.getElementById('ok-button');
-        okButton.addEventListener('click', () => {
+
+        const okButton = document.getElementById("ok-button");
+        okButton.addEventListener("click", () => {
           alertContainer.remove();
         });
-    
-        alertContainer.style.display = 'flex';
-      });
-    
-  
-  }
 
+        alertContainer.style.display = "flex";
+      });
+  };
 
   return (
     <>
@@ -82,10 +77,11 @@ const DepartmentCreation = () => {
           </div>
           <div className="col-md">
             {/* Submit button */}
-            <label className="form-label">
-              &nbsp;
-            </label>
-            <button className="btn btn-primary w-100" onClick={handleNewDepartments}>
+            <label className="form-label">&nbsp;</label>
+            <button
+              className="btn btn-primary w-100"
+              onClick={handleNewDepartments}
+            >
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>

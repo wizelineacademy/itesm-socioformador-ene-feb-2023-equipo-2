@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
 import * as FaIcons from "react-icons/fa";
 import * as BsIcons from "react-icons/bs";
@@ -28,6 +28,10 @@ export default function Home() {
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error(error));
+
+
+
+
 
   };
 
@@ -92,6 +96,9 @@ export default function Home() {
                     <BsIcons.BsFillKeyFill className="mb-1" />
                     &nbsp;&nbsp;Login
                   </Button>
+
+                  <a href="/api/auth/login">Login</a>
+
                 </Col>
               </Row>
 

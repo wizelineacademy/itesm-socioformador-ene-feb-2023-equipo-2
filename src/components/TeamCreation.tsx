@@ -33,7 +33,7 @@ const TeamCreation = () => {
     <>
       <Container className="bg-light border p-4">
         <Row>
-          <h4 className="mb-3"> Create new team </h4>
+          <p>Please fill out the following fields to create a team:</p>
         </Row>
         <Row>
           <Col>

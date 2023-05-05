@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
@@ -13,10 +13,27 @@ const clientOptions = [
 ];
 
 const estatusOptions = [
-  {value: 2, label: "Aprobado"},
-  {value: 1, label: "Pendiente"},
-  {value: 0, label: "Cancelado"}
+  {value: 2, label: "Approved"},
+  {value: 1, label: "Pending"},
+  {value: 0, label: "Rejected"}
 ];
+
+interface projectListInterface {
+  id: number;
+  orderstatus: string;
+  orderdesc: string;
+  idclient: number;
+  idteam: number;
+  orderstartdate: string;
+  orderenddate: string;
+  erased: boolean;
+  name: string;
+}
+
+interface projectListSelectionInterface {
+  value: string;
+  label: string;
+}
 
 const ProjectSearch = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -25,20 +42,24 @@ const ProjectSearch = () => {
 
   // React Hooks
   const [projectName, setProjectName] = useState("");
+  const [projectNameList, setProjectNameList] = useState<projectListSelectionInterface[]>([]);
   const [clientName, setClientName] = useState("");
   const [estatus, setEstatus] = useState("");
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    fetch(link + '/getProjects')
+      .then(res => res.json())
+      .then(data => {
+        setProjectNameList(data.orders)
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
 
   const handleChangeSelectProjectName = (e: any | null) => {
     e === null ? setProjectName("") : setProjectName(e.value);
   };
-
-  const handleChangeSelectClientName = (e: any | null) => {
-    e === null ? setClientName("") : setClientName(e.value)
-  }
-
-  const handleChangeSelectEstatus = (e : any | null) => {
-    e === null ? setEstatus("") : setEstatus(e.value)
-  }
 
   const handleSearch = (e : any) => {
     alert("buscando")
@@ -56,16 +77,16 @@ const ProjectSearch = () => {
             <label className="form-label">Project Name:</label>
             <Select
               onChange={handleChangeSelectProjectName}
-              value={clientOptions.find((obj) => obj.value === projectName)}
-              options={clientOptions}
+              value={projectNameList.find((obj) => obj.value === projectName)}
+              options={projectNameList}
               isClearable
             />
           </Col>
           <Col>
             <label className="form-label">Client:</label>
             <Select
-              onChange={handleChangeSelectClientName}
-              value={clientOptions.find((obj) => obj.value === clientName)}
+              //onChange={handleChangeSelectClientName}
+              //value={clientOptions.find((obj) => obj.value === clientName)}
               options={clientOptions}
               isClearable
             />
@@ -73,8 +94,8 @@ const ProjectSearch = () => {
           <Col>
             <label className="form-label">Estatus:</label>
             <Select
-              onChange={handleChangeSelectEstatus}
-              value={estatusOptions.find((obj) => obj.value === estatus)}
+              //onChange={handleChangeSelectEstatus}
+              //value={estatusOptions.find((obj) => obj.value === estatus)}
               options={estatusOptions}
               isClearable
             />

@@ -57,16 +57,17 @@ const EmployeeTable = (props: CardProps) => {
   };
 
   interface DataRow {
-    isActive: 0 | 1;
-    employeeName: string;
-    employeeTeam: string;
-    employeeAreaRole: string;
+    id: number;
+    name: string;
+    idposition: 1 | 2;
+    location: string;
+    employeeAreaBadge: string;
     employeeArea: string;
   }
 
   const columns: TableColumn<DataRow>[] = React.useMemo(
     () => [
-      {
+      /*{
         cell: (row) => (
           <Fragment>
             <FaIcons.FaRegDotCircle className={`status-icon-size ${row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
@@ -74,7 +75,7 @@ const EmployeeTable = (props: CardProps) => {
         ),
         omit: hideStatusIcon,
         width: '50px',
-      },
+      },*/
       {
         cell: (row) => (
           <Fragment>
@@ -85,12 +86,19 @@ const EmployeeTable = (props: CardProps) => {
       },
       {
         name: 'Name',
-        selector: row => row.employeeName,
+        selector: row => row.name,
         sortable: true,
       },
       {
-        name: 'Team',
-        selector: row => row.employeeTeam,
+        name: 'Location',
+        selector: row => row.location,
+      },
+      {
+        cell: (row) => (
+          <Fragment>
+            {row.idposition === 2 ? 'admin' : ''},
+          </Fragment>
+        ),
       },
       {
         cell: (row) => (
@@ -102,7 +110,7 @@ const EmployeeTable = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaListUl
+            <FaIcons.FaInfoCircle
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
               onClick={() => handleEmployeeSeeInfo()}/>
           </Fragment>
@@ -112,7 +120,7 @@ const EmployeeTable = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaTrashAlt
+            <FaIcons.FaTrash
                 style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
                 onClick={() => handleEmployeeDelete()}/>
           </Fragment>
@@ -148,44 +156,50 @@ const EmployeeTable = (props: CardProps) => {
 
   const data = [
     {
-      isActive: 1,
-      employeeName: 'Mario Isaí Robles Lozano',
-      employeeTeam: 'Monterrey',
+      id: 1,
+      name: 'Mario Isaí Robles Lozano',
+      idposition: 1,
+      location: 'Monterrey',
       employeeAreaBadge: 'Frontend Developer',
       employeeArea: 'frontend'
     },
     {
-      isActive: 1,
-      employeeName: 'Jorge Eduardo De Leon Reyna',
-      employeeTeam: 'Reynosa',
+      id: 2,
+      name: 'Jorge Eduardo De Leon Reyna',
+      idposition: 2,
+      location: 'Reynosa',
       employeeAreaBadge: 'Backend Developer',
       employeeArea: 'backend'
     },
     {
-      isActive: 0,
-      employeeName: 'Andrea Catalina Fernandez Mena',
-      employeeTeam: 'La Paz',
+      id: 3,
+      name: 'Andrea Catalina Fernandez Mena',
+      idposition: 1,
+      location: 'La Paz',
       employeeAreaBadge: 'Data Manager',
       employeeArea: 'data'
     },
     {
-      isActive: 1,
-      employeeName: 'Andres Fuentes Alanis',
-      employeeTeam: 'Guadalajara',
+      id: 4,
+      name: 'Andres Fuentes Alanis',
+      idposition: 2,
+      location: 'Guadalajara',
       employeeAreaBadge: 'Quality Manager',
       employeeArea: 'quality'
     },
     {
-      isActive: 0,
-      employeeName: 'Gerardo Mora Beltrán',
-      employeeTeam: 'Queretaro',
+      id: 5,
+      name: 'Gerardo Mora Beltrán',
+      idposition: 1,
+      location: 'Queretaro',
       employeeAreaBadge: 'Cibersecurity',
       employeeArea: 'cibersecurity'
     },
     {
-      isActive: 0,
-      employeeName: 'Oscar Alejandro Reyna Mont.',
-      employeeTeam: 'Guadalajara',
+      id: 6,
+      name: 'Oscar Alejandro Reyna Mont.',
+      idposition: 1,
+      location: 'Guadalajara',
       employeeAreaBadge: 'Mobile Developer',
       employeeArea: 'mobile'
     },

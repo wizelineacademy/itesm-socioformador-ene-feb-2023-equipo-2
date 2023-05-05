@@ -7,6 +7,9 @@ import { useState, useEffect } from "react";
 import { useHasMounted } from "@/components/useHasMounted";
 import { AutoprefixerIconConfig } from "@patternfly/react-icons";
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+
+
 interface apiResponse {
   id: number,
   name: string,
@@ -30,6 +33,13 @@ function Roadmap() {
   const [selectedMenu, setSelectedMenu] = useState("");
   const [data, setData] = useState<apiResponse[]>([]);
   const [roadmap, setRoadmap] = useState<any>([]);
+
+  const { user, error, isLoading } = useUser();
+
+  console.log("user => ", user);
+  console.log("error => ", error);
+  console.log("isLoading => ", isLoading);
+
 
   useEffect(() => {
     fetchData();
@@ -77,12 +87,14 @@ function Roadmap() {
 
   return (
     <div>
+      return <a href="/api/auth/logout">Logout</a>;
       <Menu
         titulo={"Roadmap"}
         descripcion={
           "Our AI suggests new technologies and programming languages based on your abilities and provides specific learning dates."
         }
       />
+
       <div className="container">
         <div className="row">
           <div className="col-3">

@@ -21,11 +21,17 @@ const skillOptions = [
   { value: "postgresql", label: "PostgreSQL" },
 ];
 
+interface departmentInterface {
+  label: string;
+  value: string;
+}
+
 const DepartmentSkillsSearch = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
+  // TODO: MARIO CÓDIGO
   //const [selectedDepartment, setSelectedDepartment] = useState<string>();
   const selectedDepartment = useContext(departmentContext)
 
@@ -40,11 +46,41 @@ const DepartmentSkillsSearch = () => {
     }
   };
 
+  let link = process.env.NEXT_PUBLIC_API_URL; 
+  const [department, setDepartment] = useState("")
+  const [departmentList, setDepartmentList] = useState<departmentInterface[]>([]);
+  // const [skill, setSkill] = useState("")
+  // const [skillList, setSkillList] = useState([])
+
+  const handleChangeSelectedDepartment = (e : any | null) => {
+    e === null ? setDepartment("") : setDepartment(e.value);
+  }
+
+  useEffect(() => {
+    fetch(link + '/get-departments')
+      .then(res => res.json())
+      .then(data => {
+        setDepartmentList(data.departments)
+      })
+      .catch(error => console.log("Error", error))
+  }, [])
+
+  // const handleChangeSelectedSkill = (e : any | null) => {
+  //   e === null ? setSkill("") : setSkill(e.value);
+  // }
+
+  // useEffect(() => {
+  //   fetch(link + '/get-skills')
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       setSkillList(data.skills)
+  //     })
+  //     .catch(error => console.log("Error", error))
+  // }, [])
+
   if (!hasMounted) {
     return null;
   }
-
-  //useEffect(() => {console.log(selectedField)}, [selectedField]);
 
   return (
     <>
@@ -52,11 +88,27 @@ const DepartmentSkillsSearch = () => {
         <Row>
           <Col>
             <label className="form-label">Department Name:</label>
-            <Select isClearable options={deptOptions} onChange={handleDepartmentSelection}/>
+            {/* <Select isClearable options={deptOptions} onChange={handleDepartmentSelection}/> */}
+            <Select
+              onChange={handleChangeSelectedDepartment}
+              value={departmentList.find(
+                (obj) => obj.value === department
+              )}
+              options={departmentList}
+              isClearable
+            />
+            <p>{department}</p>
           </Col>
           <Col>
             <label className="form-label">Skills:</label>
-            <Select isClearable options={skillOptions} />
+            {/* <Select
+              onChange={handleChangeSelectedSkill}
+              value={skillList.find(
+                (obj) => obj.value === skill
+              )}
+              options={skillList}
+              isClearable
+            /> */}
           </Col>
         </Row>
       </Container>

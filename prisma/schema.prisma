@@ -21,8 +21,9 @@ model employees {
   idposition  Int
   email       String  @unique
   password    String
+  infoabout   String
   location String
-  infoabout String
+  status Boolean
   teams teamemployees[]
   departments departmentemployees[]
 }
@@ -54,6 +55,7 @@ model orders {
   orderstartdate DateTime @default(now())
   orderenddate DateTime
   erased Boolean @default(false)
+  name String
 }
 
 model client {
