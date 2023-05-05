@@ -42,6 +42,11 @@ const locationOptions = [
   { value: "queretaro", label: "Queretaro" },
 ];
 
+interface employeeInterface {
+  value: string;
+  label: string;
+}
+
 const EmployeeSearch = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -70,7 +75,7 @@ const EmployeeSearch = () => {
     e === null ? setDepartment("") : setDepartment(e.value);
   };
 
-  const [employeesList, setEmployeesList] = useState([]);
+  const [employeesList, setEmployeesList] = useState<employeeInterface[]>([]);
 
   // fetch of employees to later place in react-select.
   useEffect(() => {
