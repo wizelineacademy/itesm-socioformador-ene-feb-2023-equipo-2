@@ -5,15 +5,24 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import { useHasMounted } from "@/components/useHasMounted";
+import { AutoprefixerIconConfig } from "@patternfly/react-icons";
 
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 
 interface apiResponse {
-  _id: string;
-  name: string;
-  description: string;
-  virtualTourURL: string;
+  id: number,
+  name: string,
+  linkedinlink: string,
+  cvfile: string,
+  profileimage: string,
+  inforoadmap: string 
+}
+
+interface roadMap {
+  name: string,
+  description: string,
+  previous_knowledge: string,
 }
 
 function Roadmap() {
@@ -23,6 +32,7 @@ function Roadmap() {
 
   const [selectedMenu, setSelectedMenu] = useState("");
   const [data, setData] = useState<apiResponse[]>([]);
+  const [roadmap, setRoadmap] = useState<any>([]);
 
   const { user, error, isLoading } = useUser();
 
@@ -35,17 +45,45 @@ function Roadmap() {
     fetchData();
   }, []);
 
+  const getParsedJson = (string: string) => {
+    //removing breakpoints and "/" characters
+    let cleanString = string.replace(/\\n|\\r|\//gm, "");
+    //removing non printable characters
+    let printableStr = cleanString.replace(/[^\x20-\x7E]/g, '');
+    //removing non ASCII characters
+    let finalString = printableStr.replace(/[^\x00-\x7F]/g, '');
+
+    console.log("final string", finalString)
+
+    let parsedJson = JSON.parse(finalString)
+
+    return parsedJson;
+
+
+  } 
+
   const fetchData = async () => {
     const response = await fetch(
-      "https://admin.marco.org.mx/api/expos/current"
+      "http://localhost:3000/api/getRoadMap"
     );
     const json = await response.json();
-    setData(json as apiResponse[]);
+    const data: any = json as apiResponse[];
+    const obj = data?.userRoadMap?.inforoadmap
+
+    console.log("json sin procesar", obj)
+      
+    //calling function to clean string
+    let jsonString = getParsedJson(obj)
+
+    let finalJson = JSON.parse(jsonString);
+    setRoadmap(finalJson)
   };
 
   if (!hasMounted) {
     return null;
   }
+
+  console.log("roadmap => ", roadmap?.tools)
 
   return (
     <div>
@@ -66,29 +104,29 @@ function Roadmap() {
               role="tablist"
               aria-orientation="vertical"
             >
-              {data.map((example) => {
+              {roadmap?.tools.map((element: any) => {
                 return (
                   <a
                     className={
-                      example._id == selectedMenu
+                      element.name == selectedMenu
                         ? "nav-link active selectedAncore nav-roadmap"
                         : "nav-link nav-roadmap"
                     }
-                    id={example._id + "-tab"}
+                    id={element.name + "-tab"}
                     data-toggle="pill"
-                    href={"#" + example._id}
+                    href={"#" + element.name}
                     role="tab"
                     aria-controls="v-pills-profile"
                     aria-selected="false"
-                    onClick={() => setSelectedMenu(example._id)}
+                    onClick={() => setSelectedMenu(element.name)}
                     style={{
                       color:
-                        example._id === selectedMenu
+                      element.name === selectedMenu
                           ? "white !important"
                           : "black !important",
                     }}
                   >
-                    {example.name}
+                    {element.name}
                   </a>
                 );
               })}
@@ -96,27 +134,35 @@ function Roadmap() {
           </div>
           <div className="col-9">
             <div className="tab-content" id="v-pills-tabContent">
-              {data.map((example) => {
+              {roadmap?.tools.map((element: any) => {
                 console.log("selected menu => ", selectedMenu);
                 return (
                   <div
                     className={
-                      example._id == selectedMenu
+                      element.name == selectedMenu
                         ? "tab-pane fade show active"
                         : "tab-pane fade"
                     }
-                    id={example._id.toString()}
+                    id={element.name.toString()}
                     role="tabpanel"
                     aria-labelledby="v-pills-profile-tab"
                   >
-                    {example.description}
+                    <h1>{element.description}</h1>
+
+                    <br />
+
+                    <h2>Description</h2>
+                    {element.description}
+
+                    <h2>Previous Knowledge</h2>
+                    {element.previous_knowledge}
                   </div>
                 );
               })}
             </div>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   );
 }

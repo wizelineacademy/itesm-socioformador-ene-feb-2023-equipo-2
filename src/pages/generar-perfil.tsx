@@ -23,8 +23,8 @@ const generarPerfil: React.FC = () => {
   const [jobExperience, setJobExperience] = useState("");
   const [skills, setSkills] = useState("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
-  const [responseRoadmap, setResponseRoadmap] = useState(null);
-  const [responseCV, setResponseCV] = useState(null);
+  const [responseRoadmap, setResponseRoadmap] = useState<any>("");
+  const [responseCV, setResponseCV] = useState<any>("");
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -53,9 +53,25 @@ const generarPerfil: React.FC = () => {
     });
 
     const auxMessage =
-      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma, los conocimientos previos necesarios para aprenderla y algún sitio de internet, libro o recurso para aprenderlo tomando en cuenta que tiene las siguientes habilidades:` +
-      text +
-      `. Tienen que ser otros lenguajes de programación, no puenden ser los mismos escritos. Finalmente, dame unicamente y exclusivamente los elementos acomodados en formato json con esta estructura:{“Roadmap”: [{  “name” ,“description” ,“previous_knowledge” “resources”},{  “name” ,“description” ,“previous_knowledge” “resources”},]}. La respuesta debe de ser en ingles.`;
+    `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma y los conocimientos previos necesarios para aprenderla tomando en cuenta que es para una persona con este perfil, habilidades y conocimientos: ` +
+    skills +
+    `. Dame únicamente la información de la ruta de aprendizaje que generaste acorde a los parámetros anteriores y hazlo únicamente en formato json siguiendo de manera muy precisa esta estructura: 
+
+    {
+    'tools'  [
+      {
+        'name': 'resource name 1',
+        'description': vresource description 1',
+        'previous_knowledge': 'previous knowledge 1'
+      },
+      {
+        'name': 'resource name 2',
+        'description': “resource description 2',
+        'previous_knowledge': ”previous knowledge 2
+      }
+      ]
+    }
+    `
     const messageRoadmap = [{ role: "user", content: auxMessage }];
 
     getChatResponse(messageRoadmap).then((res) => {
