@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 export default async function handler(req: any, res: any) {
   const { aidescription, orderstatus, orderstartdate, orderenddate, idteam, idclient} = req.body;
   const aidescription_string = JSON.stringify(aidescription);
-  const orderstatus_string = JSON.stringify(orderstatus);
+  const orderstatus_string = orderstatus;
   const orderstartdate_datetime = new Date(JSON.stringify(orderstartdate));
   const orderenddate_datetime = new Date(JSON.stringify(orderenddate));
   const idteam_int = parseInt(JSON.stringify(idteam));
