@@ -46,9 +46,25 @@ const generarPerfil: React.FC = () => {
 
   const handleSendFormManual = async () => {
     const auxMessage =
-      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma, los conocimientos previos necesarios para aprenderla y algún sitio de internet, libro o recurso para aprenderlo tomando en cuenta que es para` +
+      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma y los conocimientos previos necesarios para aprenderla tomando en cuenta que es para una persona con este perfil, habilidades y conocimientos: ` +
       skills +
-      `. Finalmente, dame unicamente y exclusivamente los elementos acomodados en formato json con esta estructura:{“Herramientas”: [{  “nombre” ,“descripcion” ,“conocimientos_previos” “recursos”},{“nombre” ,“descripcion” ,“conocimientos_previos” ,“recursos”},]}`;
+      `. Dame únicamente la información de la ruta de aprendizaje que generaste acorde a los parámetros anteriores y hazlo únicamente en formato json siguiendo de manera muy precisa esta estructura: 
+
+      {
+      'tools'  [
+        {
+          'name': 'resource name 1',
+          'description': vresource description 1',
+          'previous_knowledge': 'previous knowledge 1'
+        },
+        {
+          'name': 'resource name 2',
+          'description': “resource description 2',
+          'previous_knowledge': ”previous knowledge 2
+        }
+        ]
+      }
+      `
     const messages = [{ role: "user", content: auxMessage }];
 
     getChatResponse(messages).then((res) => {

@@ -5,7 +5,8 @@ const prisma = new PrismaClient();
 
 export default async function handler(req: any, res: any) {
   const { inforoadmap } = req.body;
-  const inforoadmap_string = JSON.stringify(inforoadmap);
+  const inforoadmap_string = JSON.stringify(inforoadmap).replace((/  |\r\n|\n|\r/gm),"");
+
 
   //TODO: ID FIJO PROVISIONAL MIENTRAS IMPLEMENTAMOS AUTH0
   const id = 13;
