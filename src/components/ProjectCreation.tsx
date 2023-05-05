@@ -9,17 +9,10 @@ import { Dropdown, DropdownButton } from "react-bootstrap";
 
 let link = process.env.NEXT_PUBLIC_API_URL;
 
-// 'options' will later be replaced by table skills in database
-const listOfClients = [
-  { value: "JohnDoeID", label: "John Doe" },
-  { value: "AndresFuentesID", label: "Andres Fuentes" },
-  { value: "CatalinaFernandezID", label: "Catalina Fernandez" },
-];
-
 const ProjectCreation = () => {
   const hasMounted = useHasMounted();
   // React Hooks for managing component state
-  const [client, setClient] = useState<string>("");
+  const [client, setClient] = useState<number>();
   const [team, setTeam] = useState<number>();
   const [projectDescription, setProjectDescription] = useState<string>("");
   const [response, setResponse] = useState("");
@@ -27,12 +20,22 @@ const ProjectCreation = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [orderStatus, setOrderStatus] = useState("");
   const [listOfTeams, setTeamsList] = useState([])
+  const [listOfClients, setClientsList] = useState([])
 
   useEffect(() => {
     fetch(link + '/fetchTeams')
     .then((res) => res.json())
     .then((data) => {
       setTeamsList(data.teams) 
+    })
+    .catch((error) => console.log("Error", error))
+  }, [])
+
+  useEffect(() => {
+    fetch(link + '/get-clients')
+    .then((res) => res.json())
+    .then((data) => {
+      setClientsList(data.client) 
     })
     .catch((error) => console.log("Error", error))
   }, [])
@@ -55,7 +58,8 @@ const ProjectCreation = () => {
                               orderstatus: orderStatus, 
                               orderstartdate: startDate.toString(),
                               orderenddate: endDate.toString(),
-                              idteam: team}),
+                              idteam: team,
+                              idclient: client}),
       };
 
       setResponse(res);
@@ -76,6 +80,10 @@ const ProjectCreation = () => {
 
   const handleFetchTeams = (e: any | null) => {
     e === null ? setTeam(0) : setTeam(parseInt(e.value))
+  }
+
+  const handleFetchClients = (e: any | null) => {
+    e === null ? setClient("") : setClient(e.value)
   }
 
   // const handleChangeTechnology = (selectedOptions: ValueType<OptionTypeBase>) works as well but with the error.
@@ -113,10 +121,11 @@ const ProjectCreation = () => {
       <div className="container bg-light border p-4">
         <div className="mb-4">
           <Select
-            options={listOfClients} // sets the available options for the Select component
+            onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
             value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
-            onChange={handleChangeClient} // sets the callback function to handle changes in selected option(s)
+            options={listOfClients} // sets the available options for the Select component
             placeholder="Select client..."
+            isClearable
           />
 
           <br></br>

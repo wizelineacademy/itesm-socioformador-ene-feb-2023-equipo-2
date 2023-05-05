@@ -5,18 +5,20 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default async function handler(req: any, res: any) {
-  const { aidescription, orderstatus, orderstartdate, orderenddate, idteam} = req.body;
+  const { aidescription, orderstatus, orderstartdate, orderenddate, idteam, idclient} = req.body;
   const aidescription_string = JSON.stringify(aidescription);
   const orderstatus_string = JSON.stringify(orderstatus);
   const orderstartdate_datetime = new Date(JSON.stringify(orderstartdate));
   const orderenddate_datetime = new Date(JSON.stringify(orderenddate));
   const idteam_int = parseInt(JSON.stringify(idteam));
+  const idclient_int = parseInt(JSON.stringify(idclient));
 
   console.log(aidescription_string)
   console.log(orderstatus_string)
   console.log(orderstartdate_datetime)
   console.log(orderenddate_datetime)
   console.log(idteam_int)
+  console.log(idclient_int)
 
   //TODO: ID FIJO PROVISIONAL MIENTRAS IMPLEMENTAMOS AUTH0
   const id = 1
@@ -35,7 +37,8 @@ export default async function handler(req: any, res: any) {
                  orderstatus: orderstatus_string, 
                  orderstartdate: orderstartdate_datetime,
                  orderenddate: orderenddate_datetime,
-                 idteam: idteam_int},
+                 idteam: idteam_int,
+                 idclient: idclient_int},
         });
     
         return updatedRecord;
