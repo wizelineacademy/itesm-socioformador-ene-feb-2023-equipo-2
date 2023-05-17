@@ -52,6 +52,15 @@ const ProjectSearch = () => {
   }, [])
 
   useEffect(() => {
+    fetch(link + '/get-clients')
+    .then((res) => res.json())
+    .then((data) => {
+      setClientsList(data.client) 
+    })
+    .catch((error) => console.log("Error", error))
+  }, [])
+
+  useEffect(() => {
   }, [projectsContext?.setCurrentProject(name)]);
 
   const handleChangeSelectProjectName = (e: any | null) => {
@@ -96,7 +105,7 @@ const ProjectSearch = () => {
             <label className="form-label">Client:</label>
             <Select
               onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
-              //value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
+              value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
               options={listOfClients} // sets the available options for the Select component
               placeholder="Select client..."
               isClearable
