@@ -24,8 +24,8 @@ export const ProjectContext = ({children}: currentProjectContextProviderProps) =
 }
 
 type projectSelectionInterface = {
-  id: number;
-  ordername: string;
+  value: string;
+  label: string;
   orderstatus: string;
   orderstartdate: string; 
   orderenddate: string; 

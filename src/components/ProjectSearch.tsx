@@ -13,8 +13,8 @@ const estatusOptions = [
 ];
 
 interface projectListInterface {
-  id: number;
-  ordername: string;
+  value: string;
+  label: string;
   orderstatus: string;
   orderstartdate: string; 
   orderenddate: string; 
@@ -41,11 +41,12 @@ const ProjectSearch = () => {
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    fetch(link + '/getProjectList')
+    //fetch(link + '/getProjectList')
+    fetch(`${link}/getProjectList?ordername=${name}`)
       .then(res => res.json())
       .then(data => {
-        setProjectList(data.client)
-        projectsListContext?.setSelectedProjectList(data.client);
+        setProjectList(data.orders)
+        projectsListContext?.setSelectedProjectList(data.orders);
       })
       .catch(error => console.log("Error ", error))
   }, [])
@@ -83,7 +84,7 @@ const ProjectSearch = () => {
               {projectList ? (
                 <Select
                 onChange={handleChangeSelectProjectName}
-                value={projectList.find((obj) => obj.ordername === name) || ""}
+                value={projectList.find((obj) => obj.value === name) || ""}
                 options={projectList}
                 isClearable
               />

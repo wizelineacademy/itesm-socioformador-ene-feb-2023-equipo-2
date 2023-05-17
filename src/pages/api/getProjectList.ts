@@ -7,8 +7,8 @@ export default async function handler(req: any, res: any) {
   try {
     const orders = await prisma.$queryRaw`
       SELECT 
-        orders.id, 
-        orders.name AS ordername, 
+        orders.id AS value, 
+        orders.name AS label, 
         orders.orderstatus, 
         to_char(orders.orderstartdate, 'DD-MM-YYYY') AS orderstartdate,
         to_char(orders.orderenddate, 'DD-MM-YYYY') AS orderenddate,
@@ -20,7 +20,7 @@ export default async function handler(req: any, res: any) {
       INNER JOIN teams
           ON orders.idteam = teams.id
       WHERE orders.erased = false;
-    `
+    `;
 
     const response = {
       orders: orders,

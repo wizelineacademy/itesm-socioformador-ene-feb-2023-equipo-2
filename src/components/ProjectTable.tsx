@@ -11,8 +11,8 @@ import { projectContext, projectListContext } from '@/context/projectsContext';
 
 
 interface projectListInterface {
-  id: number;
-  ordername: string;
+  value: string;
+  label: string;
   orderstatus: string;
   orderstartdate: string; 
   orderenddate: string; 
@@ -62,7 +62,7 @@ const ProjectTable = () => {
     },
     {
       name: "Project",
-      selector: (row) => row.ordername,
+      selector: (row) => row.label,
       sortable: true,
     },
     {
@@ -113,8 +113,8 @@ const ProjectTable = () => {
 
   const data = projects?.map((project) => {
     return {
-      id: project.id,
-      ordername: project.ordername,
+      value: project.value,
+      label: project.label,
       orderstatus: project.orderstatus,
       orderstartdate: project.orderstartdate,
       orderenddate: project.orderenddate,
@@ -124,7 +124,7 @@ const ProjectTable = () => {
   })
 
   let selectedProjectID = projectsContext?.currentProject;
-  let filteredProjectData = selectedProjectID ? data?.filter(project => project.ordername === selectedProjectID) : data;
+  let filteredProjectData = selectedProjectID ? data?.filter(project => project.value === selectedProjectID) : data;
 
   return (
     <>
