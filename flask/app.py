@@ -6,8 +6,14 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import re
 import time
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
+load_dotenv()
+
+USERNAME = os.getenv("LINKEDIN_USERNAME")
+PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 
 @app.route("/")
 def hello_world():
@@ -24,10 +30,10 @@ def index_cv():
     time.sleep(5)
 
     username = driver.find_element(By.ID, "username")
-    username.send_keys("oreynam0410@hotmail.com") 
+    username.send_keys(USERNAME) 
 
     pword = driver.find_element(By.ID, "password")
-    pword.send_keys("ScRaPpRoYeCto2023$%^")
+    pword.send_keys(PASSWORD)
 
     driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
