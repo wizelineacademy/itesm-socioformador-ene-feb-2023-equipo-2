@@ -6,7 +6,14 @@ import React, { Fragment, useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 
+import { useContext } from 'react'
+import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
+
+
 const ClientCard = () => {
+  const clientsContext = useContext(clientContext);
+  const clientsListContext = useContext(clientListContext);
+
   const handleClientSeeProjects = () => {
     alert("se va a redireccionar al perfil del usuario");
   };
@@ -33,15 +40,23 @@ const ClientCard = () => {
     },
   };
 
-  interface DataRow {
-    isActive: 0 | 1;
-    clientName: string;
-    clientEmail: string;
-    clientPhone: string;
+  interface clientSelectionInterface {
+    value: string;
+    label: string;
+    email: string;
+    phone: string;
+    erased: boolean;
   }
 
-  const columns: TableColumn<DataRow>[] = [
-    {
+  let clients = clientsListContext?.selectedClient;
+
+  /*[
+    // An array of projects of type projectsInterface
+    // Replace with your actual project data
+  ];*/
+
+  let columns: TableColumn<clientSelectionInterface>[] = [
+    /*{
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
@@ -54,7 +69,7 @@ const ClientCard = () => {
         </Fragment>
       ),
       width: "50px",
-    },
+    },*/
     {
       cell: (row) => (
         <Fragment>
@@ -65,16 +80,20 @@ const ClientCard = () => {
     },
     {
       name: "Name",
-      selector: (row) => row.clientName,
+      selector: (row) => row.label,
       sortable: true,
     },
     {
       name: "Email",
-      selector: (row) => row.clientEmail,
+      selector: (row) => row.email,
     },
     {
       name: "Phone Number",
-      selector: (row) => row.clientPhone,
+      selector: (row) => row.phone,
+    },
+    {
+      name: "Erased?",
+      selector: (row) => row.erased,
     },
     {
       cell: (row) => (
@@ -111,51 +130,25 @@ const ClientCard = () => {
     },
   ];
 
-  const data = [
-    {
-      isActive: 1,
-      clientName: "Mario Isaí Robles Lozano",
-      clientEmail: "Monterrey",
-      clientPhone: "Microsoft",
-    },
-    {
-      isActive: 1,
-      clientName: "Jorge Eduardo De Leon Reyna",
-      clientEmail: "Reynosa",
-      clientPhone: "Macrohard",
-    },
-    {
-      isActive: 0,
-      clientName: "Andrea Catalina Fernandez Mena",
-      clientEmail: "La Paz",
-      clientPhone: "Meta",
-    },
-    {
-      isActive: 1,
-      clientName: "Andres Fuentes Alanis",
-      clientEmail: "Guadalajara",
-      clientPhone: "Google",
-    },
-    {
-      isActive: 0,
-      clientName: "Gerardo Mora Beltrán",
-      clientEmail: "Queretaro",
-      clientPhone: "Softek",
-    },
-    {
-      isActive: 0,
-      clientName: "Oscar Alejandro Reyna Mont.",
-      clientEmail: "Guadalajara",
-      clientPhone: "Youtube",
-    },
-  ];
+  const data = clients?.map((client) => {
+    return {
+      value: client.value,
+      label: client.label,
+      email: client.email,
+      phone: client.phone,
+      erased: client.erased,
+    }
+  })
+
+  let selectedClientID = clientsContext?.currentClient;
+  let filteredData = selectedClientID ? data?.filter(client => client.value === selectedClientID) : data;
 
   return (
     <>
       <div className="container my-4">
         <DataTable
           columns={columns}
-          data={data}
+          data={filteredData}
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover
