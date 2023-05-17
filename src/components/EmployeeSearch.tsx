@@ -7,6 +7,9 @@ import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 
+import { useContext } from 'react'
+import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
+
 const specialityOptions = [
   { value: "frontend", label: "Frontend Developer" },
   { value: "backend", label: "Backend Developer" },
@@ -42,12 +45,25 @@ const locationOptions = [
   { value: "queretaro", label: "Queretaro" },
 ];
 
-interface employeeInterface {
-  value: string;
-  label: string;
+type employeeSelectionInterface = {
+  value: string,
+  label: string,
+  linkedinlink: string,
+  cvfile: string,
+  profileimg: string,
+  inforoadmap: string,
+  idposition: number,
+  email: string,
+  password: string,
+  location: string,
+  infoabout: string,
+  status: boolean
 }
 
 const EmployeeSearch = () => {
+  const employeesContext = useContext(employeeContext);
+  const employeesListContext = useContext(employeeListContext);
+
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
@@ -59,8 +75,20 @@ const EmployeeSearch = () => {
   const [role, setRole] = useState("");
   const [department, setDepartment] = useState("");
 
-  const handleChangeSelectEmployeeName = (e: any | null) => {
+  /*const handleChangeSelectEmployeeName = (e: any | null) => {
     e === null ? setEmployeeName("") : setEmployeeName(e.value);
+    console.log(e.value);
+  };*/
+
+  const handleChangeSelectEmployeeName = (e : any | null) => {
+    if (e === null) {
+      setEmployeeName("");
+    } else {
+      setEmployeeName(e.value);
+      employeesContext?.setCurrentEmployee(e.value);
+      console.log(employeesContext?.currentEmployee)
+      console.log(employeesListContext?.selectedEmployee)
+    }
   };
 
   const handleChangeSelectTeamName = (e: any | null) => {
@@ -75,7 +103,7 @@ const EmployeeSearch = () => {
     e === null ? setDepartment("") : setDepartment(e.value);
   };
 
-  const [employeesList, setEmployeesList] = useState<employeeInterface[]>([]);
+  const [employeesList, setEmployeesList] = useState<employeeSelectionInterface[]>([]);
 
   // fetch of employees to later place in react-select.
   useEffect(() => {
@@ -83,9 +111,13 @@ const EmployeeSearch = () => {
       .then(res => res.json())
       .then(data => {
         setEmployeesList(data.employees)
+        employeesListContext?.setSelectedEmployeeList(data.employees);
       })
       .catch(error => console.log("Error", error))
   }, [])
+
+  useEffect(() => {
+  }, [employeesContext?.setCurrentEmployee(employeeName)]);
 
   const handleSearch = (e: any) => {
     alert("buscando");

@@ -7,12 +7,17 @@ import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
 
+import { useContext } from 'react'
+import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
+
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
   pageType: 'listForAdmin' | 'listForEmployee' | 'addToOrder' | 'OrderSummary' | 'showAll';
 }
 
 const EmployeeTable = (props: CardProps) => {
+  const employeesContext = useContext(employeeContext);
+  const employeesListContext = useContext(employeeListContext);
 
   const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
@@ -56,16 +61,24 @@ const EmployeeTable = (props: CardProps) => {
     },
   };
 
-  interface DataRow {
-    id: number;
-    name: string;
-    idposition: 1 | 2;
+  interface employeeSelectionInterface {
+    value: string;
+    label: string;
+    linkedinlink: string;
+    cvfile: string;
+    profileimg: string;
+    inforoadmap: string;
+    idposition: number;
+    email: string;
+    password: string;
     location: string;
-    employeeAreaBadge: string;
-    employeeArea: string;
+    infoabout: string;
+    status: boolean;
   }
 
-  const columns: TableColumn<DataRow>[] = React.useMemo(
+  let employees = employeesListContext?.selectedEmployee;
+
+  const columns: TableColumn<employeeSelectionInterface>[] = React.useMemo(
     () => [
       /*{
         cell: (row) => (
@@ -86,26 +99,44 @@ const EmployeeTable = (props: CardProps) => {
       },
       {
         name: 'Name',
-        selector: row => row.name,
+        selector: row => row.label,
         sortable: true,
+      },
+      {
+        name: 'LinkedIn Link',
+        selector: row => row.linkedinlink,
+      },
+      {
+        name: 'CV File',
+        selector: row => row.cvfile,
+      },
+      {
+        name: 'Profile Image',
+        selector: row => row.profileimg,
+      },
+      {
+        name: 'Roadmap Information',
+        selector: row => row.inforoadmap,
+      },
+      {
+        name: 'Email',
+        selector: row => row.email,
+      },
+      {
+        name: 'Password',
+        selector: row => row.password,
       },
       {
         name: 'Location',
         selector: row => row.location,
       },
       {
-        cell: (row) => (
-          <Fragment>
-            {row.idposition === 2 ? 'admin' : ''},
-          </Fragment>
-        ),
+        name: 'About',
+        selector: row => row.infoabout,
       },
       {
-        cell: (row) => (
-          <Fragment>
-              <TextBox textBoxText={row.employeeAreaBadge} textBoxColorScheme={row.employeeArea} />
-          </Fragment>
-        ),
+        name: 'Status',
+        selector: row => String(row.status),
       },
       {
         cell: (row) => (
@@ -154,63 +185,32 @@ const EmployeeTable = (props: CardProps) => {
     [hideTrashCan, hidePlusSign, hideMinusSign],
   );
 
-  const data = [
-    {
-      id: 1,
-      name: 'Mario Isaí Robles Lozano',
-      idposition: 1,
-      location: 'Monterrey',
-      employeeAreaBadge: 'Frontend Developer',
-      employeeArea: 'frontend'
-    },
-    {
-      id: 2,
-      name: 'Jorge Eduardo De Leon Reyna',
-      idposition: 2,
-      location: 'Reynosa',
-      employeeAreaBadge: 'Backend Developer',
-      employeeArea: 'backend'
-    },
-    {
-      id: 3,
-      name: 'Andrea Catalina Fernandez Mena',
-      idposition: 1,
-      location: 'La Paz',
-      employeeAreaBadge: 'Data Manager',
-      employeeArea: 'data'
-    },
-    {
-      id: 4,
-      name: 'Andres Fuentes Alanis',
-      idposition: 2,
-      location: 'Guadalajara',
-      employeeAreaBadge: 'Quality Manager',
-      employeeArea: 'quality'
-    },
-    {
-      id: 5,
-      name: 'Gerardo Mora Beltrán',
-      idposition: 1,
-      location: 'Queretaro',
-      employeeAreaBadge: 'Cibersecurity',
-      employeeArea: 'cibersecurity'
-    },
-    {
-      id: 6,
-      name: 'Oscar Alejandro Reyna Mont.',
-      idposition: 1,
-      location: 'Guadalajara',
-      employeeAreaBadge: 'Mobile Developer',
-      employeeArea: 'mobile'
-    },
-  ]
+  const data = employees?.map((employee) => {
+    return {
+      value: employee.value,
+      label: employee.label,
+      linkedinlink: employee.linkedinlink,
+      cvfile: employee.cvfile,
+      profileimg: employee.profileimg,
+      inforoadmap: employee.inforoadmap,
+      idposition: employee.idposition,
+      email: employee.email,
+      password: employee.password,
+      location: employee.location,
+      infoabout: employee.infoabout,
+      status: employee.status,
+    }
+  })
+
+  let selectedEmployeeID = employeesContext?.currentEmployee;
+  let filteredData = selectedEmployeeID ? data?.filter(employee => employee.value === selectedEmployeeID) : data;
 
   return (
     <>
       <div className='container my-4'>
         <DataTable
           columns={columns}
-          data={data}
+          data={filteredData}
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover
