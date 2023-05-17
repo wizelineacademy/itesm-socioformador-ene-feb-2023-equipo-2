@@ -50,26 +50,7 @@ const ClientCard = () => {
 
   let clients = clientsListContext?.selectedClient;
 
-  /*[
-    // An array of projects of type projectsInterface
-    // Replace with your actual project data
-  ];*/
-
   let columns: TableColumn<clientSelectionInterface>[] = [
-    /*{
-      cell: (row) => (
-        <Fragment>
-          <FaIcons.FaRegDotCircle
-            className={`status-icon-size ${
-              row.isActive === 1
-                ? "state-active"
-                : "state-inactive"
-            }`}
-          />
-        </Fragment>
-      ),
-      width: "50px",
-    },*/
     {
       cell: (row) => (
         <Fragment>

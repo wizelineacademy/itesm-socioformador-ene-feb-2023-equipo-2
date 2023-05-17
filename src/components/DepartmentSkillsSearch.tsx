@@ -54,6 +54,10 @@ const DepartmentSkillsSearch = () => {
 
   const handleChangeSelectedDepartment = (e : any | null) => {
     e === null ? setDepartment("") : setDepartment(e.value);
+    if (selectedDepartment) {
+      selectedDepartment.setSelectedDepartment(e)
+      console.log(e);
+    }
   }
 
   useEffect(() => {
@@ -97,7 +101,7 @@ const DepartmentSkillsSearch = () => {
               options={departmentList}
               isClearable
             />
-            <p>{department}</p>
+            <p>{selectedDepartment?.selectedDepartment?.label}</p>
           </Col>
           <Col>
             <label className="form-label">Skills:</label>

@@ -10,20 +10,6 @@ import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "@/components/TextBox";
 
 
-const data = {
-  "post": {
-      "_id": "62cd5b5ef2a39582f96ad514",
-      "title": "asdadsad",
-      "description": "sdasdasdasda",
-      "imageURL": "image 1",
-      "creator_id": "62cd5b1bf2a39582f96ad500",
-      "createdAt": "2022-07-12T11:30:38.255Z",
-      "updatedAt": "2022-07-12T11:30:38.255Z",
-      "__v": 0,
-      "id": "62cd5b5ef2a39582f96ad514"
-  }
-}
-
 
 const projects = () => {
   const hasMounted = useHasMounted();
@@ -62,14 +48,6 @@ const projects = () => {
   };
 
   const columns: TableColumn<EmployeeDataRow>[] = [
-      /*{
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaRegDotCircle className={`status-icon-size ${row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
-          </Fragment>
-        ),
-        width: '50px',
-      },*/
       {
         cell: (row) => (
           <Fragment>
