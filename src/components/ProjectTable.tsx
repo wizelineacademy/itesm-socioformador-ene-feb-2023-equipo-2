@@ -2,22 +2,13 @@
 // Poner una imagen de placeholden en caso de que no haya foto de perfil
 // Arreglar para la vista tipo telefono
 
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
 
-interface DataRow {
-  id: number;
-  isActive: 0 | 1 | 2;
-  projectName: string;
-  clientName: string;
-  clientCompany: string;
-  teamName: string;
-  startDate: string;
-  endDate: string;
-  name: string;
-}
+import { projectContext, projectListContext } from '@/context/projectsContext';
+
 
 interface projectListInterface {
   id: number;
@@ -30,6 +21,10 @@ interface projectListInterface {
 }
 
 const ProjectTable = () => {
+  const projectsContext = useContext(projectContext);
+  const projectsListContext = useContext(projectListContext);
+
+
   const handleSeeProjects = () => {
     alert("se va a redireccionar al perfil del usuario");
   };
@@ -37,19 +32,6 @@ const ProjectTable = () => {
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
   };
-
-  const [projectList, setProjectList] = useState<projectListInterface[]>([]);
-
-  let link = process.env.NEXT_PUBLIC_API_URL;
-
-  useEffect(() => {
-    fetch(link + '/getProjectList')
-      .then(res => res.json())
-      .then(data => {
-        setProjectList(data.orders)
-      })
-      .catch(error => console.log("Error ", error))
-  }, [])
 
   const customStyles = {
     rows: {
@@ -127,42 +109,29 @@ const ProjectTable = () => {
     },
   ];
 
-  const data = [
-    {
-      "id": 1,
-      "isActive": 2,
-      "projectName": "project namesss",
-      "clientName": "client name",
-      "teamName": "team 1",
-      "startDate": "2019-01-16",
-      "endDate": "2019-01-16",
-    },
-    /*{
-      id: 2,
-      isActive: 1,
-      projectName: "project name",
-      clientName: "client name",
-      teamName: "team 1",
-      startDate: "2019-01-16",
-      endDate: "2019-01-16",
-    },
-    {
-      id: 3,
-      isActive: 0,
-      projectName: "project name",
-      clientName: "client name",
-      teamName: "team 1",
-      startDate: "2019-01-16",
-      endDate: "2019-01-16",
-    },*/
-  ];
+  let projects = projectsListContext?.selectedProject;
+
+  const data = projects?.map((project) => {
+    return {
+      id: project.id,
+      ordername: project.ordername,
+      orderstatus: project.orderstatus,
+      orderstartdate: project.orderstartdate,
+      orderenddate: project.orderenddate,
+      clientname: project.clientname,
+      teamname: project.teamname,
+    }
+  })
+
+  let selectedProjectID = projectsContext?.currentProject;
+  let filteredProjectData = selectedProjectID ? data?.filter(project => project.ordername === selectedProjectID) : data;
 
   return (
     <>
       <div className="container my-4">
         <DataTable
           columns={columns}
-          data={projectList}
+          data={filteredProjectData}
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover

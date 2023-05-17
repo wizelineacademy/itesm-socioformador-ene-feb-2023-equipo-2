@@ -28,6 +28,9 @@ import ProjectCreation from "@/components/ProjectCreation";
 import ProjectTable from "@/components/ProjectTable";
 import { useHasMounted } from "@/components/useHasMounted";
 
+import { ProjectListContext } from "@/context/projectsContext";
+import { ProjectContext } from "@/context/projectsContext";
+
 // 'options' will later be replaced by table skills in database
 const listOfClients = [
   { value: "JohnDoeID", label: "John Doe" },
@@ -48,47 +51,49 @@ const projects = () => {
   }
 
   return (
-    <>
-      <Menu
-        titulo={"Projects"}
-        descripcion={
-          "Project administration panel to edit existing projects or create new ones for effective project management."
-        }
-      />
-      <ProjectSearch />
-      <Container className="mt-3">
-        <Row>
-          <Col></Col>
-          <Col></Col>
-          <Col className="d-flex flex-row-reverse">
-            <button
-              className="btn btn-primary"
-              onClick={() => setCollapse(!collapse)}
-              aria-controls="collapseProjectCreation"
-              aria-expanded={collapse}
-            >
-              {collapse ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaClipboardList className="mb-1" />
-                  &nbsp;&nbsp;Add Project
-                </>
-              )}
-            </button>
-          </Col>
-        </Row>
-      </Container>
-      <Collapse in={collapse}>
-        <div id="collapseProjectCreation" className="my-3">
-          <ProjectCreation />
-        </div>
-      </Collapse>
-      <ProjectTable />
-    </>
+    <ProjectListContext>
+      <ProjectContext>
+        <Menu
+          titulo={"Projects"}
+          descripcion={
+            "Project administration panel to edit existing projects or create new ones for effective project management."
+          }
+        />
+        <ProjectSearch />
+        <Container className="mt-3">
+          <Row>
+            <Col></Col>
+            <Col></Col>
+            <Col className="d-flex flex-row-reverse">
+              <button
+                className="btn btn-primary"
+                onClick={() => setCollapse(!collapse)}
+                aria-controls="collapseProjectCreation"
+                aria-expanded={collapse}
+              >
+                {collapse ? (
+                  <>
+                    <FaIcons.FaTimes className="mb-1" />
+                    &nbsp;&nbsp;Close
+                  </>
+                ) : (
+                  <>
+                    <FaIcons.FaClipboardList className="mb-1" />
+                    &nbsp;&nbsp;Add Project
+                  </>
+                )}
+              </button>
+            </Col>
+          </Row>
+        </Container>
+        <Collapse in={collapse}>
+          <div id="collapseProjectCreation" className="my-3">
+            <ProjectCreation />
+          </div>
+        </Collapse>
+        <ProjectTable />
+      </ProjectContext>
+    </ProjectListContext>
   );
 };
 

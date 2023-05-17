@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
+
+import { projectContext, projectListContext } from '@/context/projectsContext';
 
 const estatusOptions = [
   {value: 2, label: "Approved"},
@@ -10,9 +12,14 @@ const estatusOptions = [
   {value: 0, label: "Rejected"}
 ];
 
-interface projectListSelectionInterface {
-  value: string;
-  label: string;
+interface projectListInterface {
+  id: number;
+  ordername: string;
+  orderstatus: string;
+  orderstartdate: string; 
+  orderenddate: string; 
+  clientname: string; 
+  teamname: string;
 }
 
 const ProjectSearch = () => {
@@ -20,9 +27,13 @@ const ProjectSearch = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
+  const projectsContext = useContext(projectContext);
+  const projectsListContext = useContext(projectListContext);
+
   // React Hooks
-  const [projectName, setProjectName] = useState("");
-  const [projectNameList, setProjectNameList] = useState<projectListSelectionInterface[]>([]);
+  const [name, setName] = useState("");
+  const [projectList, setProjectList] = useState<projectListInterface[] | null>(null);
+  
   const [client, setClient] = useState<number>();
   const [estatus, setEstatus] = useState("");
   const [listOfClients, setClientsList] = useState([])
@@ -30,29 +41,29 @@ const ProjectSearch = () => {
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    fetch(link + '/getProjects')
+    fetch(link + '/getProjectList')
       .then(res => res.json())
       .then(data => {
-        setProjectNameList(data.orders)
+        setProjectList(data.client)
+        projectsListContext?.setSelectedProjectList(data.client);
       })
       .catch(error => console.log("Error ", error))
   }, [])
 
   useEffect(() => {
-    fetch(link + '/get-clients')
-    .then((res) => res.json())
-    .then((data) => {
-      setClientsList(data.client) 
-    })
-    .catch((error) => console.log("Error", error))
-  }, [])
+  }, [projectsContext?.setCurrentProject(name)]);
 
   const handleChangeSelectProjectName = (e: any | null) => {
-    e === null ? setProjectName("") : setProjectName(e.value);
+    if (e === null) {
+      setName("");
+    } else {
+      setName(e.value);
+      projectsContext?.setCurrentProject(e.value);
+    }
   };
 
   const handleFetchClients = (e: any | null) => {
-    e === null ? setClient("") : setClient(e.value)
+    e === null ? setClient(0) : setClient(e.value)
   }
 
   const handleSearch = (e : any) => {
@@ -69,18 +80,22 @@ const ProjectSearch = () => {
         <Row>
           <Col>
             <label className="form-label">Project Name:</label>
-            <Select
-              onChange={handleChangeSelectProjectName}
-              value={projectNameList.find((obj) => obj.value === projectName)}
-              options={projectNameList}
-              isClearable
-            />
+              {projectList ? (
+                <Select
+                onChange={handleChangeSelectProjectName}
+                value={projectList.find((obj) => obj.ordername === name) || ""}
+                options={projectList}
+                isClearable
+              />
+              ) : (
+                <div>Loading...</div>
+              )}
           </Col>
           <Col>
             <label className="form-label">Client:</label>
             <Select
               onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
-              value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
+              //value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
               options={listOfClients} // sets the available options for the Select component
               placeholder="Select client..."
               isClearable
