@@ -3,11 +3,11 @@ import Menu from "@/components/Menu";
 import Link from "next/link";
 
 import { useState, useEffect } from "react";
-
 import { useHasMounted } from "@/components/useHasMounted";
 import { AutoprefixerIconConfig } from "@patternfly/react-icons";
-
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useRouter } from "next/router";
+
 
 
 interface apiResponse {
@@ -29,10 +29,13 @@ function Roadmap() {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
+  const router = useRouter();
+
 
   const [selectedMenu, setSelectedMenu] = useState("");
   const [data, setData] = useState<apiResponse[]>([]);
   const [roadmap, setRoadmap] = useState<any>([]);
+  const [isRoadmap, setIsRoadmap] = useState(false);
 
   const { user, error, isLoading } = useUser();
 
@@ -44,6 +47,15 @@ function Roadmap() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if(roadmap?.tools){
+      setIsRoadmap(true)
+    }
+    else(
+      router.push("/generar-perfil")
+    )
+  }, roadmap)
 
   const getParsedJson = (string: string) => {
     //removing breakpoints and "/" characters
@@ -69,14 +81,16 @@ function Roadmap() {
     const json = await response.json();
     const data: any = json as apiResponse[];
     const obj = data?.userRoadMap?.inforoadmap
-
-    console.log("json sin procesar", obj)
       
-    //calling function to clean string
-    let jsonString = getParsedJson(obj)
-
-    let finalJson = JSON.parse(jsonString);
-    setRoadmap(finalJson)
+    //calling function to clean string only if there are a string to parse
+    try {
+        let jsonString = getParsedJson(obj)
+        let finalJson = JSON.parse(jsonString);
+        setRoadmap(finalJson)
+    } catch (e: any){
+        console.log("JSON not parsed");
+    } 
+    
   };
 
   if (!hasMounted) {
@@ -96,7 +110,8 @@ function Roadmap() {
       />
 
       <div className="container">
-        <div className="row">
+        {isRoadmap && 
+          <div className="row">
           <div className="col-3">
             <div
               className="nav flex-column nav-pills"
@@ -164,6 +179,14 @@ function Roadmap() {
             </div>
           </div>
         </div>
+        }
+
+        {
+          !isRoadmap && <div>
+      <h1>You will be redirected to Perfil Generation page because you have not your roadmap generated</h1>
+    </div>
+        }
+        
       </div> 
     </div>
   );
