@@ -6,11 +6,23 @@ import Select from "react-select";
 import * as FaIcons from 'react-icons/fa';
 import { useHasMounted } from "@/components/useHasMounted";
 
+import { useContext } from 'react';
+import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
+import { any } from "cypress/types/bluebird";
+
+
 interface clientSelectionInterface {
-  value: string;
-  label: string;
+  value: string,
+  label: string,
+  email: string,
+  phone: string,
+  erased: boolean
 }
+
 const ClientSearch = () => {
+  const clientsContext = useContext(clientContext);
+  const clientsListContext = useContext(clientListContext);
+  
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
@@ -23,13 +35,17 @@ const ClientSearch = () => {
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    fetch(link + '/get-clients')
+    fetch(`${link}/get-clients?id=${name}`)
       .then(res => res.json())
       .then(data => {
         setClientList(data.client)
+        clientsListContext?.setSelectedClientList(data.client);
       })
       .catch(error => console.log("Error ", error))
   }, [])
+
+  useEffect(() => {
+  }, [clientsContext?.setCurrentClient(name)]);
 
   //  const options = [
   //    { value: "1", label: "one" },
@@ -41,6 +57,9 @@ const ClientSearch = () => {
       setName("");
     } else {
       setName(e.value);
+      clientsContext?.setCurrentClient(e.value);
+      //console.log(clientsContext?.currentClient)
+      //console.log(clientsListContext?.selectedClient)
     }
   };
 
