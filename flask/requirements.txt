@@ -7,3 +7,5 @@ Jinja2==3.1.2
 MarkupSafe==2.1.2
 Werkzeug==2.3.4
 zipp==3.15.0
+selenium==4.8.3
+beautifulsoup4==4.11.1
