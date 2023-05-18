@@ -8,6 +8,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
 
 import { projectContext, projectListContext } from '@/context/projectsContext';
+import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
 import { useRouter } from 'next/router';
 
 interface projectListInterface {
@@ -16,13 +17,21 @@ interface projectListInterface {
   orderstatus: string;
   orderstartdate: string; 
   orderenddate: string; 
+  idclient: string;
   clientname: string; 
+  idteam: string;
   teamname: string;
 }
 
-const ProjectTable = () => {
+interface CardProps {
+  clientID: string;
+}
+
+const ProjectTable = (props: CardProps) => {
   const projectsContext = useContext(projectContext);
   const projectsListContext = useContext(projectListContext);
+  const clientsContext = useContext(clientContext);
+  const clientsListContext = useContext(clientListContext);
 
   const router = useRouter();
 
@@ -109,6 +118,7 @@ const ProjectTable = () => {
   ];
 
   let projects = projectsListContext?.selectedProject;
+  //let clients = clientsListContext?.selectedClient;
 
   const data = projects?.map((project) => {
     return {
@@ -117,13 +127,24 @@ const ProjectTable = () => {
       orderstatus: project.orderstatus,
       orderstartdate: project.orderstartdate,
       orderenddate: project.orderenddate,
+      idclient: project.idclient,
       clientname: project.clientname,
+      idteam: project.idteam,
       teamname: project.teamname,
     }
   })
 
+  let filteredProjectData;
+  
+  if (props.clientID) {
+    filteredProjectData = data?.filter(project => project.idclient === props.clientID);
+  }
+
   let selectedProjectID = projectsContext?.currentProject;
-  let filteredProjectData = selectedProjectID ? data?.filter(project => project.value === selectedProjectID) : data;
+  let selectedClientID = clientsContext?.currentClient;
+  filteredProjectData = selectedProjectID && selectedClientID ? data?.filter(project => project.value === selectedProjectID && project.idclient === selectedClientID) :
+                        selectedProjectID ? data?.filter(project => project.value === selectedProjectID) :
+                        selectedClientID ? data?.filter(project => project.idclient === selectedClientID) : data;
 
   return (
     <>

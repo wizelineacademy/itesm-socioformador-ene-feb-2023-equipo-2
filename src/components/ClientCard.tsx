@@ -9,10 +9,14 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { useContext } from 'react'
 import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
 
+import { useRouter } from 'next/router';
+
 
 const ClientCard = () => {
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
+
+  const router = useRouter();
 
   const handleClientSeeProjects = () => {
     alert("se va a redireccionar al perfil del usuario");
@@ -79,10 +83,12 @@ const ClientCard = () => {
     {
       cell: (row) => (
         <Fragment>
-          <FaIcons.FaClipboardList
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleClientSeeProjects()}
-          />
+          <div onClick={() => {router.push({pathname: '/projects',query: { slug: row.value },});}}>
+            <FaIcons.FaClipboardList
+              style={{ color: "black", fontSize: "25px", cursor: "pointer" }}
+              onClick={() => handleClientSeeProjects()}
+            />
+          </div>
         </Fragment>
       ),
       width: "50px",
