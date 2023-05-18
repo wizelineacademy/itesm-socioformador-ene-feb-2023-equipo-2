@@ -16,3 +16,7 @@ module.exports = {
     return config;
   },
 };
+
+require('dotenv').config()
+
+module.exports = {}

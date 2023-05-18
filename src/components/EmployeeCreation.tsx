@@ -94,7 +94,7 @@ console.log("token => ", token)
     auth0.clientCredentialsGrant(
       {
         audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
-        scope: 'create:users',
+        scope: 'create:users read:users	',
       },
       function (err: any, response: any) {
         if (err) {

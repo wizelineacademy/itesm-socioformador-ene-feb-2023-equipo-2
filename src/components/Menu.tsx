@@ -138,12 +138,13 @@ const Menu = (props: MenuProps) => {
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item
-                href="#"
+                href=""
                 className="a-logout"
                 onClick={handleLogout}
               >
                 <FaIcons.FaDoorOpen className="mb-1"/>
-                &nbsp;&nbsp;Log Out
+                &nbsp;&nbsp;
+                <a href="/api/auth/logout">LogOut</a>
               </NavDropdown.Item>
               <Modal
                 show={
