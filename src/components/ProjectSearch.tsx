@@ -42,7 +42,7 @@ const ProjectSearch = () => {
 
   useEffect(() => {
     //fetch(link + '/getProjectList')
-    fetch(`${link}/getProjectList?ordername=${name}`)
+    fetch(link + '/getProjectList')
       .then(res => res.json())
       .then(data => {
         setProjectList(data.orders)
@@ -52,6 +52,9 @@ const ProjectSearch = () => {
   }, [])
 
   useEffect(() => {
+  }, [projectsContext?.setCurrentProject(name)]);
+
+  useEffect(() => {
     fetch(link + '/get-clients')
     .then((res) => res.json())
     .then((data) => {
@@ -59,9 +62,6 @@ const ProjectSearch = () => {
     })
     .catch((error) => console.log("Error", error))
   }, [])
-
-  useEffect(() => {
-  }, [projectsContext?.setCurrentProject(name)]);
 
   const handleChangeSelectProjectName = (e: any | null) => {
     if (e === null) {

@@ -5,22 +5,6 @@ import { useHasMounted } from "@/components/useHasMounted";
 
 import { departmentContext } from '@/context/departmentContext';
 
-const deptOptions = [
-  { value: "software-engineering", label: "Software Engineering" },
-  { value: "security-engineering", label: "Security Engineering" },
-  { value: "mobile-engineering", label: "Mobile Engineering" },
-  { value: "technology", label: "Technology" },
-  { value: "learning-program-management", label: "Learning Program Management" },
-];
-
-const skillOptions = [
-  { value: "php", label: "PHP" },
-  { value: "sales", label: "Sales" },
-  { value: "java", label: "Java" },
-  { value: "javascript", label: "JavaScript" },
-  { value: "postgresql", label: "PostgreSQL" },
-];
-
 interface departmentInterface {
   label: string;
   value: string;
@@ -101,7 +85,7 @@ const DepartmentSkillsSearch = () => {
               options={departmentList}
               isClearable
             />
-            <p>{selectedDepartment?.selectedDepartment?.label}</p>
+            {/* <p>{selectedDepartment?.selectedDepartment?.label}</p> */}
           </Col>
           <Col>
             <label className="form-label">Skills:</label>

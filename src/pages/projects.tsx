@@ -28,8 +28,7 @@ import ProjectCreation from "@/components/ProjectCreation";
 import ProjectTable from "@/components/ProjectTable";
 import { useHasMounted } from "@/components/useHasMounted";
 
-import { ProjectListContext } from "@/context/projectsContext";
-import { ProjectContext } from "@/context/projectsContext";
+import { ProjectListContext, ProjectContext } from "@/context/projectsContext";
 
 // 'options' will later be replaced by table skills in database
 const listOfClients = [
