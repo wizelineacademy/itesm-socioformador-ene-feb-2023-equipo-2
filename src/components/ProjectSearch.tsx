@@ -112,7 +112,7 @@ const ProjectSearch = () => {
             />
           </Col>
           <Col>
-            <label className="form-label">Estatus:</label>
+            <label className="form-label">Order Status:</label>
             <Select
               //onChange={handleChangeSelectEstatus}
               //value={estatusOptions.find((obj) => obj.value === estatus)}
