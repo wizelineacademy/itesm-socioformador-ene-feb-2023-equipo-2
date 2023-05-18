@@ -22,6 +22,12 @@ const ProjectCreation = () => {
   const [listOfTeams, setTeamsList] = useState([])
   const [listOfClients, setClientsList] = useState([])
 
+  const listOfStatus = [
+    {value: "Approved", label: "Approved"},
+    {value: "Pending", label: "Pending"},
+    {value: "Rejected", label: "Rejected"}
+  ];
+
   useEffect(() => {
     fetch(link + '/fetchTeams')
     .then((res) => res.json())
@@ -83,7 +89,11 @@ const ProjectCreation = () => {
   }
 
   const handleFetchClients = (e: any | null) => {
-    e === null ? setClient("") : setClient(e.value)
+    e === null ? setClient(0) : setClient(e.value)
+  }
+
+  const handleDropdownSelect = (e: any | null) => {
+    e === null ? setOrderStatus("") : setOrderStatus(e.value)
   }
 
   // const handleChangeTechnology = (selectedOptions: ValueType<OptionTypeBase>) works as well but with the error.
@@ -93,22 +103,22 @@ const ProjectCreation = () => {
     setClient(e.value);
   };
 
-  function handleDropdownSelect(eventKey: string, event: React.SyntheticEvent<{}>) {
+  /*function handleDropdownSelect(eventKey: string, event: React.SyntheticEvent<{}>) {
     switch (eventKey) {
-      case "approved":
+      case "Approved":
         setOrderStatus("Approved");
         break;
-      case "pending":
+      case "Pending":
         setOrderStatus("Pending");
         break;
-      case "rejected":
+      case "Rejected":
         setOrderStatus("Rejected");
         break;
       default:
         setOrderStatus("");
         break;
     }
-  };
+  };*/
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -138,6 +148,8 @@ const ProjectCreation = () => {
             isClearable
           />
 
+          <br></br>
+
           <div className="container">
             <div className="row">
               {/* Start date calendar */}
@@ -162,16 +174,14 @@ const ProjectCreation = () => {
 
               {/* Order status buttons */}
               <div className="col-sm">
-                <DropdownButton
-                  id="dropdown-basic-button"
-                  title={orderStatus || "Order Status"}
-                  onSelect={handleDropdownSelect}
+              <label className="form-label">Order Status</label>
+                <Select
                   //onSelect={(eventKey: any, e) => handleDropdownSelect}
-                >
-                  <Dropdown.Item eventKey="approved" id="approvedItem">Approved</Dropdown.Item>
-                  <Dropdown.Item eventKey="pending" id="pendingItem">Pending</Dropdown.Item>
-                  <Dropdown.Item eventKey="rejected" id="rejectedItem">Rejected</Dropdown.Item>
-                </DropdownButton>
+                  onChange={handleDropdownSelect} // sets the callback function to handle changes in selected option(s)
+                  value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)} // sets the currently selected option(s). Use when isMulti is specified.
+                  options={listOfStatus} // sets the available options for the Select component
+                  placeholder="Select..."
+                  isClearable/>
               </div>
             </div>
 
