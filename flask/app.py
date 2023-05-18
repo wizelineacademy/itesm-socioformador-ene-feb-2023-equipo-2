@@ -1,15 +1,15 @@
 from flask import Flask, request, jsonify
-
+from flask_cors import CORS
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-import re
 import time
 from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
+CORS(app)
 load_dotenv()
 
 USERNAME = os.getenv("LINKEDIN_USERNAME")
