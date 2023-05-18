@@ -8,7 +8,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
 
 import { projectContext, projectListContext } from '@/context/projectsContext';
-
+import { useRouter } from 'next/router';
 
 interface projectListInterface {
   value: string;
@@ -24,10 +24,7 @@ const ProjectTable = () => {
   const projectsContext = useContext(projectContext);
   const projectsListContext = useContext(projectListContext);
 
-
-  const handleSeeProjects = () => {
-    alert("se va a redireccionar al perfil del usuario");
-  };
+  const router = useRouter();
 
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
@@ -85,10 +82,12 @@ const ProjectTable = () => {
     {
       cell: (row) => (
         <Fragment>
-          <Link href="/project-overview">
+          <div onClick={() => {router.push({pathname: '/project-overview',query: { slug: row.value },});}}>
             <FaIcons.FaInfoCircle style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
-          </Link>
-          {/*<FaIcons.FaInfoCircle
+          </div>
+          {/*
+          href="/project-overview"
+          <FaIcons.FaInfoCircle
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleSeeProjects()}
       />*/}

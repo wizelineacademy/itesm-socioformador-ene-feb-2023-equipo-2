@@ -1,6 +1,6 @@
 // TODO:
 
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import * as FaIcons from "react-icons/fa";
 import { Container, Row, Col, Collapse } from "react-bootstrap";
 
@@ -9,10 +9,71 @@ import { useHasMounted } from "@/components/useHasMounted";
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "@/components/TextBox";
 
+import { useRouter } from 'next/router';
 
+interface projectOverviewInterface {
+  id: string;
+  ordername: string;
+  orderstatus: string;
+  clientname: string;
+  email: string;
+  phone: string;
+  teamname: string;
+  orderstartdate: string; 
+  orderenddate: string;  
+  orderdesc: string;
+}
 
 const projects = () => {
   const hasMounted = useHasMounted();
+
+  const router = useRouter();
+  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[] | null>(null);
+  const [projectDescription, setProjectDescription] = useState<any>([]);
+
+  let projectID = router.query.slug;
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    fetch(link + '/getProjectOverview')
+      .then(res => res.json())
+      .then(data => {
+        setSelectedProjectOverview(data.orders)
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
+
+
+  const data = selectedProjectOverview?.map((project) => {
+    return {
+      id: project.id,
+      ordername: project.ordername,
+      orderstatus: project.orderstatus,
+      clientname: project.clientname,
+      email: project.email,
+      phone: project.phone,
+      teamname: project.teamname,
+      orderstartdate: project.orderstartdate,
+      orderenddate: project.orderenddate,
+      orderdesc: project.orderdesc,
+    }
+  })
+
+  let filteredProjectOverviewData = projectID ? data?.filter(project => project.id === projectID) : data;
+
+
+  /*const description = filteredProjectOverviewData?.[0]?.orderdesc;
+  if (description) {
+    let filteredDescription = getParsedJson(description);
+    let finalJson = JSON.parse(filteredDescription);
+    setProjectDescription(finalJson);
+    console.log(finalJson);
+  }*/
+  /*else {
+    setProjectDescription
+  }*/
+  //console.log(filteredProjectOverviewData);
 
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
@@ -121,14 +182,6 @@ const projects = () => {
       },
     ]
 
-  const clientData = {
-    "id": "1",
-    "name": 'Andres Fuentes Alanis',
-    "email": 'andres@tec.mx',
-    "phone": '1234567890',
-    "erased": "false"
-  }
-
   const teamEmployeesData = [
     {
       id: 1,
@@ -165,11 +218,6 @@ const projects = () => {
     employeeArea: string;
   }
 
-  const teamData = {
-    "id": "1",
-    "name": "Team Awesome"
-  }
-
   const projectData = {
     "id": "1",
     "name": "awesome project",
@@ -194,19 +242,18 @@ const projects = () => {
         titulo={"Project Overview"}
         descripcion={""}
       />
-      
       <Container className="mt-3">
         <Row>
           <div className="container p-4">
             <div className="card-body d-flex flex-column">
               <div className="d-flex flex-row justify-content-between">
-                <h3 className="ml-5">{projectData.name}</h3>
-                <h6 className="mt-auto">{projectData.orderstartdate} - {projectData.orderenddate}</h6>
+                <h3 className="ml-5">{filteredProjectOverviewData?.[0]?.ordername}</h3>
+                <h6 className="mt-auto">{filteredProjectOverviewData?.[0]?.orderstartdate} - {filteredProjectOverviewData?.[0]?.orderenddate}</h6>
               </div>
-              <h6 className="ml-5 mt-2">{projectData.orderdesc}</h6>
-              <h5 className="ml-5 mt-4">{clientData.name}</h5>
-              <h6 className="ml-5">{clientData.email}</h6>
-              <h6 className="ml-5">{clientData.phone}</h6>
+              <h6 className="ml-5 mt-2">{filteredProjectOverviewData?.[0]?.orderdesc}</h6>
+              <h5 className="ml-5 mt-4">{filteredProjectOverviewData?.[0]?.clientname}</h5>
+              <h6 className="ml-5">{filteredProjectOverviewData?.[0]?.email}</h6>
+              <h6 className="ml-5">{filteredProjectOverviewData?.[0]?.phone}</h6>
             </div>
           </div>
           <Col className="d-flex flex-row-reverse">
@@ -232,11 +279,11 @@ const projects = () => {
         </Row>
         <Collapse in={collapse}>
           <div id="collapseProjectCreation" className="my-3">
-            Aqui van los requerimientos del proyecto
+            {filteredProjectOverviewData?.[0]?.orderdesc}
           </div>
         </Collapse>
         <DataTable
-            title={teamData.name}
+            title={'Team Members'}
             columns={columns}
             data={teamEmployeesData}
             customStyles={customStyles}
