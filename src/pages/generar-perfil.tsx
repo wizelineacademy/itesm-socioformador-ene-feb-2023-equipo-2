@@ -14,6 +14,8 @@ import { useHasMounted } from "@/components/useHasMounted";
 import { getChatResponse } from "@/openai/openai";
 import { setTimeout } from "timers/promises";
 import { propTypes } from "react-bootstrap/esm/Image";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import {useAuth0} from "@auth0/auth0-react";
 
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
@@ -28,8 +30,40 @@ const generarPerfil: React.FC = () => {
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
+  const { user, error, isLoading } = useUser();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  console.log("isAuthenticated => ", isAuthenticated);
+  console.log(useUser())
+
+  useEffect(() => {
+    console.log("user => ", user?.name);
+    console.log("error => ", error?.message);
+  },[isLoading])
+
+  if(!isLoading){
+    console.log("user loading => ", user?.name);
+    console.log("error loading => ", error?.message);
+  }
+
+  // console.log("loading => ", isLoading);
+  
+
   const handleOpenAIResponse = (e: any) => {
     console.log(e.target.id);
+
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        inforoadmap: responseRoadmap,
+        infoabout: responseCV,
+      }),
+    };
+
+    fetch(link + "/save-employee-information", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
 
     let text = "";
     if (e.target.id === "buttonManual") {
@@ -109,6 +143,7 @@ const generarPerfil: React.FC = () => {
           "In order for artificial intelligence to generate a complete profile, we need you to provide us with your employment and educational information. You can do it in several ways: through your LinkedIn profile, by filling in the fields of our web application or by uploading your resume to our platform."
         }
       />
+      <a href="/api/auth/logout">Logout</a>
       <div className="container">
         <div className="row">
           <div className="col-md">
