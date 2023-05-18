@@ -27,8 +27,10 @@ import ProjectSearch from "@/components/ProjectSearch";
 import ProjectCreation from "@/components/ProjectCreation";
 import ProjectTable from "@/components/ProjectTable";
 import { useHasMounted } from "@/components/useHasMounted";
+import { useRouter } from 'next/router';
 
 import { ProjectListContext, ProjectContext } from "@/context/projectsContext";
+import { ClientListContext, ClientContext } from "@/context/clientContext";
 
 // 'options' will later be replaced by table skills in database
 const listOfClients = [
@@ -39,6 +41,9 @@ const listOfClients = [
 
 const projects = () => {
   const hasMounted = useHasMounted();
+
+  const router = useRouter();
+  let clientID = router.query.slug;
 
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
@@ -52,45 +57,49 @@ const projects = () => {
   return (
     <ProjectListContext>
       <ProjectContext>
-        <Menu
-          titulo={"Projects"}
-          descripcion={
-            "Project administration panel to edit existing projects or create new ones for effective project management."
-          }
-        />
-        <ProjectSearch />
-        <Container className="mt-3">
-          <Row>
-            <Col></Col>
-            <Col></Col>
-            <Col className="d-flex flex-row-reverse">
-              <button
-                className="btn btn-primary"
-                onClick={() => setCollapse(!collapse)}
-                aria-controls="collapseProjectCreation"
-                aria-expanded={collapse}
-              >
-                {collapse ? (
-                  <>
-                    <FaIcons.FaTimes className="mb-1" />
-                    &nbsp;&nbsp;Close
-                  </>
-                ) : (
-                  <>
-                    <FaIcons.FaClipboardList className="mb-1" />
-                    &nbsp;&nbsp;Add Project
-                  </>
-                )}
-              </button>
-            </Col>
-          </Row>
-        </Container>
-        <Collapse in={collapse}>
-          <div id="collapseProjectCreation" className="my-3">
-            <ProjectCreation />
-          </div>
-        </Collapse>
-        <ProjectTable />
+        <ClientListContext>
+          <ClientContext>
+            <Menu
+              titulo={"Projects"}
+              descripcion={
+                "Project administration panel to edit existing projects or create new ones for effective project management."
+              }
+            />
+            <ProjectSearch />
+            <Container className="mt-3">
+              <Row>
+                <Col></Col>
+                <Col></Col>
+                <Col className="d-flex flex-row-reverse">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setCollapse(!collapse)}
+                    aria-controls="collapseProjectCreation"
+                    aria-expanded={collapse}
+                  >
+                    {collapse ? (
+                      <>
+                        <FaIcons.FaTimes className="mb-1" />
+                        &nbsp;&nbsp;Close
+                      </>
+                    ) : (
+                      <>
+                        <FaIcons.FaClipboardList className="mb-1" />
+                        &nbsp;&nbsp;Add Project
+                      </>
+                    )}
+                  </button>
+                </Col>
+              </Row>
+            </Container>
+            <Collapse in={collapse}>
+              <div id="collapseProjectCreation" className="my-3">
+                <ProjectCreation />
+              </div>
+            </Collapse>
+            <ProjectTable clientID={clientID}/>
+          </ClientContext>
+        </ClientListContext>
       </ProjectContext>
     </ProjectListContext>
   );

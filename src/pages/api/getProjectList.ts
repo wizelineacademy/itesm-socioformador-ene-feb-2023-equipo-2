@@ -12,8 +12,10 @@ export default async function handler(req: any, res: any) {
         orders.orderstatus, 
         to_char(orders.orderstartdate, 'DD-MM-YYYY') AS orderstartdate,
         to_char(orders.orderenddate, 'DD-MM-YYYY') AS orderenddate,
+        client.id AS idclient,
         client.name AS clientname, 
-        teams.name AS teamname 
+        teams.id AS idteam,
+        teams.name AS teamname
       FROM orders
       INNER JOIN client
           ON orders.idclient = client.id

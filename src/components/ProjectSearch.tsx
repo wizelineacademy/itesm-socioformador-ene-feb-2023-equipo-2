@@ -5,6 +5,7 @@ import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 
 import { projectContext, projectListContext } from '@/context/projectsContext';
+import { clientContext, clientListContext } from "@/context/clientContext";
 
 const estatusOptions = [
   {value: 2, label: "Approved"},
@@ -12,13 +13,23 @@ const estatusOptions = [
   {value: 0, label: "Rejected"}
 ];
 
+interface clientSelectionInterface {
+  value: string,
+  label: string,
+  email: string,
+  phone: string,
+  erased: boolean
+}
+
 interface projectListInterface {
   value: string;
   label: string;
   orderstatus: string;
   orderstartdate: string; 
   orderenddate: string; 
-  clientname: string; 
+  idclient: string;
+  clientname: string;
+  idteam: string; 
   teamname: string;
 }
 
@@ -29,12 +40,16 @@ const ProjectSearch = () => {
 
   const projectsContext = useContext(projectContext);
   const projectsListContext = useContext(projectListContext);
+  const clientsContext = useContext(clientContext);
+  const clientsListContext = useContext(clientListContext);
 
   // React Hooks
   const [name, setName] = useState("");
   const [projectList, setProjectList] = useState<projectListInterface[] | null>(null);
   
-  const [client, setClient] = useState<number>();
+  const [clientName, setClientName] = useState("");
+  const [clientList, setClientList] = useState<clientSelectionInterface[] | null>(null);
+
   const [estatus, setEstatus] = useState("");
   const [listOfClients, setClientsList] = useState([])
 
@@ -54,15 +69,6 @@ const ProjectSearch = () => {
   useEffect(() => {
   }, [projectsContext?.setCurrentProject(name)]);
 
-  useEffect(() => {
-    fetch(link + '/get-clients')
-    .then((res) => res.json())
-    .then((data) => {
-      setClientsList(data.client) 
-    })
-    .catch((error) => console.log("Error", error))
-  }, [])
-
   const handleChangeSelectProjectName = (e: any | null) => {
     if (e === null) {
       setName("");
@@ -72,9 +78,27 @@ const ProjectSearch = () => {
     }
   };
 
-  const handleFetchClients = (e: any | null) => {
-    e === null ? setClient(0) : setClient(e.value)
-  }
+  useEffect(() => {
+    fetch(`${link}/get-clients?id=${clientName}`)
+      .then(res => res.json())
+      .then(data => {
+        setClientList(data.client)
+        clientsListContext?.setSelectedClientList(data.client);
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
+
+  useEffect(() => {
+  }, [clientsContext?.setCurrentClient(clientName)]);
+
+  const handleChangeClienttName = (e : any | null) => {
+    if (e === null) {
+      setClientName("");
+    } else {
+      setClientName(e.value);
+      clientsContext?.setCurrentClient(e.value);
+    }
+  };
 
   const handleSearch = (e : any) => {
     alert("buscando")
@@ -103,13 +127,16 @@ const ProjectSearch = () => {
           </Col>
           <Col>
             <label className="form-label">Client:</label>
-            <Select
-              onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
-              value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
-              options={listOfClients} // sets the available options for the Select component
-              placeholder="Select client..."
-              isClearable
-            />
+            {clientList ? (
+              <Select
+                onChange={handleChangeClienttName}
+                value={clientList.find((obj) => obj.value === clientName) || ""}
+                options={clientList}
+                isClearable
+              />
+            ) : (
+              <div>Loading...</div>
+            )}
           </Col>
           <Col>
             <label className="form-label">Order Status:</label>

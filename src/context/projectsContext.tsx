@@ -31,7 +31,9 @@ type projectSelectionInterface = {
   orderstatus: string;
   orderstartdate: string; 
   orderenddate: string; 
+  idclient: string;
   clientname: string; 
+  idteam: string;
   teamname: string;
 }
 
