@@ -15,6 +15,7 @@
     "@patternfly/react-icons": "^4.93.6",
     "@patternfly/react-styles": "^4.92.6",
     "@types/node": "18.15.10",
+    "auth0": "^3.4.0",
     "bootstrap": "^5.2.3",
     "dotenv": "^16.0.3",
     "next": "13.2.4",
