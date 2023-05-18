@@ -23,20 +23,52 @@ const generarPerfil: React.FC = () => {
   const [jobExperience, setJobExperience] = useState("");
   const [skills, setSkills] = useState("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
+  const [resLinkLinkedin, setResLinkLinkedin] = useState("");
   const [responseRoadmap, setResponseRoadmap] = useState<any>("");
   const [responseCV, setResponseCV] = useState<any>("");
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
-  const handleOpenAIResponse = (e: any) => {
-    console.log(e.target.id);
+  const flaskLinkedin = (linkLinkedin: string) => {
+    return new Promise((resolve, reject) => {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          link_linkedin: linkLinkedin,
+        }),
+      };
+  
+      fetch("http://127.0.0.1:5000/cv-linkedin", requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Flask");
+          console.log(data.Message);
+          resolve(data.Message);
+        })
+        .catch((error) => {
+          console.error("Error al guardar ruta de aprendizaje");
+          reject(error);
+        });
+    });
+  };
 
-    let text = "";
-    if (e.target.id === "buttonManual") {
-      text = jobExperience + "and" + skills;
-    } else {
-      text = linkLinkedin;
+  const handleOpenAIResponse = async (e: any) => {
+  console.log(e.target.id);
+
+  let text = "";
+  if (e.target.id === "buttonManual") {
+    text = jobExperience + "and" + skills;
+  } else {
+    console.log("React");
+    try {
+      const response = await flaskLinkedin(linkLinkedin);
+      text = response as string;
+    } catch (error) {
+      console.error("Error:", error);
+      return;
     }
+  }
 
     const messageCV = [
       {
