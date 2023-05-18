@@ -24,11 +24,22 @@ interface projectOverviewInterface {
   orderdesc: string;
 }
 
+interface projectTeamMembersInterface {
+  id: string;
+  employeename: string;
+  location: string;
+  idposition: string;
+  departmentname: string;
+  teamname: string;
+  idproject: string;
+}
+
 const projects = () => {
   const hasMounted = useHasMounted();
 
   const router = useRouter();
   const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[] | null>(null);
+  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[] | null>(null);
   const [projectDescription, setProjectDescription] = useState<any>([]);
 
   let projectID = router.query.slug;
@@ -44,8 +55,7 @@ const projects = () => {
       .catch(error => console.log("Error ", error))
   }, [])
 
-
-  const data = selectedProjectOverview?.map((project) => {
+  const projectOverviewData = selectedProjectOverview?.map((project) => {
     return {
       id: project.id,
       ordername: project.ordername,
@@ -60,8 +70,31 @@ const projects = () => {
     }
   })
 
-  let filteredProjectOverviewData = projectID ? data?.filter(project => project.id === projectID) : data;
+  let filteredProjectOverviewData = projectID ? projectOverviewData?.filter(project => project.id === projectID) : projectOverviewData;
 
+  useEffect(() => {
+    fetch(link + '/getTeamEmployees')
+      .then(res => res.json())
+      .then(data => {
+        setProjectTeamMembers(data.teamMembers)
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
+
+  const projectTeamMembersData = projectTeamMembers?.map((members) => {
+    return {
+      id: members.id,
+      employeename: members.employeename,
+      location: members.location,
+      idposition: members.idposition,
+      departmentname: members.departmentname,
+      teamname: members.teamname,
+      idproject: members.idproject,
+    }
+  })
+
+  let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter(members => members.idproject === projectID) : projectTeamMembersData;
+  console.log(projectTeamMembersData);
 
   /*const description = filteredProjectOverviewData?.[0]?.orderdesc;
   if (description) {
@@ -86,14 +119,6 @@ const projects = () => {
     alert("se va a eliminar el usuario del sistema");
   };
 
-  const handleEmployeeAddToProject = () => {
-    alert("se van a agregar el usuario a la lista de la orden");
-  };
-  
-  const handleEmployeeEraseFromProject = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
-  };
-
   const customStyles = {
     rows: {
         style: {
@@ -108,7 +133,7 @@ const projects = () => {
     },
   };
 
-  const columns: TableColumn<EmployeeDataRow>[] = [
+  const columns: TableColumn<projectTeamMembersInterface>[] = [
       {
         cell: (row) => (
           <Fragment>
@@ -119,7 +144,12 @@ const projects = () => {
       },
       {
         name: 'Name',
-        selector: row => row.name,
+        selector: row => row.id,
+        sortable: true,
+      },
+      {
+        name: 'Name',
+        selector: row => row.employeename,
         sortable: true,
       },
       {
@@ -129,14 +159,14 @@ const projects = () => {
       {
         cell: (row) => (
           <Fragment>
-            {row.idposition === 2 ? 'admin' : ''}
+            {row.idposition === '2' ? 'admin' : ''}
           </Fragment>
         ),
       },
       {
         cell: (row) => (
           <Fragment>
-              <TextBox textBoxText={row.employeeAreaBadge} textBoxColorScheme={row.employeeArea} />
+              <TextBox textBoxText={row.departmentname} textBoxColorScheme={'backend'} />
           </Fragment>
         ),
       },
@@ -156,26 +186,6 @@ const projects = () => {
             <FaIcons.FaTrash
                 style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
                 onClick={() => handleEmployeeDelete()}/>
-          </Fragment>
-        ),
-        width: '50px',
-      },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaPlus
-                style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                onClick={() => handleEmployeeAddToProject()}/>
-          </Fragment>
-        ),
-        width: '50px',
-      },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaMinus
-                style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                onClick={() => handleEmployeeEraseFromProject()}/>
           </Fragment>
         ),
         width: '50px',
@@ -285,7 +295,7 @@ const projects = () => {
         <DataTable
             title={'Team Members'}
             columns={columns}
-            data={teamEmployeesData}
+            data={filteredProjectTeamMembersData}
             customStyles={customStyles}
             highlightOnHover
             pagination
