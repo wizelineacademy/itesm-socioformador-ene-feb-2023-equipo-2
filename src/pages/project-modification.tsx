@@ -149,7 +149,7 @@ const projectModification = () => {
         statusStrValue = statusStr.value;
         //console.log(statusStrValue);
       } else {
-        statusStrValue = team;
+        statusStrValue = orderStatus;
       }
 
       console.log(projectID);
