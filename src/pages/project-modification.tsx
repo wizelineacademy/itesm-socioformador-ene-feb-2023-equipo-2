@@ -119,11 +119,6 @@ const projectModification = () => {
   }, [clientsContext?.setCurrentClient(clientName)]);
 
   const handleSendForm = () => {
-    /*console.log(client);
-    console.log(selectedProjectOverview?.idclient);
-    console.log(typeof(client) != "number")*/
-
-
     let requestOptions;
     
     if (typeof(client) != "number" || typeof(team) != "number" || typeof(orderStatus) != "string") {
