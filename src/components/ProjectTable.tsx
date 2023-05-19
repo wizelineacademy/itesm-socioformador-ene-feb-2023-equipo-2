@@ -33,7 +33,7 @@ const ProjectTable = (props: CardProps) => {
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
 
-  const router = useRouter();
+  const projectTableRouter = useRouter();
 
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
@@ -91,7 +91,7 @@ const ProjectTable = (props: CardProps) => {
     {
       cell: (row) => (
         <Fragment>
-          <div onClick={() => {router.push({pathname: '/project-modification',query: { slug: row.value },});}}>
+          <div onClick={() => {projectTableRouter.push({pathname: '/project-modification',query: { slug: row.value },});}}>
             <FaIcons.FaPencilAlt style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
           </div>
           {/*
@@ -107,7 +107,7 @@ const ProjectTable = (props: CardProps) => {
     {
       cell: (row) => (
         <Fragment>
-          <div onClick={() => {router.push({pathname: '/project-overview',query: { slug: row.value },});}}>
+          <div onClick={() => {projectTableRouter.push({pathname: '/project-overview',query: { slug: row.value },});}}>
             <FaIcons.FaInfoCircle style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
           </div>
           {/*

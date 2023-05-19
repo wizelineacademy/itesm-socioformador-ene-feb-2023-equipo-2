@@ -6,6 +6,7 @@ import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "@/components/TextBox";
 import { projectContext, projectListContext } from '@/context/projectsContext';
@@ -42,7 +43,8 @@ const projectModification = () => {
   const clientsListContext = useContext(clientListContext);
   const hasMounted = useHasMounted();
 
-  const router = useRouter();
+  const projectModificationRouter = useRouter();
+  let projectID = projectModificationRouter.query.slug;
 
   const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectListInterface | null>(null);
   const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[] | null>(null);
@@ -70,11 +72,7 @@ const projectModification = () => {
     {value: "Rejected", label: "Rejected"}
   ];
 
-  let projectID = router.query.slug;
-
   useEffect(() => {
-    console.log(projectID);
-    
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,13 +83,16 @@ const projectModification = () => {
       .then(res => res.json())
       .then(data => {
         setSelectedProjectOverview(data.orders)
+        
         /*console.log(data.orders)
         console.log(selectedProjectOverview?.orderstartdate)
         let test = selectedProjectOverview?.orderstartdate.toString()
         console.log(test)*/
       })
       .catch(error => console.log("Error ", error))
-  }, [])
+
+      console.log("Worked successfully")
+  }, [projectID])
 
   useEffect(() => {
   }, [projectsContext?.setCurrentProject(projectName)]);
@@ -151,7 +152,7 @@ const projectModification = () => {
         statusStrValue = team;
       }
 
-      console.log(projectName);
+      console.log(projectID);
         requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -161,7 +162,8 @@ const projectModification = () => {
                               orderenddate: endDate.toString(),
                               idteam: teamInt,
                               idclient: clientInt,
-                              name: projectName}),
+                              name: projectName,
+                              id: projectID}),
       };
     } else {
       requestOptions = {
@@ -173,7 +175,8 @@ const projectModification = () => {
                               orderenddate: endDate.toString(),
                               idteam: team,
                               idclient: client,
-                              name: projectName}),
+                              name: projectName,
+                              id: projectID}),
       };
     }
 
@@ -238,7 +241,7 @@ const projectModification = () => {
           
           <Select
             onChange={handleFetchTeams} // sets the callback function to handle changes in selected option(s)
-            value = {team === undefined ||  team === 0 ? team = listOfTeams.find((obj) => obj.value === selectedProjectOverview?.idteam) && listOfTeams.find((obj) => obj.value === selectedProjectOverview.idteam) : listOfTeams.find((obj) => obj.value === team)}
+            value = {team === undefined ||  team === 0 ? team = listOfTeams.find((obj) => obj.value === selectedProjectOverview?.idteam) && listOfTeams.find((obj) => obj.value === selectedProjectOverview?.idteam) : listOfTeams.find((obj) => obj.value === team)}
             //value={listOfTeams.find((obj) => obj.value === team)} // sets the currently selected option(s). Use when isMulti is specified.
             options={listOfTeams} // sets the available options for the Select component
             placeholder={"Select team..."}
@@ -255,7 +258,7 @@ const projectModification = () => {
 
                 <DatePicker
                   //selected={new Date(JSON.stringify(selectedProjectOverview?.orderstartdate))}
-                  selected={new Date()}
+                  selected={startDate}
                   onChange={(date: Date) => setStartDate(date)}
                 />
               </div>
@@ -266,7 +269,7 @@ const projectModification = () => {
 
                 <DatePicker
                   //selected={new Date(JSON.stringify(selectedProjectOverview?.orderenddate))}
-                  selected={new Date()}
+                  selected={endDate}
                   onChange={(date: Date) => setEndDate(date)}
                 />
               </div>

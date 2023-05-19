@@ -51,7 +51,6 @@ const projects = () => {
       .then(res => res.json())
       .then(data => {
         setSelectedProjectOverview(data.orders)
-        console.log(projectID);
       })
       .catch(error => console.log("Error ", error))
   }, [])
