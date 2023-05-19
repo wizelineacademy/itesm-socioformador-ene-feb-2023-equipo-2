@@ -19,6 +19,7 @@ const ProjectCreation = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [orderStatus, setOrderStatus] = useState("");
+  const [projectName, setProjectName] = useState("");
   const [listOfTeams, setTeamsList] = useState([])
   const [listOfClients, setClientsList] = useState([])
 
@@ -29,7 +30,7 @@ const ProjectCreation = () => {
   ];
 
   useEffect(() => {
-    fetch(link + '/fetchTeams')
+    fetch(link + '/get-teams')
     .then((res) => res.json())
     .then((data) => {
       setTeamsList(data.teams) 
@@ -46,7 +47,7 @@ const ProjectCreation = () => {
     .catch((error) => console.log("Error", error))
   }, [])
 
-  const handleSendForm = () => {
+  /*const handleSendForm = () => {
     const messages = [
       {
         role: "user",
@@ -65,13 +66,15 @@ const ProjectCreation = () => {
                               orderstartdate: startDate.toString(),
                               orderenddate: endDate.toString(),
                               idteam: team,
-                              idclient: client}),
+                              idclient: client,
+                              name: projectName}),
       };
 
       setResponse(res);
 
       fetch(
-        "http://localhost:3000/api/saveAIRequirementDocumentation",
+        //"http://localhost:3000/api/saveAIRequirementDocumentation",
+        "http://localhost:3000/api/createProject",
         requestOptions
       )
         .then((response) => response.json())
@@ -80,6 +83,54 @@ const ProjectCreation = () => {
         )
         .catch((error) =>
           console.error("Error al guardar esqueleto de requerimientos")
+        );
+    });
+  };*/
+
+  const handleSendForm = async (event: any) => {
+    event.preventDefault();
+
+    const messages = [
+      {
+        role: "user",
+        content:
+          "In my company we are about to do a project. Its description is the following:" +
+          projectDescription +
+          'Following the project description above I need you to write a section named “Project description” where you make more descriptive the project’s description I told you, after that I need you to list the functional requirements with its user stories and each of them with their lists of use cases and acceptance criteria; finalize with the non-functional requirements with the same things as the functional ones. I need your response to be a JSON and to be indented properly to improve readability, follow the following example: {"Project description":"Our mission is to design a hospital system that simplifies the process of finding donors for people on the waiting list for transplants. The system will ensure that all necessary information is kept organized and up-to-date in order to reduce wait times and improve success rates.","Functional requirements":[{"ID":"FR001","Name":"Functional requirement name","User stories":[{"ID":"US001","Description":"Functional requirement description"},{"ID":"US002","Description":"Functional requirement description"}],"Use cases":[{"ID":"UC001","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"Acceptance criteria description"},{"ID":"AC002","Description":"Acceptance criteria description"}]},{"ID":"UC002","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"All required fields must be completed"},{"ID":"AC002","Description":"Information must be validated before submission"}]}]}],"Non-functional requirements":[{"ID":"NFR001","Name":"Non-functional requirement name","Use cases":[{"ID":"UC005","Description":"Use case description","Acceptance criteria":[{"ID":"AC007","Description":"Acceptance criteria description"},{"ID":"AC008","Description":"Acceptance criteria description"}]}]},{"ID":"NFR002","Name":"Performance","Use cases":[{"ID":"UC006","Description":"Use case description","Acceptance criteria":[{"ID":"AC009","Description":"Acceptance criteria description"},{"ID":"AC010","Description":"Acceptance criteria description"}]}]}]}',
+      },
+    ];
+    getChatResponse(messages).then((res) => {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({aidescription: res, 
+                              orderstatus: orderStatus, 
+                              orderstartdate: startDate.toString(),
+                              orderenddate: endDate.toString(),
+                              idteam: team,
+                              idclient: client,
+                              name: projectName}),
+      };
+
+      setResponse(res);
+
+      fetch(
+        //"http://localhost:3000/api/saveAIRequirementDocumentation",
+        //"http://localhost:3000/api/createProject",
+        link + "/createProject", requestOptions,
+      )
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok.");
+        })
+        .then((data) =>{
+          alert("Exito");
+          console.log("Esqueleto de requerimientos guardados exitosamente");
+          console.log(data);
+        })
+        .catch((error) => console.error("Error", error)
         );
     });
   };
@@ -186,6 +237,21 @@ const ProjectCreation = () => {
             </div>
 
             <br></br>
+
+              {/* Project description input field */}
+          <label className="form-label">Project name...</label>
+          <textarea
+            className="form-control"
+            id="projectDescription"
+            autoComplete="off"
+            onChange={(e) => setProjectName(e.target.value)}
+            value={projectName}
+            placeholder="Name of the project..."
+            rows="1"
+            required
+          />
+
+          <br></br>
 
             {/* Project description input field */}
           <label className="form-label">Project description...</label>
