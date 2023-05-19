@@ -91,6 +91,22 @@ const ProjectTable = (props: CardProps) => {
     {
       cell: (row) => (
         <Fragment>
+          <div onClick={() => {router.push({pathname: '/project-modification',query: { slug: row.value },});}}>
+            <FaIcons.FaPencilAlt style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
+          </div>
+          {/*
+          href="/project-overview"
+          <FaIcons.FaInfoCircle
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => handleSeeProjects()}
+      />*/}
+        </Fragment>
+      ),
+      width: "50px",
+    },
+    {
+      cell: (row) => (
+        <Fragment>
           <div onClick={() => {router.push({pathname: '/project-overview',query: { slug: row.value },});}}>
             <FaIcons.FaInfoCircle style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
           </div>
