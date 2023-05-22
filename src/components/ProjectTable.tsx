@@ -158,9 +158,23 @@ const ProjectTable = (props: CardProps) => {
 
   let selectedProjectID = projectsContext?.currentProject;
   let selectedClientID = clientsContext?.currentClient;
-  let filteredProjectData = selectedProjectID && selectedClientID ? data?.filter(project => project.value === selectedProjectID && project.idclient === selectedClientID) :
-                        selectedProjectID ? data?.filter(project => project.value === selectedProjectID) :
-                        selectedClientID ? data?.filter(project => project.idclient === selectedClientID) : data;
+  let selectedProjectIDInt = parseInt(projectsContext?.currentProject);
+  let selectedClientIDInt = parseInt(clientsContext?.currentClient);
+  console.log(selectedClientID)
+  console.log(selectedProjectID)
+  
+  console.log(selectedProjectID != "" && selectedClientID != "" && selectedProjectID != undefined && selectedClientID != undefined)
+  console.log(selectedProjectID != "" && selectedProjectID != undefined)
+  console.log(selectedClientID != "" && selectedClientID != undefined && selectedProjectID != "0")
+  console.log(selectedClientID === "undefined")
+
+  /*console.log(selectedClientID);
+  console.log(data[6].idclient);
+  console.log(selectedClientID === data[6].idclient);*/
+  
+  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0") ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
+                        selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" ? data?.filter(project => project.value === selectedProjectIDInt) :
+                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) : data;
 
   return (
     <>

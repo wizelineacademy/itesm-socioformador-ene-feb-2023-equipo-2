@@ -6,6 +6,7 @@ import { useHasMounted } from "@/components/useHasMounted";
 
 import { projectContext, projectListContext } from '@/context/projectsContext';
 import { clientContext, clientListContext } from "@/context/clientContext";
+import { stringify } from "querystring";
 
 const estatusOptions = [
   {value: 2, label: "Approved"},
@@ -33,7 +34,12 @@ interface projectListInterface {
   teamname: string;
 }
 
-const ProjectSearch = () => {
+const ProjectSearch = (clientID: string | string[] | undefined) => {
+  let clientIDStr = stringify(clientID);
+  clientIDStr = clientIDStr.replace('clientID=', '');
+  let clientIDInt = parseInt(clientIDStr);
+  //console.log(clientIDInt)
+
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
@@ -44,11 +50,12 @@ const ProjectSearch = () => {
   const clientsListContext = useContext(clientListContext);
 
   // React Hooks
+  let [client, setClient] = useState<number>();
   const [name, setName] = useState("");
   const [projectList, setProjectList] = useState<projectListInterface[] | null>(null);
   
-  const [clientName, setClientName] = useState("");
-  const [clientList, setClientList] = useState<clientSelectionInterface[] | null>(null);
+  let [clientName, setClientName] = useState("");
+  //const [clientList, setClientList] = useState<clientSelectionInterface[] | null>(null);
 
   const [estatus, setEstatus] = useState("");
   const [listOfClients, setClientsList] = useState([])
@@ -56,7 +63,6 @@ const ProjectSearch = () => {
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    //fetch(link + '/getProjectList')
     fetch(link + '/getProjectList')
       .then(res => res.json())
       .then(data => {
@@ -68,6 +74,11 @@ const ProjectSearch = () => {
 
   useEffect(() => {
   }, [projectsContext?.setCurrentProject(name)]);
+
+  useEffect(() => {
+    clientsContext?.setCurrentClient(String(client))
+    console.log(clientsContext?.currentClient)
+  }, [client]);
 
   const handleChangeSelectProjectName = (e: any | null) => {
     if (e === null) {
@@ -82,21 +93,22 @@ const ProjectSearch = () => {
     fetch(`${link}/get-clients?id=${clientName}`)
       .then(res => res.json())
       .then(data => {
-        setClientList(data.client)
+        setClientsList(data.client)
         clientsListContext?.setSelectedClientList(data.client);
       })
       .catch(error => console.log("Error ", error))
   }, [])
 
   useEffect(() => {
-  }, [clientsContext?.setCurrentClient(clientName)]);
+  }, [clientsContext?.setCurrentClient(String(client))]);
 
-  const handleChangeClienttName = (e : any | null) => {
+  const handleChangeClientName = (e : any | null) => {
     if (e === null) {
-      setClientName("");
+      setClient(0);
+      clientsContext?.setCurrentClient("")
     } else {
-      setClientName(e.value);
-      clientsContext?.setCurrentClient(e.value);
+      setClient(e.value);
+      clientsContext?.setCurrentClient(String(e.value));
     }
   };
 
@@ -127,12 +139,14 @@ const ProjectSearch = () => {
           </Col>
           <Col>
             <label className="form-label">Client:</label>
-            {clientList ? (
+            {listOfClients ? (
               <Select
-                onChange={handleChangeClienttName}
-                value={clientList.find((obj) => obj.value === clientName) || ""}
-                options={clientList}
+                onChange={handleChangeClientName}
+                //value={clientList.find((obj) => obj.value === clientName) || ""} clientID
+                value = {(client === undefined ||  client === 0) ? client = clientIDInt && listOfClients.find((obj) => obj.value === clientIDInt) && clientsContext?.setCurrentClient(clientIDInt): listOfClients.find((obj) => obj.value === client)}
+                options={listOfClients}
                 isClearable
+                placeholder = {"Select..."}
               />
             ) : (
               <div>Loading...</div>

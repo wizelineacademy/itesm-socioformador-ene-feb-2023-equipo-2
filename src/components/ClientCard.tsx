@@ -83,8 +83,8 @@ const ClientCard = () => {
     {
       cell: (row) => (
         <Fragment>
-          <div onClick={() => {router.push({pathname: '/projects',query: { slug: row.value },});}}>
-            <FaIcons.FaClipboardList
+          <div onClick={() => {router.push({pathname: '/projects', query: { slug: row.value },});}}>
+            <FaIcons.FaInfoCircle
               style={{ color: "black", fontSize: "25px", cursor: "pointer" }}
               onClick={() => handleClientSeeProjects()}
             />

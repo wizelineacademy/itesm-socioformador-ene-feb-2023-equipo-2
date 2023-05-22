@@ -48,6 +48,11 @@ const projects = () => {
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
 
+  useEffect(() => {
+    clientID = router.query.slug;
+    console.log("Client ID is" + clientID);
+  }, [clientID])
+
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   if (!hasMounted) {
@@ -65,7 +70,7 @@ const projects = () => {
                 "Project administration panel to edit existing projects or create new ones for effective project management."
               }
             />
-            <ProjectSearch />
+            <ProjectSearch clientID={clientID}/>
             <Container className="mt-3">
               <Row>
                 <Col></Col>
