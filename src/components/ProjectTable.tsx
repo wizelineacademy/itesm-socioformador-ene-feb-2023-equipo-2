@@ -150,15 +150,15 @@ const ProjectTable = (props: CardProps) => {
     }
   })
 
-  let filteredProjectData;
+  // let filteredProjectData;
   
-  if (props.clientID) {
-    filteredProjectData = data?.filter(project => project.idclient === props.clientID);
-  }
+  // if (props.clientID) {
+  //   filteredProjectData = data?.filter(project => project.idclient === props.clientID);
+  // }
 
   let selectedProjectID = projectsContext?.currentProject;
   let selectedClientID = clientsContext?.currentClient;
-  filteredProjectData = selectedProjectID && selectedClientID ? data?.filter(project => project.value === selectedProjectID && project.idclient === selectedClientID) :
+  let filteredProjectData = selectedProjectID && selectedClientID ? data?.filter(project => project.value === selectedProjectID && project.idclient === selectedClientID) :
                         selectedProjectID ? data?.filter(project => project.value === selectedProjectID) :
                         selectedClientID ? data?.filter(project => project.idclient === selectedClientID) : data;
 
