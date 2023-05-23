@@ -58,3 +58,27 @@ export const ProjectListContext = ({children}: selectedProjectContextProviderPro
     </projectListContext.Provider>
   )
 }
+
+//------------------------------------------------------------------------------------
+
+type statusOptionsTypes = {
+  selectedStatus: string | null, 
+  setSelectedStatus: React.Dispatch<React.SetStateAction<string | null>>
+}
+
+type selectedStatusContextProviderProps = {
+  children: React.ReactNode
+}
+
+export const statusContext = createContext<statusOptionsTypes | null>(null);
+
+//export const ProjectContext = createContext<projectOptionsTypes | null>(null);
+export const StatusContext = ({children}: selectedStatusContextProviderProps) => {
+  //return <departmentContext.Provider value={selectedDepartment}>{children}</departmentContext.Provider>
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  return (
+    <statusContext.Provider value={{selectedStatus, setSelectedStatus}}>
+      {children}
+    </statusContext.Provider>
+  )
+}
