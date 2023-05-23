@@ -29,7 +29,7 @@ import ProjectTable from "@/components/ProjectTable";
 import { useHasMounted } from "@/components/useHasMounted";
 import { useRouter } from 'next/router';
 
-import { ProjectListContext, ProjectContext } from "@/context/projectsContext";
+import { ProjectListContext, ProjectContext, StatusContext } from "@/context/projectsContext";
 import { ClientListContext, ClientContext } from "@/context/clientContext";
 
 // 'options' will later be replaced by table skills in database
@@ -50,7 +50,7 @@ const projects = () => {
 
   useEffect(() => {
     clientID = router.query.slug;
-    console.log("Client ID is" + clientID);
+    console.log(clientID);
   }, [clientID])
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -64,6 +64,7 @@ const projects = () => {
       <ProjectContext>
         <ClientListContext>
           <ClientContext>
+            <StatusContext>
             <Menu
               titulo={"Projects"}
               descripcion={
@@ -103,6 +104,7 @@ const projects = () => {
               </div>
             </Collapse>
             <ProjectTable clientID={clientID}/>
+            </StatusContext>
           </ClientContext>
         </ClientListContext>
       </ProjectContext>

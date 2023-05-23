@@ -4,14 +4,14 @@ import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 
-import { projectContext, projectListContext } from '@/context/projectsContext';
+import { projectContext, projectListContext, statusContext } from '@/context/projectsContext';
 import { clientContext, clientListContext } from "@/context/clientContext";
 import { stringify } from "querystring";
 
-const estatusOptions = [
-  {value: 2, label: "Approved"},
-  {value: 1, label: "Pending"},
-  {value: 0, label: "Rejected"}
+const listOfStatus = [
+  {value: "Approved", label: "Approved"},
+  {value: "Pending", label: "Pending"},
+  {value: "Rejected", label: "Rejected"}
 ];
 
 interface clientSelectionInterface {
@@ -48,13 +48,15 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   const projectsListContext = useContext(projectListContext);
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
+  const statusesContext = useContext(statusContext);
+  //const clientsListContext = useContext(clientListContext);
 
   // React Hooks
   let [client, setClient] = useState<number>();
   const [name, setName] = useState("");
   const [projectList, setProjectList] = useState<projectListInterface[] | null>(null);
   
-  let [clientName, setClientName] = useState("");
+  const [orderStatus, setOrderStatus] = useState("");
   //const [clientList, setClientList] = useState<clientSelectionInterface[] | null>(null);
 
   const [estatus, setEstatus] = useState("");
@@ -80,6 +82,18 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
     console.log(clientsContext?.currentClient)
   }, [client]);
 
+  useEffect(() => {
+  }, [statusesContext?.setSelectedStatus(orderStatus)]);
+
+  const handleDropdownSelect = (e: any | null) => {
+    if (e === null) {
+      setOrderStatus("");
+    } else {
+      setOrderStatus(e.value);
+      statusesContext?.setSelectedStatus(e.value);
+    }
+  }
+
   const handleChangeSelectProjectName = (e: any | null) => {
     if (e === null) {
       setName("");
@@ -90,7 +104,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   };
 
   useEffect(() => {
-    fetch(`${link}/get-clients?id=${clientName}`)
+    fetch(`${link}/get-clients?id=${client}`)
       .then(res => res.json())
       .then(data => {
         setClientsList(data.client)
@@ -155,9 +169,9 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
           <Col>
             <label className="form-label">Order Status:</label>
             <Select
-              //onChange={handleChangeSelectEstatus}
-              //value={estatusOptions.find((obj) => obj.value === estatus)}
-              options={estatusOptions}
+              onChange={handleDropdownSelect}
+              value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)}
+              options={listOfStatus}
               isClearable
             />
           </Col>

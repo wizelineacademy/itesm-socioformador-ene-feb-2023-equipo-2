@@ -7,7 +7,7 @@ import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
 
-import { projectContext, projectListContext } from '@/context/projectsContext';
+import { projectContext, projectListContext, statusContext } from '@/context/projectsContext';
 import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
 import { useRouter } from 'next/router';
 
@@ -30,6 +30,7 @@ interface CardProps {
 const ProjectTable = (props: CardProps) => {
   const projectsContext = useContext(projectContext);
   const projectsListContext = useContext(projectListContext);
+  const statusesContext = useContext(statusContext);
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
 
@@ -158,9 +159,11 @@ const ProjectTable = (props: CardProps) => {
 
   let selectedProjectID = projectsContext?.currentProject;
   let selectedClientID = clientsContext?.currentClient;
+  let selectedStatus = statusesContext?.selectedStatus;
+
   let selectedProjectIDInt = parseInt(projectsContext?.currentProject);
   let selectedClientIDInt = parseInt(clientsContext?.currentClient);
-  console.log(selectedClientID)
+  /*console.log(selectedClientID)
   console.log(selectedProjectID)
   
   console.log(selectedProjectID != "" && selectedClientID != "" && selectedProjectID != undefined && selectedClientID != undefined)
@@ -168,13 +171,14 @@ const ProjectTable = (props: CardProps) => {
   console.log(selectedClientID != "" && selectedClientID != undefined && selectedProjectID != "0")
   console.log(selectedClientID === "undefined")
 
-  /*console.log(selectedClientID);
+  console.log(selectedClientID);
   console.log(data[6].idclient);
   console.log(selectedClientID === data[6].idclient);*/
   
-  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0") ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
+  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" ? data?.filter(project => project.value === selectedProjectIDInt) :
-                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) : data;
+                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        selectedStatus != "" && selectedStatus != "undefined" && selectedStatus != null ? data?.filter(project => project.orderstatus === selectedStatus) : data;
 
   return (
     <>
