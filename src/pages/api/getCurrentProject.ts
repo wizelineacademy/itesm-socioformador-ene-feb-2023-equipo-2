@@ -17,8 +17,8 @@ export default async function handler(req: any, res: any) {
       orderdesc: project?.orderdesc,
       idclient: project?.idclient,
       idteam: project?.idteam,
-      orderstartdate: project?.orderstartdate.toISOString(),
-      orderenddate: project?.orderenddate.toISOString(),
+      orderstartdate: project?.orderstartdate.toString(),
+      orderenddate: project?.orderenddate.toString(),
       erased: project?.erased}
 
     const response = {
