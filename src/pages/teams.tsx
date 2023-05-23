@@ -66,7 +66,7 @@ const teams = () => {
               <TeamCreation />
             </div>
           </Collapse> : <div></div>}
-          <TeamList teamName={"Team 1"} />
+          <TeamList pageType={"listForAdmin"}/>
           </EmployeeListContext>
         </EmployeeContext>
       </TeamListContext>

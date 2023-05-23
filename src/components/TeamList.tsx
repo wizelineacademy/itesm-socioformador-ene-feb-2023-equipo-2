@@ -1,8 +1,8 @@
-import React, {Fragment, useState} from "react";
+import React, { Fragment, useState } from "react";
 import Menu from "@/components/Menu";
 import { Container, Row, Col, Collapse } from "react-bootstrap";
 import * as FaIcons from "react-icons/fa";
-import DataTable, { TableColumn} from 'react-data-table-component';
+import DataTable, { TableColumn } from "react-data-table-component";
 import { useEffect } from "react";
 
 import TeamSearch from "@/components/TeamSearch";
@@ -10,19 +10,30 @@ import TeamCreation from "@/components/TeamCreation";
 import EmployeeCard from "@/components/EmployeeTable";
 import { useHasMounted } from "@/components/useHasMounted";
 import { useContext } from "react";
-import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
-import { teamContext, teamListContext, TeamListContext } from "@/context/teamContext";
-import { useRouter } from 'next/router';
+import {
+  employeeContext,
+  EmployeeListContext,
+  employeeListContext,
+} from "@/context/employeeContext";
+import {
+  teamContext,
+  teamListContext,
+  TeamListContext,
+} from "@/context/teamContext";
+import { useRouter } from "next/router";
 import _ from "cypress/types/lodash";
 import { projectContext } from "@/context/projectsContext";
 
 interface CardProps {
-  teamName: String;
-  pageType: 'listForAdmin' | 'listForEmployee' | 'addToOrder' | 'OrderSummary' | 'showAll';
-
+  pageType:
+    | "listForAdmin"
+    | "listForEmployee"
+    | "addToOrder"
+    | "OrderSummary"
+    | "showAll";
 }
 
-let link = process.env.NEXT_PUBLIC_API_URL; 
+let link = process.env.NEXT_PUBLIC_API_URL;
 
 const TeamList = (props: CardProps) => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -35,10 +46,18 @@ const TeamList = (props: CardProps) => {
   const teamsContext = useContext(teamContext);
   const teamsListContext = useContext(teamListContext);
 
-  const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
-  const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
-  const [hidePlusSign] = useState<boolean>(props.pageType === 'addToOrder' ? false : true);
-  const [hideMinusSign] = useState<boolean>(props.pageType === 'OrderSummary' ? false : true);
+  const [hideStatusIcon] = useState<boolean>(
+    props.pageType === "listForEmployee" ? true : false
+  );
+  const [hideTrashCan] = useState<boolean>(
+    props.pageType === "listForAdmin" ? false : true
+  );
+  const [hidePlusSign] = useState<boolean>(
+    props.pageType === "addToOrder" ? false : true
+  );
+  const [hideMinusSign] = useState<boolean>(
+    props.pageType === "OrderSummary" ? false : true
+  );
 
   let projectID = router.query.slug;
 
@@ -53,22 +72,24 @@ const TeamList = (props: CardProps) => {
   const handleEmployeeAddToProject = () => {
     alert("se van a agregar el usuario a la lista de la orden");
   };
-  
+
   const handleEmployeeEraseFromProject = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
   };
 
-  const [projectTeamMembers, setProjectTeamMembers] = useState<teamMembersInterface[] | null>(null);
+  const [projectTeamMembers, setProjectTeamMembers] = useState<
+    teamMembersInterface[] | null
+  >(null);
 
   useEffect(() => {
-    fetch(link + '/joinTeamEmployeesFetch')
-    .then((res) => res.json())
-    .then((data) => {
-      setProjectTeamMembers(data.teamMembers)
-      console.log(data.teamMembers) 
-    })
-    .catch((error) => console.log("Error", error))
-  }, [])
+    fetch(link + "/joinTeamEmployeesFetch")
+      .then((res) => res.json())
+      .then((data) => {
+        setProjectTeamMembers(data.teamMembers);
+        console.log(data.teamMembers);
+      })
+      .catch((error) => console.log("Error", error));
+  }, []);
 
   interface employeeSelectionInterface {
     value: string;
@@ -86,8 +107,8 @@ const TeamList = (props: CardProps) => {
   }
 
   interface teamSelectionInterface {
-    value: string,
-    label: string,
+    value: string;
+    label: string;
   }
 
   interface teamMembersInterface {
@@ -98,7 +119,7 @@ const TeamList = (props: CardProps) => {
     departmentname: string;
     label: string;
     idproject: string;
-    idteam: string
+    idteam: string;
   }
 
   const data = projectTeamMembers?.map((members) => {
@@ -110,47 +131,54 @@ const TeamList = (props: CardProps) => {
       idposition: members.idposition,
       departmentname: members.departmentname,
       idproject: members.idproject,
-      idteam: parseInt(members.idteam)
-    }
-  })
+      idteam: parseInt(members.idteam),
+    };
+  });
 
   console.log(data);
-  
+
   let teams = teamsListContext?.selectedTeam;
   let employees = employeesListContext?.selectedEmployee;
-  
+
   // let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter(members => members.idproject === projectID) : projectTeamMembersData;
   // console.log(projectTeamMembersData);
   const data2 = teams?.map((team) => {
     return {
       value: team.value,
       label: team.label,
-      
-    }
-  })
+    };
+  });
 
   let selectedTeamID = teamsContext?.currentTeam;
   let selectedEmployeeID = employeesContext?.currentEmployee;
-  
-  console.log(selectedEmployeeID)
-  //console.log(selectedEmployeeID)
-  
 
-  let filteredData = selectedTeamID && selectedEmployeeID ? data?.filter(members => members.idteam === selectedTeamID && members.value === selectedEmployeeID) :
-                        selectedTeamID ? data?.filter(members => members.idteam === selectedTeamID) :
-                        selectedEmployeeID ? data?.filter(members => members.value === selectedEmployeeID) : data;
+  console.log(selectedEmployeeID);
+  //console.log(selectedEmployeeID)
+
+  let filteredData =
+    selectedTeamID && selectedEmployeeID
+      ? data?.filter(
+          (members) =>
+            members.idteam === selectedTeamID &&
+            members.value === selectedEmployeeID
+        )
+      : selectedTeamID
+      ? data?.filter((members) => members.idteam === selectedTeamID)
+      : selectedEmployeeID
+      ? data?.filter((members) => members.value === selectedEmployeeID)
+      : data;
 
   const customStyles = {
     rows: {
-        style: {
-          minHeight: '50px',
-        },
-        highlightOnHoverStyle: {
-          backgroundColor: '#EDEDED',
-          borderBottomColor: '#FFFFFF',
-          borderRadius: '10px',
-          outline: '1px solid #FFFFFF',
-        },
+      style: {
+        minHeight: "50px",
+      },
+      highlightOnHoverStyle: {
+        backgroundColor: "#EDEDED",
+        borderBottomColor: "#FFFFFF",
+        borderRadius: "10px",
+        outline: "1px solid #FFFFFF",
+      },
     },
   };
 
@@ -165,71 +193,94 @@ const TeamList = (props: CardProps) => {
         omit: hideStatusIcon,
         width: '50px',
       },*/
-       {
-         cell: (row) => (
-           <Fragment>
-             <FaIcons.FaCircle style={{color: 'black', fontSize: '50px'}}/>
-           </Fragment>
-         ),
-         width: '50px',
-       },
-      
       {
-        name: 'Team Name',
-        selector: row => row.label,
+        cell: (row) => (
+          <Fragment>
+            <FaIcons.FaCircle style={{ color: "black", fontSize: "50px" }} />
+          </Fragment>
+        ),
+        width: "50px",
+      },
+
+      {
+        name: "Team Name",
+        selector: (row) => row.label,
         sortable: true,
       },
       {
-        name: 'Member ID',
-        selector: row => row.employeename,
+        name: "Member ID",
+        selector: (row) => row.employeename,
         sortable: true,
       },
-      
-       {
-         cell: (row) => (
-           <Fragment>
-             <FaIcons.FaInfoCircle
-               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-               onClick={() => handleEmployeeSeeInfo()}/>
-           </Fragment>
-         ),
-         width: '50px',
-       },
-       {
-         cell: (row) => (
-           <Fragment>
-             <FaIcons.FaTrash
-                 style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                 onClick={() => handleEmployeeDelete()}/>
-           </Fragment>
-         ),
-         omit: hideTrashCan,
-         width: '50px',
-       },
-       {
-         cell: (row) => (
-           <Fragment>
-             <FaIcons.FaPlus
-                 style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                 onClick={() => handleEmployeeAddToProject()}/>
-           </Fragment>
-         ),
-         omit: hidePlusSign,
-         width: '50px',
-       },
-       {
-         cell: (row) => (
-           <Fragment>
-             <FaIcons.FaMinus
-                 style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                 onClick={() => handleEmployeeEraseFromProject()}/>
-           </Fragment>
-         ),
-         omit: hideMinusSign,
-         width: '50px',
-       },
+
+      {
+        cell: (row) => (
+          <Fragment>
+            <FaIcons.FaInfoCircle
+              style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+              onClick={() => handleEmployeeSeeInfo()}
+            />
+          </Fragment>
+        ),
+        width: "50px",
+      },
+      {
+        cell: (row) => (
+          <Fragment>
+            <div
+              onClick={() => {
+                router.push({
+                  pathname: "/team-modification",
+                  query: { slug: row.idteam },
+                });
+              }}
+            >
+              <FaIcons.FaPencilAlt
+                style={{ color: "black", fontSize: "18px", cursor: "pointer" }}
+              />
+            </div>
+          </Fragment>
+        ),
+        width: "50px",
+      },
+      {
+        cell: (row) => (
+          <Fragment>
+            <FaIcons.FaTrash
+              style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+              onClick={() => handleEmployeeDelete()}
+            />
+          </Fragment>
+        ),
+        omit: hideTrashCan,
+        width: "50px",
+      },
+      {
+        cell: (row) => (
+          <Fragment>
+            <FaIcons.FaPlus
+              style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+              onClick={() => handleEmployeeAddToProject()}
+            />
+          </Fragment>
+        ),
+        omit: hidePlusSign,
+        width: "50px",
+      },
+      {
+        cell: (row) => (
+          <Fragment>
+            <FaIcons.FaMinus
+              style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+              onClick={() => handleEmployeeEraseFromProject()}
+            />
+          </Fragment>
+        ),
+        omit: hideMinusSign,
+        width: "50px",
+      },
     ],
-    [hideTrashCan, hidePlusSign, hideMinusSign],
+    [hideTrashCan, hidePlusSign, hideMinusSign]
   );
 
   /*let selectedTeamID = teamsContext?.currentTeam;
@@ -247,8 +298,8 @@ const TeamList = (props: CardProps) => {
 
   return (
     <>
-      <div className='container my-4'>
-      <DataTable
+      <div className="container my-4">
+        <DataTable
           columns={columns}
           data={filteredData}
           customStyles={customStyles}
@@ -258,8 +309,7 @@ const TeamList = (props: CardProps) => {
         />
       </div>
     </>
-    );
-  };
-  
-  export default TeamList;
-  
+  );
+};
+
+export default TeamList;
