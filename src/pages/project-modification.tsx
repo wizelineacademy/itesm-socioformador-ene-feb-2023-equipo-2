@@ -36,10 +36,6 @@ interface projectListInterface {
   erased: boolean;
 }
 
-interface datos {
-  orderstartdate: Date;
-}
-
 const projectModification = () => {
   const projectsContext = useContext(projectContext);
   const projectsListContext = useContext(projectListContext);
@@ -97,7 +93,7 @@ const projectModification = () => {
       .then((res) => res.json())
       .then((data) => {
         setSelectedProjectOverview(data.orders);
-        
+
         const dateStart = data.orders.orderstartdate;
         const dateStartObject = new Date(dateStart);
         setStartDateProjectOverview(dateStartObject);
