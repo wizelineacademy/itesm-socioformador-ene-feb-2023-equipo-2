@@ -7,12 +7,12 @@ import { useHasMounted } from "@/components/useHasMounted";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import DataTable, { TableColumn} from 'react-data-table-component';
+import DataTable, { TableColumn } from "react-data-table-component";
 import TextBox from "@/components/TextBox";
-import { projectContext, projectListContext } from '@/context/projectsContext';
+import { projectContext, projectListContext } from "@/context/projectsContext";
 import { clientContext, clientListContext } from "@/context/clientContext";
 
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 interface projectTeamMembersInterface {
   id: string;
@@ -25,15 +25,19 @@ interface projectTeamMembersInterface {
 }
 
 interface projectListInterface {
-  value: number,
-  label: string,
-  orderstatus: string,
-  orderdesc: string,
-  idclient: number,
-  idteam: number,
-  orderstartdate: string,
-  orderenddate: string,
-  erased: boolean
+  value: number;
+  label: string;
+  orderstatus: string;
+  orderdesc: string;
+  idclient: number;
+  idteam: number;
+  orderstartdate: string;
+  orderenddate: string;
+  erased: boolean;
+}
+
+interface datos {
+  orderstartdate: Date;
 }
 
 const projectModification = () => {
@@ -46,8 +50,19 @@ const projectModification = () => {
   const projectModificationRouter = useRouter();
   let projectID = projectModificationRouter.query.slug;
 
-  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectListInterface | null>(null);
-  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[] | null>(null);
+  const [selectedProjectOverview, setSelectedProjectOverview] =
+    useState<projectListInterface | null>(null);
+
+  const [startDateProjectOverview, setStartDateProjectOverview] = useState(
+    new Date()
+  );
+  const [endDateProjectOverview, setEndDateProjectOverview] = useState(new Date());
+
+  const [startDateProjectOverviewString, setStartDateProjectOverviewString] =
+    useState(new Date());
+  const [projectTeamMembers, setProjectTeamMembers] = useState<
+    projectTeamMembersInterface[] | null
+  >(null);
   const [projectDescription, setProjectDescription] = useState<any>([]);
 
   // React Hooks
@@ -60,72 +75,83 @@ const projectModification = () => {
   let [endDate, setEndDate] = useState(new Date());
   let [orderStatus, setOrderStatus] = useState("");
   let [projectName, setProjectName] = useState("");
-  const [listOfTeams, setTeamsList] = useState([])
-  const [listOfClients, setClientsList] = useState([])
-
+  const [listOfTeams, setTeamsList] = useState([]);
+  const [listOfClients, setClientsList] = useState([]);
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   const listOfStatus = [
-    {value: "Approved", label: "Approved"},
-    {value: "Pending", label: "Pending"},
-    {value: "Rejected", label: "Rejected"}
+    { value: "Approved", label: "Approved" },
+    { value: "Pending", label: "Pending" },
+    { value: "Rejected", label: "Rejected" },
   ];
 
   useEffect(() => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({id: projectID}),
+      body: JSON.stringify({ id: projectID }),
     };
 
-    fetch(link + "/getCurrentProject?", requestOptions,)
-      .then(res => res.json())
-      .then(data => {
-        setSelectedProjectOverview(data.orders)
+    fetch(link + "/getCurrentProject?", requestOptions)
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectedProjectOverview(data.orders);
         
-        /*console.log(data.orders)
-        console.log(selectedProjectOverview?.orderstartdate)
-        let test = selectedProjectOverview?.orderstartdate.toString()
-        console.log(test)*/
-      })
-      .catch(error => console.log("Error ", error))
+        const dateStart = data.orders.orderstartdate;
+        const dateStartObject = new Date(dateStart);
+        setStartDateProjectOverview(dateStartObject);
 
-      console.log("Worked successfully")
-  }, [projectID])
+        const dateEnd = data.orders.orderenddate;
+        const dateEndObject = new Date(dateEnd);
+        setEndDateProjectOverview(dateEndObject)
+
+        // console.log("Worked successfully");
+      })
+      .catch((error) => console.log("Error ", error));
+
+    // console.log("Worked successfully");
+  }, [projectID]);
 
   useEffect(() => {
-  }, [projectsContext?.setCurrentProject(projectName)]);
+    console.log("prueba");
+    console.log(startDateProjectOverview);
+  }, [startDateProjectOverview]);
+
+  useEffect(() => {}, [projectsContext?.setCurrentProject(projectName)]);
 
   useEffect(() => {
     fetch(`${link}/get-clients?id=${clientName}`)
-      .then(res => res.json())
-      .then(data => {
-        setClientsList(data.client)
+      .then((res) => res.json())
+      .then((data) => {
+        setClientsList(data.client);
         clientsListContext?.setSelectedClientList(data.client);
       })
-      .catch(error => console.log("Error ", error))
-  }, [])
+      .catch((error) => console.log("Error ", error));
+  }, []);
 
   useEffect(() => {
-    fetch(link + '/get-teams')
-    .then((res) => res.json())
-    .then((data) => {
-      setTeamsList(data.teams) 
-    })
-    .catch((error) => console.log("Error", error))
-  }, [])
+    fetch(link + "/get-teams")
+      .then((res) => res.json())
+      .then((data) => {
+        setTeamsList(data.teams);
+      })
+      .catch((error) => console.log("Error", error));
+  }, []);
 
-  useEffect(() => {
-  }, [clientsContext?.setCurrentClient(clientName)]);
+  useEffect(() => {}, [clientsContext?.setCurrentClient(clientName)]);
 
   const handleSendForm = () => {
     let requestOptions;
-    
-    if (typeof(client) != "number" || typeof(team) != "number" || typeof(orderStatus) != "string") {
+
+    if (
+      typeof client != "number" ||
+      typeof team != "number" ||
+      typeof orderStatus != "string"
+    ) {
       let clientInt, teamInt, statusStrValue;
 
-      if(typeof(client) != "number") {
+      if (typeof client != "number") {
         let clientStr = JSON.parse(JSON.stringify(client));
         //console.log(clientStr)
         clientInt = clientStr.value;
@@ -134,7 +160,7 @@ const projectModification = () => {
         clientInt = client;
       }
 
-      if(typeof(team) != "number") {
+      if (typeof team != "number") {
         let teamStr = JSON.parse(JSON.stringify(team));
         //console.log(teamStr)
         teamInt = teamStr.value;
@@ -143,7 +169,7 @@ const projectModification = () => {
         teamInt = team;
       }
 
-      if(typeof(orderStatus) != "string") {
+      if (typeof orderStatus != "string") {
         let statusStr = JSON.parse(JSON.stringify(orderStatus));
         //console.log(statusStr)
         statusStrValue = statusStr.value;
@@ -153,30 +179,34 @@ const projectModification = () => {
       }
 
       console.log(projectID);
-        requestOptions = {
+      requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({aidescription: response, 
-                              orderstatus: statusStrValue, 
-                              orderstartdate: startDate.toString(),
-                              orderenddate: endDate.toString(),
-                              idteam: teamInt,
-                              idclient: clientInt,
-                              name: projectName,
-                              id: projectID}),
+        body: JSON.stringify({
+          aidescription: response,
+          orderstatus: statusStrValue,
+          orderstartdate: startDate.toString(),
+          orderenddate: endDate.toString(),
+          idteam: teamInt,
+          idclient: clientInt,
+          name: projectName,
+          id: projectID,
+        }),
       };
     } else {
       requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({aidescription: response, 
-                              orderstatus: orderStatus, 
-                              orderstartdate: startDate.toString(),
-                              orderenddate: endDate.toString(),
-                              idteam: team,
-                              idclient: client,
-                              name: projectName,
-                              id: projectID}),
+        body: JSON.stringify({
+          aidescription: response,
+          orderstatus: orderStatus,
+          orderstartdate: startDate.toString(),
+          orderenddate: endDate.toString(),
+          idteam: team,
+          idclient: client,
+          name: projectName,
+          id: projectID,
+        }),
       };
     }
 
@@ -196,16 +226,16 @@ const projectModification = () => {
   };
 
   const handleFetchTeams = (e: any | null) => {
-    e === null ? setTeam(0) : setTeam(parseInt(e.value))
-  }
+    e === null ? setTeam(0) : setTeam(parseInt(e.value));
+  };
 
   const handleFetchClients = (e: any | null) => {
-    e === null ? setClient(0) : setClient(e.value)
-  }
+    e === null ? setClient(0) : setClient(e.value);
+  };
 
   const handleDropdownSelect = (e: any | null) => {
-    e === null ? setOrderStatus("") : setOrderStatus(e.value)
-  }
+    e === null ? setOrderStatus("") : setOrderStatus(e.value);
+  };
 
   // const handleChangeTechnology = (selectedOptions: ValueType<OptionTypeBase>) works as well but with the error.
   // The above commented out code can be used as an alternative, but it may result in an error.
@@ -222,15 +252,20 @@ const projectModification = () => {
 
   return (
     <>
-    <Menu
-        titulo={"Project Modification"}
-        descripcion={""}
-      />
+      <Menu titulo={"Project Modification"} descripcion={""} />
       <div className="container bg-light border p-4">
         <div className="mb-4">
           <Select
             onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
-            value = {client === undefined ||  client === 0 ? client = selectedProjectOverview?.idclient && listOfClients.find((obj) => obj.value === selectedProjectOverview.idclient) : listOfClients.find((obj) => obj.value === client)}
+            value={
+              client === undefined || client === 0
+                ? (client =
+                    selectedProjectOverview?.idclient &&
+                    listOfClients.find(
+                      (obj) => obj.value === selectedProjectOverview.idclient
+                    ))
+                : listOfClients.find((obj) => obj.value === client)
+            }
             //value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
             options={listOfClients} // sets the available options for the Select component
             placeholder={"Select client..."}
@@ -238,10 +273,20 @@ const projectModification = () => {
           />
 
           <br></br>
-          
+
           <Select
             onChange={handleFetchTeams} // sets the callback function to handle changes in selected option(s)
-            value = {team === undefined ||  team === 0 ? team = listOfTeams.find((obj) => obj.value === selectedProjectOverview?.idteam) && listOfTeams.find((obj) => obj.value === selectedProjectOverview?.idteam) : listOfTeams.find((obj) => obj.value === team)}
+            value={
+              team === undefined || team === 0
+                ? (team =
+                    listOfTeams.find(
+                      (obj) => obj.value === selectedProjectOverview?.idteam
+                    ) &&
+                    listOfTeams.find(
+                      (obj) => obj.value === selectedProjectOverview?.idteam
+                    ))
+                : listOfTeams.find((obj) => obj.value === team)
+            }
             //value={listOfTeams.find((obj) => obj.value === team)} // sets the currently selected option(s). Use when isMulti is specified.
             options={listOfTeams} // sets the available options for the Select component
             placeholder={"Select team..."}
@@ -249,7 +294,6 @@ const projectModification = () => {
           />
 
           <br></br>
-
           <div className="container">
             <div className="row">
               {/* Start date calendar */}
@@ -258,8 +302,8 @@ const projectModification = () => {
 
                 <DatePicker
                   //selected={new Date(JSON.stringify(selectedProjectOverview?.orderstartdate))}
-                  selected={startDate}
-                  onChange={(date: Date) => setStartDate(date)}
+                  selected={startDateProjectOverview}
+                  onChange={(date: Date) => setStartDateProjectOverview(date)}
                 />
               </div>
 
@@ -269,64 +313,86 @@ const projectModification = () => {
 
                 <DatePicker
                   //selected={new Date(JSON.stringify(selectedProjectOverview?.orderenddate))}
-                  selected={endDate}
-                  onChange={(date: Date) => setEndDate(date)}
+                  selected={endDateProjectOverview}
+                  onChange={(date: Date) => setEndDateProjectOverview(date)}
                 />
               </div>
 
               {/* Order status buttons */}
               <div className="col-sm">
-              <label className="form-label">Order Status</label>
+                <label className="form-label">Order Status</label>
                 <Select
                   //onSelect={(eventKey: any, e) => handleDropdownSelect}
                   onChange={handleDropdownSelect} // sets the callback function to handle changes in selected option(s)
-                  value = {orderStatus === "undefined" || orderStatus === "" || orderStatus === null ? orderStatus = selectedProjectOverview?.orderstatus && listOfStatus.find((obj) => obj.value === selectedProjectOverview.orderstatus) : listOfStatus.find((obj) => obj.value === orderStatus)}
+                  value={
+                    orderStatus === "undefined" ||
+                    orderStatus === "" ||
+                    orderStatus === null
+                      ? (orderStatus =
+                          selectedProjectOverview?.orderstatus &&
+                          listOfStatus.find(
+                            (obj) =>
+                              obj.value === selectedProjectOverview.orderstatus
+                          ))
+                      : listOfStatus.find((obj) => obj.value === orderStatus)
+                  }
                   //value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)} // sets the currently selected option(s). Use when isMulti is specified.
                   options={listOfStatus} // sets the available options for the Select component
                   placeholder={"Select status..."}
-                  isClearable/>
+                  isClearable
+                />
               </div>
             </div>
 
             <br></br>
 
-              {/* Project description input field */}
-          <label className="form-label">Project name...</label>
-          <textarea
-            className="form-control"
-            id="projectDescription"
-            autoComplete="off"
-            onChange={(e) => setProjectName(e.target.value)}
-            value = {projectName === "undefined" || projectName === "" || projectName === null ? projectName = selectedProjectOverview?.label : projectName}
-            //value={projectName}
-            placeholder={"Select project name..."}
-            rows="1"
-            required
-          />
+            {/* Project description input field */}
+            <p>{projectName}</p>
+            <label className="form-label">Project name...</label>
+            <textarea
+              className="form-control"
+              id="projectDescription"
+              autoComplete="off"
+              onChange={(e) => setProjectName(e.target.value)}
+              value={
+                projectName === "undefined" ||
+                projectName === "" ||
+                projectName === null
+                  ? (projectName = selectedProjectOverview?.label)
+                  : projectName
+              }
+              //value={projectName}
+              placeholder={"Select project name..."}
+              rows="1"
+              required
+            />
 
-          <br></br>
-          
-          {/* Description of the project generated by AI */}
-          <label className="form-label">
-            AI-generated project description...
-          </label>
+            <br></br>
 
-          <textarea
-            rows="15"
-            className="form-control"
-            id="projectDescription"
-            autoComplete="off"
-            onChange={(e) => setResponse(e.target.value)}
-            value={response === "undefined" || response === null || response === "" ? response = selectedProjectOverview?.orderdesc : response}
-            placeholder="This is the response generated byt the AI. Feel free to modify it..."
-          />
+            {/* Description of the project generated by AI */}
+            <label className="form-label">
+              AI-generated project description...
+            </label>
 
-          {/* Submit button */}
-          <button className="btn btn-primary mt-3" onClick={handleSendForm}>
-            <FaIcons.FaBrain className="mb-1" />
-            &nbsp;&nbsp;Update project
-          </button>
-          
+            <textarea
+              rows="15"
+              className="form-control"
+              id="projectDescription"
+              autoComplete="off"
+              onChange={(e) => setResponse(e.target.value)}
+              value={
+                response === "undefined" || response === null || response === ""
+                  ? (response = selectedProjectOverview?.orderdesc)
+                  : response
+              }
+              placeholder="This is the response generated byt the AI. Feel free to modify it..."
+            />
+
+            {/* Submit button */}
+            <button className="btn btn-primary mt-3" onClick={handleSendForm}>
+              <FaIcons.FaBrain className="mb-1" />
+              &nbsp;&nbsp;Update project
+            </button>
           </div>
         </div>
       </div>
