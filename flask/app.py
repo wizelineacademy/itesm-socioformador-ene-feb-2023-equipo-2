@@ -1,26 +1,26 @@
 from flask import Flask, request, jsonify
-
+from flask_cors import CORS
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-import re
 import time
 from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
+CORS(app)
 load_dotenv()
 
-# USERNAME = os.getenv("LINKEDIN_USERNAME")
-# PASSWORD = os.getenv("LINKEDIN_PASSWORD")
+#USERNAME = os.getenv("LINKEDIN_USERNAME")
+#PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
 
 @app.route("/cv-linkedin", methods=["POST"])
-def index_cv(): 
+def index_cv():
     link_linkedin = request.json["link_linkedin"]
     profile_linkedin = ""
     #--------------------------------------------------------
