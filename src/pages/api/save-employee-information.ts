@@ -4,25 +4,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function handler(req: any, res: any) {
-  const { inforoadmap } = req.body;
-  const inforoadmap_string = JSON.stringify(inforoadmap);
+  const { inforoadmap, infoabout } = req.body;
+  const inforoadmap_string = JSON.stringify(inforoadmap).replace((/  |\r\n|\n|\r/gm),"");
+  const infoabout_string = JSON.stringify(infoabout);
 
   //TODO: ID FIJO PROVISIONAL MIENTRAS IMPLEMENTAMOS AUTH0
   const id = 13;
 
   try {
-    const updatedRecord = await prisma.$transaction(async (prisma) => {
-      const record = await prisma.employees.findUnique({ where: { id: id } });
-      if (!record) {
-        throw new Error(`Record with ID ${id} not found`);
-      }
+    const record = await prisma.employees.findUnique({ where: { id: id } });
+    if (!record) {
+      throw new Error(`Record with ID ${id} not found`);
+    }
 
-      const updatedRecord = await prisma.employees.update({
-        where: { id },
-        data: { inforoadmap: inforoadmap_string },
-      });
-
-      return updatedRecord;
+    const updatedRecord = await prisma.employees.update({
+      where: { id },
+      data: { inforoadmap: inforoadmap_string, infoabout: infoabout_string },
     });
 
     res.status(201).json("Roadmap info saved correctly");

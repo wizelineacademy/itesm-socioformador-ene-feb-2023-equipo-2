@@ -41,9 +41,11 @@ const ClientCreation = () => {
       },
       body: JSON.stringify({
         name: name,
+        email: email, 
+        phone: phone
       }),
     };
-    fetch(link + "/createClient", requestOptions)
+    fetch(link + "/create-client", requestOptions)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -56,26 +58,6 @@ const ClientCreation = () => {
       })
       .catch((error) => console.error("Error", error));
   };
-
-  const companyOptions = [
-    { value: "monterrey", label: "Monterrey" },
-    { value: "saltillo", label: "Saltillo" },
-    { value: "reynosa", label: "Reynosa" },
-    { value: "victoria", label: "Ciudad Victoria" },
-    { value: "lapaz", label: "La Paz" },
-    { value: "guadalajara", label: "Guadalajara" },
-    { value: "queretaro", label: "Queretaro" },
-  ];
-
-  const locationOptions = [
-    { value: "monterrey", label: "Monterrey" },
-    { value: "saltillo", label: "Saltillo" },
-    { value: "reynosa", label: "Reynosa" },
-    { value: "victoria", label: "Ciudad Victoria" },
-    { value: "lapaz", label: "La Paz" },
-    { value: "guadalajara", label: "Guadalajara" },
-    { value: "queretaro", label: "Queretaro" },
-  ];
 
   if (!hasMounted) {
     return null;
@@ -124,7 +106,7 @@ const ClientCreation = () => {
               type="text"
               id="phone"
               onChange={(event) => setPhone(event.target.value)}
-              value={email}
+              value={phone}
               required
             />
           </div>

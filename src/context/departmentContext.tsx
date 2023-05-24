@@ -26,28 +26,3 @@ export const DepartmentContextProvider = ({children}: selectedDepartmentContextP
     </departmentContext.Provider>
   )
 }
-
-/*type field = {
-  selectedField: string;
-  setSelectedField: () => void;
-}
-
-const fieldExample: field = {
-  selectedField: "",
-  setSelectedField: () => {}
-}
-
-type props = {children: ReactNode}
-
-export const Contexto = createContext<field>(fieldExample);
-
-function ContextoFunc({children}: props) {
-  const [selectedField, setSelectedField] = useState<field>(fieldExample);
-  return(
-    <Contexto.Provider value={{selectedField, setSelectedField}}>
-      {children}
-    </Contexto.Provider>
-  )
-}
-
-export default ContextoFunc;*/

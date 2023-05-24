@@ -124,15 +124,15 @@ const Menu = (props: MenuProps) => {
               id="basic-nav-dropdown"
               className="a-navbar"
             >
-              <NavDropdown.Item href="perfil" className="a-navbar">
+              <NavDropdown.Item href="/profile" className="a-navbar">
                 <FaIcons.FaUser className="mb-1"/>
                 &nbsp;&nbsp;Profile
               </NavDropdown.Item>
-              <NavDropdown.Item href="settings" className="a-navbar">
+              <NavDropdown.Item href="/settings" className="a-navbar">
                 <FaIcons.FaCog className="mb-1"/>
                 &nbsp;&nbsp;Settings
               </NavDropdown.Item>
-              <NavDropdown.Item href="roadmap" className="a-navbar">
+              <NavDropdown.Item href="/roadmap" className="a-navbar">
                 <FaIcons.FaSitemap className="mb-1" />
                 &nbsp;&nbsp;Roadmap
               </NavDropdown.Item>

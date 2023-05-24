@@ -7,12 +7,17 @@ import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
 
+import { useContext } from 'react'
+import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
+
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
   pageType: 'listForAdmin' | 'listForEmployee' | 'addToOrder' | 'OrderSummary' | 'showAll';
 }
 
 const EmployeeTable = (props: CardProps) => {
+  const employeesContext = useContext(employeeContext);
+  const employeesListContext = useContext(employeeListContext);
 
   const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
@@ -56,17 +61,26 @@ const EmployeeTable = (props: CardProps) => {
     },
   };
 
-  interface DataRow {
-    isActive: 0 | 1;
-    employeeName: string;
-    employeeTeam: string;
-    employeeAreaRole: string;
-    employeeArea: string;
+  interface employeeSelectionInterface {
+    value: string;
+    label: string;
+    linkedinlink: string;
+    cvfile: string;
+    profileimg: string;
+    inforoadmap: string;
+    idposition: number;
+    email: string;
+    password: string;
+    location: string;
+    infoabout: string;
+    status: boolean;
   }
 
-  const columns: TableColumn<DataRow>[] = React.useMemo(
+  let employees = employeesListContext?.selectedEmployee;
+
+  const columns: TableColumn<employeeSelectionInterface>[] = React.useMemo(
     () => [
-      {
+      /*{
         cell: (row) => (
           <Fragment>
             <FaIcons.FaRegDotCircle className={`status-icon-size ${row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
@@ -74,7 +88,7 @@ const EmployeeTable = (props: CardProps) => {
         ),
         omit: hideStatusIcon,
         width: '50px',
-      },
+      },*/
       {
         cell: (row) => (
           <Fragment>
@@ -85,24 +99,49 @@ const EmployeeTable = (props: CardProps) => {
       },
       {
         name: 'Name',
-        selector: row => row.employeeName,
+        selector: row => row.label,
         sortable: true,
       },
       {
-        name: 'Team',
-        selector: row => row.employeeTeam,
+        name: 'LinkedIn Link',
+        selector: row => row.linkedinlink,
+      },
+      {
+        name: 'CV File',
+        selector: row => row.cvfile,
+      },
+      {
+        name: 'Profile Image',
+        selector: row => row.profileimg,
+      },
+      {
+        name: 'Roadmap Information',
+        selector: row => row.inforoadmap,
+      },
+      {
+        name: 'Email',
+        selector: row => row.email,
+      },
+      {
+        name: 'Password',
+        selector: row => row.password,
+      },
+      {
+        name: 'Location',
+        selector: row => row.location,
+      },
+      {
+        name: 'About',
+        selector: row => row.infoabout,
+      },
+      {
+        name: 'Status',
+        selector: row => String(row.status),
       },
       {
         cell: (row) => (
           <Fragment>
-              <TextBox textBoxText={row.employeeAreaBadge} textBoxColorScheme={row.employeeArea} />
-          </Fragment>
-        ),
-      },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaListUl
+            <FaIcons.FaInfoCircle
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
               onClick={() => handleEmployeeSeeInfo()}/>
           </Fragment>
@@ -112,7 +151,7 @@ const EmployeeTable = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaTrashAlt
+            <FaIcons.FaTrash
                 style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
                 onClick={() => handleEmployeeDelete()}/>
           </Fragment>
@@ -146,57 +185,32 @@ const EmployeeTable = (props: CardProps) => {
     [hideTrashCan, hidePlusSign, hideMinusSign],
   );
 
-  const data = [
-    {
-      isActive: 1,
-      employeeName: 'Mario Isaí Robles Lozano',
-      employeeTeam: 'Monterrey',
-      employeeAreaBadge: 'Frontend Developer',
-      employeeArea: 'frontend'
-    },
-    {
-      isActive: 1,
-      employeeName: 'Jorge Eduardo De Leon Reyna',
-      employeeTeam: 'Reynosa',
-      employeeAreaBadge: 'Backend Developer',
-      employeeArea: 'backend'
-    },
-    {
-      isActive: 0,
-      employeeName: 'Andrea Catalina Fernandez Mena',
-      employeeTeam: 'La Paz',
-      employeeAreaBadge: 'Data Manager',
-      employeeArea: 'data'
-    },
-    {
-      isActive: 1,
-      employeeName: 'Andres Fuentes Alanis',
-      employeeTeam: 'Guadalajara',
-      employeeAreaBadge: 'Quality Manager',
-      employeeArea: 'quality'
-    },
-    {
-      isActive: 0,
-      employeeName: 'Gerardo Mora Beltrán',
-      employeeTeam: 'Queretaro',
-      employeeAreaBadge: 'Cibersecurity',
-      employeeArea: 'cibersecurity'
-    },
-    {
-      isActive: 0,
-      employeeName: 'Oscar Alejandro Reyna Mont.',
-      employeeTeam: 'Guadalajara',
-      employeeAreaBadge: 'Mobile Developer',
-      employeeArea: 'mobile'
-    },
-  ]
+  const data = employees?.map((employee) => {
+    return {
+      value: employee.value,
+      label: employee.label,
+      linkedinlink: employee.linkedinlink,
+      cvfile: employee.cvfile,
+      profileimg: employee.profileimg,
+      inforoadmap: employee.inforoadmap,
+      idposition: employee.idposition,
+      email: employee.email,
+      password: employee.password,
+      location: employee.location,
+      infoabout: employee.infoabout,
+      status: employee.status,
+    }
+  })
+
+  let selectedEmployeeID = employeesContext?.currentEmployee;
+  let filteredData = selectedEmployeeID ? data?.filter(employee => employee.value === selectedEmployeeID) : data;
 
   return (
     <>
       <div className='container my-4'>
         <DataTable
           columns={columns}
-          data={data}
+          data={filteredData}
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover
