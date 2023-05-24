@@ -8,8 +8,8 @@ on:
 jobs:
   hello-world:
     runs-on: ubuntu-latest
-      steps:
-        name: "Echo message"
+    steps:
+      - name: "Echo message"
         run: |
           echo "hello word"
 
