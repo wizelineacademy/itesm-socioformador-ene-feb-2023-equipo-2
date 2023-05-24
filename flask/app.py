@@ -36,10 +36,10 @@ def index_cv():
     time.sleep(5)
 
     username = driver.find_element(By.ID, "username")
-    username.send_keys(oreynam0410@hotmail.com) 
+    username.send_keys("oreynam0410@hotmail.com") 
 
     pword = driver.find_element(By.ID, "password")
-    pword.send_keys(ScRaPpRoYeCto2023$%^)
+    pword.send_keys("ScRaPpRoYeCto2023$%^")
 
     driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
