@@ -12,16 +12,15 @@ import os
 app = Flask(__name__)
 load_dotenv()
 
-USERNAME = os.getenv("LINKEDIN_USERNAME")
-PASSWORD = os.getenv("LINKEDIN_PASSWORD")
+# USERNAME = os.getenv("LINKEDIN_USERNAME")
+# PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
 
 @app.route("/cv-linkedin", methods=["POST"])
-def index_cv():
-  try: 
+def index_cv(): 
     link_linkedin = request.json["link_linkedin"]
     profile_linkedin = ""
     #--------------------------------------------------------
@@ -37,10 +36,10 @@ def index_cv():
     time.sleep(5)
 
     username = driver.find_element(By.ID, "username")
-    username.send_keys(USERNAME) 
+    username.send_keys(oreynam0410@hotmail.com) 
 
     pword = driver.find_element(By.ID, "password")
-    pword.send_keys(PASSWORD)
+    pword.send_keys(ScRaPpRoYeCto2023$%^)
 
     driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
@@ -55,11 +54,11 @@ def index_cv():
         driver.execute_script(f"window.scrollTo({initialScroll}, {finalScroll})")
         initialScroll = finalScroll
         finalScroll += 1000
-    
+
         time.sleep(10)
-    
+
         end = time.time()
-    
+
         if round(end - start) > 10:
             break
 
@@ -75,19 +74,19 @@ def index_cv():
     intro2 = soup.find('div', {'class': 'pv-text-details__left-panel mt2'})
 
     name_loc = intro.find("h1")
-    
+
     # Extracting the Name
     name = name_loc.get_text().strip()
 
-    
+
     works_at_loc = intro.find("div", {'class': 'text-body-medium break-words'})
     # Extracting the Company Name
     works_at = works_at_loc.get_text().strip()
-    
+
     location_loc = intro2.find("span", {'class': 'text-body-small inline t-black--light break-words'})
     # Extracting the Location
     location = location_loc.get_text().strip()
-    
+
     profile_linkedin = ("Name -->", name, "Position --> (", works_at, ")", "Location -->", location, "--------------------------------")
 
     #--------------------------------
@@ -102,9 +101,9 @@ def index_cv():
         initialScroll = finalScroll
         finalScroll += 1000
         time.sleep(10)
-    
+
         end = time.time()
-    
+
         if round(end - start) > 10:
             break
 
@@ -185,7 +184,7 @@ def index_cv():
                     job_counter += 1
     except AttributeError:
         profile_linkedin = profile_linkedin + ("No Experience Found", 
-              "--------------------------------")
+                "--------------------------------")
 
     #-------------------------------------
     # HTML of the skills section in the profile
@@ -201,11 +200,11 @@ def index_cv():
         driver.execute_script(f"window.scrollTo({initialScroll}, {finalScroll})")
         initialScroll = finalScroll
         finalScroll += 1000
-    
+
         time.sleep(10)
-    
+
         end = time.time()
-    
+
         if round(end - start) > 10:
             break
 
@@ -233,10 +232,8 @@ def index_cv():
 
     except AttributeError:
         profile_linkedin = profile_linkedin + ("No skills found",
-              "----------------------------------------")
+                "----------------------------------------")
 
     #--------------------------------------------------------
 
     return jsonify({"Message": profile_linkedin})
-  except:
-    return jsonify({"Message": "Error, no se pudo procesar correctamente el link ingresado. Favor de volver a intentar."}), 400
