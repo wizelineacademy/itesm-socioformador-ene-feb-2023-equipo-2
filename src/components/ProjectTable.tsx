@@ -176,8 +176,11 @@ const ProjectTable = (props: CardProps) => {
   console.log(selectedClientID === data[6].idclient);*/
   
   let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
+                        selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" && selectedStatus ? data?.filter(project => project.value === selectedProjectIDInt && project.orderstatus === selectedStatus) :
+                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" && selectedStatus ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" ? data?.filter(project => project.value === selectedProjectIDInt) :
-                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) :
                         selectedStatus != "" && selectedStatus != "undefined" && selectedStatus != null ? data?.filter(project => project.orderstatus === selectedStatus) : data;
 
   return (
