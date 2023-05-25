@@ -123,7 +123,7 @@ const EmployeeTable = (props: CardProps) => {
       /*{
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaRegDotCircle className={`status-icon-size ${ row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
+            <FaIcons.FaRegDotCircle className={`status-icon-size ${row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
           </Fragment>
         ),
         omit: hideStatusIcon,
