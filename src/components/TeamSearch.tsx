@@ -1,8 +1,9 @@
 import React, {useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Collapse } from "react-bootstrap";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
+import TeamCreation from "@/components/TeamCreation";
 
 // const options = [
 //   { value: "juan-garcia", label: "Juan García" },
@@ -61,6 +62,12 @@ const TeamSearch = () => {
   const [teamName, setTeamName] = useState("");
   const [role, setRole] = useState("");
   const [department, setDepartment] = useState("");
+
+  // React Hooks for managing component state for add new client
+  const [collapse, setCollapse] = useState(false);
+
+  var isAdmin:Boolean = true;
+  
   
   let link = process.env.NEXT_PUBLIC_API_URL;
   let employees = employeesListContext?.selectedEmployee;
@@ -172,11 +179,38 @@ const TeamSearch = () => {
           </div>
           <div className="col-md-2">
             <label className="form-label">&nbsp;</label>
-            <button className="btn btn-primary w-100" onClick={handleSearch}>
+            {isAdmin ? <Container className="mt">
+              <button
+                className="btn btn-primary w-100"
+                onClick={() => setCollapse(!collapse)}
+                aria-controls="collapseProjectCreation"
+                aria-expanded={collapse}
+              >
+                {collapse ? (
+                <>
+                  <FaIcons.FaTimes className="mb-1" />
+                  &nbsp;&nbsp;Close
+                </>
+              ) : (
+                <>
+                  <FaIcons.FaUsers className="mb-1" />
+                  &nbsp;&nbsp;Add Team
+                </>
+              )}
+            </button>
+          </Container> : <div></div>}
+            {/* Botón anteriormente ejecutado previo al call */}
+            {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
               &nbsp;&nbsp;Search
-            </button>
+            </button> */}
           </div>
+          {isAdmin ? 
+          <Collapse in={collapse}>
+            <div id="collapseProjectCreation" className="my-3">
+              <TeamCreation />
+            </div>
+          </Collapse> : <div></div>}
         </div>
       </div>
     </>

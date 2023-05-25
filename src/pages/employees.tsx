@@ -46,7 +46,7 @@ const employees = () => {
           <div className="container my-4">
             <div className="row">
               <div className="d-flex flex-row-reverse">
-                <button
+                {/* <button
                   className="btn btn-primary w-10" 
                   onClick={() => setAddEmployee(!addEmployee)}
                   aria-controls="employeeCreation"
@@ -62,15 +62,15 @@ const employees = () => {
                       &nbsp;&nbsp;Add Employee
                     </>
                   )}
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
-          <Collapse in={addEmployee}>
+          {/* <Collapse in={addEmployee}>
             <div id="employeeCreation">
               <EmployeeCreation />
             </div>
-          </Collapse>
+          </Collapse> */}
           <EmployeeTable pageType={"listForAdmin"} />
         </EmployeeListContext>
       </EmployeeContext>

@@ -73,7 +73,7 @@ const projects = () => {
             />
             {/*@ts-ignore*/}
             <ProjectSearch clientID={clientID}/>
-            <Container className="mt-3">
+            {/* <Container className="mt-3">
               <Row>
                 <Col></Col>
                 <Col></Col>
@@ -103,7 +103,7 @@ const projects = () => {
               <div id="collapseProjectCreation" className="my-3">
                 <ProjectCreation />
               </div>
-            </Collapse>
+            </Collapse>  */}
             {/* @ts-ignore */}
             <ProjectTable clientID={clientID}/>
             </StatusContext>
