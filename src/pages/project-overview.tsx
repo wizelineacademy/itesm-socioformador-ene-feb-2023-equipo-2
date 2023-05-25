@@ -295,6 +295,7 @@ const projects = () => {
         <DataTable
             title={'Team Members'}
             columns={columns}
+            // @ts-ignore
             data={filteredProjectTeamMembersData}
             customStyles={customStyles}
             highlightOnHover

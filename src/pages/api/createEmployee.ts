@@ -9,6 +9,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     const newUser = await prisma.employees.create({
+      // @ts-ignore
       data: {
         name: name,  
         linkedinlink: '',

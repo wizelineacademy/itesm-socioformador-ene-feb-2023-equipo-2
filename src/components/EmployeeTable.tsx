@@ -210,6 +210,7 @@ const EmployeeTable = (props: CardProps) => {
       <div className='container my-4'>
         <DataTable
           columns={columns}
+          // @ts-ignore
           data={filteredData}
           customStyles={customStyles}
           highlightOnHover

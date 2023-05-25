@@ -1,21 +1,13 @@
-// TODO
-// Poner una imagen de placeholden en caso de que no haya foto de perfil
-// Arreglar para la vista tipo telefono
-
 import React, { Fragment, useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
-
-import { useContext } from 'react'
+import { useContext } from 'react';
 import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
-
 import { useRouter } from 'next/router';
-
 
 const ClientCard = () => {
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
-
   const router = useRouter();
 
   const handleClientSeeProjects = () => {
@@ -23,8 +15,8 @@ const ClientCard = () => {
   };
 
   const handleClientEdit = () => {
-    alert("editar")
-  }
+    alert("editar");
+  };
 
   const handleClientEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
@@ -78,12 +70,12 @@ const ClientCard = () => {
     },
     {
       name: "Erased?",
-      selector: (row) => row.erased,
+      selector: (row) => row.erased.toString(), // Convert erased to string
     },
     {
       cell: (row) => (
         <Fragment>
-          <div onClick={() => {router.push({pathname: '/projects', query: { slug: row.value },});}}>
+          <div onClick={() => { router.push({ pathname: '/projects', query: { slug: row.value } }); }}>
             <FaIcons.FaInfoCircle
               style={{ color: "black", fontSize: "25px", cursor: "pointer" }}
               onClick={() => handleClientSeeProjects()}
@@ -124,8 +116,8 @@ const ClientCard = () => {
       email: client.email,
       phone: client.phone,
       erased: client.erased,
-    }
-  })
+    };
+  });
 
   let selectedClientID = clientsContext?.currentClient;
   let filteredData = selectedClientID ? data?.filter(client => client.value === selectedClientID) : data;
@@ -135,10 +127,10 @@ const ClientCard = () => {
       <div className="container my-4">
         <DataTable
           columns={columns}
+          // @ts-ignore
           data={filteredData}
           customStyles={customStyles}
           highlightOnHover
-          //pointerOnHover
           pagination
         />
       </div>
