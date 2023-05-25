@@ -192,33 +192,6 @@ const projects = () => {
       },
     ]
 
-  const teamEmployeesData = [
-    {
-      id: 1,
-      name: 'Mario Isaí Robles Lozano',
-      idposition: 1,
-      location: 'Monterrey',
-      employeeAreaBadge: 'Frontend Developer',
-      employeeArea: 'frontend'
-    },
-    {
-      id: 2,
-      name: 'Jorge Eduardo De Leon Reyna',
-      idposition: 2,
-      location: 'Reynosa',
-      employeeAreaBadge: 'Backend Developer',
-      employeeArea: 'backend'
-    },
-    {
-      id: 3,
-      name: 'Andrea Catalina Fernandez Mena',
-      idposition: 1,
-      location: 'La Paz',
-      employeeAreaBadge: 'Data Manager',
-      employeeArea: 'data'
-    }
-  ]
-
   interface EmployeeDataRow {
     id: number;
     name: string;
