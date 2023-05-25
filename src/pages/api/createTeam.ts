@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 export default async function handler(req: any, res: any) {
   const { teamName, teamMembers } = req.body;
-
+  // @ts-ignore
   const selectedValues = teamMembers.map((employee) => {
     return {
       employee: {

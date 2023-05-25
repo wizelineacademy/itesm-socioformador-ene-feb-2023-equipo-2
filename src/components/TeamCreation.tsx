@@ -105,6 +105,7 @@ const TeamCreation = () => {
               <label className="form-label">Members</label>
               {employeesList ? (
                 <Select
+                // @ts-ignore
                 onChange={handleChangeSelectEmployeeName}
                 value={employeesList.filter((obj) =>
                   selectedEmployees.includes(obj.value)
