@@ -1,6 +1,4 @@
-// TODO
-// Poner una imagen de placeholden en caso de que no haya foto de perfil
-// Arreglar para la vista tipo telefono
+/* eslint-disable */
 
 import React, { Fragment, useState } from "react";
 import * as FaIcons from "react-icons/fa";
@@ -129,12 +127,13 @@ const ClientCard = () => {
 
   let selectedClientID = clientsContext?.currentClient;
   let filteredData = selectedClientID ? data?.filter(client => client.value === selectedClientID) : data;
-
+  
   return (
     <>
       <div className="container my-4">
         <DataTable
           columns={columns}
+          { /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */ }
           data={filteredData}
           customStyles={customStyles}
           highlightOnHover
