@@ -1,29 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { Container, Row, Col } from "react-bootstrap";
 import { useHasMounted } from "@/components/useHasMounted";
 
-const options = [
-  { value: "monterrey", label: "Monterrey" },
-  { value: "saltillo", label: "Saltillo" },
-  { value: "reynosa", label: "Reynosa" },
-  { value: "victoria", label: "Ciudad Victoria" },
-  { value: "lapaz", label: "La Paz" },
-  { value: "guadalajara", label: "Guadalajara" },
-  { value: "queretaro", label: "Queretaro" },
-];
+
+//Interface for employee
+type employeeSelectionInterface = {
+  value: string,
+  label: string,
+  linkedinlink: string,
+  cvfile: string,
+  profileimg: string,
+  inforoadmap: string,
+  idposition: number,
+  email: string,
+  password: string,
+  location: string,
+  infoabout: string,
+  status: boolean
+}
 
 const TeamCreation = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
-  const [name, setName] = useState("");
+  const [employeesList, setEmployeesList] = useState<employeeSelectionInterface[]>([]);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  //const [teamMembersList, setTeamMembersList] = useState<employeeName[]>([]);
 
-  const handleAddTeam = (e : any) => {
-    alert("prueba")
-  }
+  const [name, setName] = useState("");
+  
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  // fetch of employees to later place in react-select.
+  useEffect(() => {
+    fetch(link + '/get-employees')
+      .then(res => res.json())
+      .then(data => {
+        setEmployeesList(data.employees)
+      })
+      .catch(error => console.log("Error", error))
+  }, [])
+
+  const handleTeamCreation = (e : any | null) => {
+    const requestOptionsList = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ teamName: name,
+                             teamMembers: selectedEmployees }),
+    };
+
+    fetch(link + "/createTeam", requestOptionsList)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data', data)
+      })
+      .catch((error) => {
+        console.log('Error ', error);
+      });
+  };
+
+  //Handle func for employees
+  const handleChangeSelectEmployeeName = (e : any[] | null) => {
+    if (e === null) {
+      setSelectedEmployees([]);
+    } else {
+      const selectedValues = e.map((option) => option.value);
+      setSelectedEmployees(selectedValues);
+      //console.log('setSelectedEmployees', selectedValues)
+      //console.log(employeesContext?.currentEmployee)
+      //console.log(employeesListContext?.selectedEmployee)
+      //console.log('\n\n\n\n\n\n\n\n\n' + employeesContext?.currentEmployee)
+    }
+  };
 
   if (!hasMounted) {
     return null;
@@ -50,16 +101,28 @@ const TeamCreation = () => {
             />
           </Col>
           <Col>
-            <label htmlFor="programmers" className="form-label">
-              Programmers:
-            </label>
-            <Select options={options} isMulti isClearable />
+            <div className="col-md">
+              <label className="form-label">Members</label>
+              {employeesList ? (
+                <Select
+                onChange={handleChangeSelectEmployeeName}
+                value={employeesList.filter((obj) =>
+                  selectedEmployees.includes(obj.value)
+                )}
+                options={employeesList}
+                isClearable
+                isMulti
+                />
+              ) : (
+                <div>Loading...</div>
+              )}
+            </div>
           </Col>
           <Col>
             <label className="form-label">
               &nbsp;
             </label>
-            <button className="btn btn-primary w-100" onClick={handleAddTeam}>
+            <button className="btn btn-primary w-100" onClick={handleTeamCreation}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>

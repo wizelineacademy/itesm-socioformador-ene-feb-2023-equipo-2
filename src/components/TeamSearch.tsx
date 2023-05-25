@@ -130,9 +130,9 @@ const TeamSearch = () => {
     } else {
       setEmployeeName(e.value);
       employeesContext?.setCurrentEmployee(e.value);
-      console.log(employeesContext?.currentEmployee)
-      console.log(employeesListContext?.selectedEmployee)
-      console.log('\n\n\n\n\n\n\n\n\n' + employeesContext?.currentEmployee)
+      //console.log(employeesContext?.currentEmployee)
+      //console.log(employeesListContext?.selectedEmployee)
+      //console.log('\n\n\n\n\n\n\n\n\n' + employeesContext?.currentEmployee)
     }
   };
 
