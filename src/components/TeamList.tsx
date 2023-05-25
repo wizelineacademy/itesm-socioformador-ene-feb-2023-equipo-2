@@ -218,7 +218,7 @@ const TeamList = (props: CardProps) => {
           <Fragment>
             <FaIcons.FaInfoCircle
               style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-              onClick={() => handleEmployeeSeeInfo()}
+              onClick={() => {router.push({pathname: '/employees', query: { slug: row.idteam },});}}
             />
           </Fragment>
         ),
@@ -282,13 +282,6 @@ const TeamList = (props: CardProps) => {
     ],
     [hideTrashCan, hidePlusSign, hideMinusSign]
   );
-
-  /*let selectedTeamID = teamsContext?.currentTeam;
-  let selectedEmployeeID = employeesContext?.currentEmployee;
-  
-  let filteredData = selectedTeamID && selectedEmployeeID ? data?.filter(team => team.value === selectedTeamID && team.value === selectedTeamID) :
-                        selectedTeamID ? data?.filter(team => team.value === selectedTeamID) :
-                        selectedEmployeeID ? data?.filter(team => team.label === selectedEmployeeID) : data;*/
 
   const hasMounted = useHasMounted();
 
