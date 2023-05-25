@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Collapse  } from "react-bootstrap";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
@@ -7,6 +7,13 @@ import { useHasMounted } from "@/components/useHasMounted";
 import { projectContext, projectListContext, statusContext } from '@/context/projectsContext';
 import { clientContext, clientListContext } from "@/context/clientContext";
 import { stringify } from "querystring";
+
+import Menu from "@/components/Menu";
+import ProjectCreation from "@/components/ProjectCreation";
+import ProjectTable from "@/components/ProjectTable";
+import { useRouter } from 'next/router';
+
+
 
 const listOfStatus = [
   {value: "Approved", label: "Approved"},
@@ -52,6 +59,8 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   const statusesContext = useContext(statusContext);
   //const clientsListContext = useContext(clientListContext);
 
+  // React Hooks for managing component state
+  const [collapse, setCollapse] = useState(false);
   // React Hooks
   let [client, setClient] = useState<number>();
   const [name, setName] = useState("");
@@ -127,9 +136,9 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
     }
   };
 
-  const handleSearch = (e : any) => {
-    alert("buscando")
-  }
+  // const handleSearch = (e : any) => {
+  //   alert("buscando")
+  // }
 
   if (!hasMounted) {
     return null;
@@ -178,12 +187,37 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
             />
           </Col>
           <Col>
-            <label className="form-label">&nbsp;</label>
-            <button className="btn btn-primary w-100" onClick={handleSearch}>
+                <label className="form-label">&nbsp;</label>
+                   <button
+                    className="btn btn-primary w-100"
+                    onClick={() => setCollapse(!collapse)}
+                    aria-controls="collapseProjectCreation"
+                    aria-expanded={collapse}
+                  >
+                    {collapse ? (
+                      <>
+                        <FaIcons.FaTimes className="mb-1" />
+                        &nbsp;&nbsp;Close
+                      </>
+                    ) : (
+                      <>
+                        <FaIcons.FaClipboardList className="mb-1" />
+                        &nbsp;&nbsp;Add Project
+                      </>
+                    )}
+                  </button> 
+            </Col>
+              <Collapse in={collapse}>
+                    <div id="collapseProjectCreation" className="my-3">
+                      <ProjectCreation />
+                    </div>
+              </Collapse>
+          
+             {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
               &nbsp;&nbsp;Search
-            </button>
-          </Col>
+            </button>  */}
+          
         </Row>
       </Container>
     </>

@@ -28,7 +28,7 @@ const clients = () => {
       <ClientListContext>
         <ClientContext>
           <ClientSearch />
-          <div className="container mt-4">
+          {/* <div className="container mt-4">
             <div className="row">
               <div className="d-flex flex-row-reverse">
                 <button
@@ -55,7 +55,7 @@ const clients = () => {
             <div id="employeeCreation" className="my-3">
               <ClientCreation />
             </div>
-          </Collapse>
+          </Collapse> */}
           <ClientCard />
         </ClientContext>
       </ClientListContext>

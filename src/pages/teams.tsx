@@ -37,7 +37,7 @@ const teams = () => {
             }
           />
           <TeamSearch />
-          {isAdmin ? <Container className="mt-3">
+          {/* {isAdmin ? <Container className="mt-3">
             <Row>
               <Col className="d-flex flex-row-reverse">
                 <button
@@ -65,7 +65,7 @@ const teams = () => {
             <div id="collapseProjectCreation" className="my-3">
               <TeamCreation />
             </div>
-          </Collapse> : <div></div>}
+          </Collapse> : <div></div>} */}
           <TeamList pageType={"listForAdmin"}/>
           </EmployeeListContext>
         </EmployeeContext>

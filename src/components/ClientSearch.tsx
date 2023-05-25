@@ -5,11 +5,11 @@ import React, { useState , useEffect } from "react";
 import Select from "react-select";
 import * as FaIcons from 'react-icons/fa';
 import { useHasMounted } from "@/components/useHasMounted";
-
+import Collapse from 'react-bootstrap/Collapse';
 import { useContext } from 'react';
 import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
 import { any } from "cypress/types/bluebird";
-
+import ClientCreation from "@/components/ClientCreation";
 
 interface clientSelectionInterface {
   value: string,
@@ -30,7 +30,8 @@ const ClientSearch = () => {
   //Hooks
   const [name, setName] = useState("");
   const [clientList, setClientList] = useState<clientSelectionInterface[] | null>(null);
-
+//Hook for showing add button option
+  const [addEmployee, setAddEmployee] = useState(false); 
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -94,11 +95,33 @@ const ClientSearch = () => {
           </div>
           <div className="col-md-2">
             <label className="form-label">&nbsp;</label>
-            <button className="btn btn-primary w-100" onClick={handleSearch}>
+            {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
               &nbsp;&nbsp;Search
-            </button>
+            </button> */}
+              <button
+                    className="btn btn-primary w-100" 
+                    onClick={() => setAddEmployee(!addEmployee)}
+                    aria-controls="employeeCreation"
+                    aria-expanded={addEmployee}>
+                    {addEmployee ? (
+                      <>
+                        <FaIcons.FaTimes className="mb-1" />
+                        &nbsp;&nbsp;Close
+                      </>
+                    ) : (
+                      <>
+                        <FaIcons.FaUserTie className="mb-1" />
+                        &nbsp;&nbsp;Add Clients
+                      </>
+                    )}
+              </button>
           </div>
+          <Collapse in={addEmployee}>
+                <div id="employeeCreation" className="my-3">
+                  <ClientCreation/>
+                </div>
+          </Collapse>
         </div>
       </div>
     </>

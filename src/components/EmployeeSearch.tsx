@@ -6,6 +6,9 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
+import EmployeeTable from "@/components/EmployeeTable";
+import EmployeeCreation from "@/components/EmployeeCreation";
+import Collapse from 'react-bootstrap/Collapse';
 
 import { useContext } from 'react'
 import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
@@ -122,6 +125,8 @@ const EmployeeSearch = () => {
   const handleSearch = (e: any) => {
     alert("buscando");
   };
+  //Hook for add new employee
+  const [addEmployee, setAddEmployee] = useState(false); // True -> A to Z, False -> Z to A
 
   if (!hasMounted) {
     return null;
@@ -173,11 +178,33 @@ const EmployeeSearch = () => {
           </div>
           <div className="col-md">
             <label className="form-label">&nbsp;</label>
-            <button className="btn btn-primary w-100" onClick={handleSearch}>
+            <button
+                  className="btn btn-primary w-100" 
+                  onClick={() => setAddEmployee(!addEmployee)}
+                  aria-controls="employeeCreation"
+                  aria-expanded={addEmployee}>
+                  {addEmployee ? (
+                    <>
+                      <FaIcons.FaTimes className="mb-1" />
+                      &nbsp;&nbsp;Close
+                    </>
+                  ) : (
+                    <>
+                      <FaIcons.FaUserCog className="mb-1" />
+                      &nbsp;&nbsp;Add Employee
+                    </>
+                  )}
+                </button>
+            {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
               &nbsp;&nbsp;Search
-            </button>
+            </button> */}
           </div>
+          <Collapse in={addEmployee}>
+            <div id="employeeCreation" className="my-3">
+              <EmployeeCreation />
+            </div>
+          </Collapse>
         </div>
       </div>
     </>
