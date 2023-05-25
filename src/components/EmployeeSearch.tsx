@@ -6,9 +6,11 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
+import { stringify } from "querystring";
 
 import { useContext } from 'react'
 import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
+import { teamContext, teamListContext, TeamListContext } from "@/context/teamContext";
 
 const specialityOptions = [
   { value: "frontend", label: "Frontend Developer" },
@@ -60,9 +62,15 @@ type employeeSelectionInterface = {
   status: boolean
 }
 
-const EmployeeSearch = () => {
+const EmployeeSearch = (teamID: string | string[] | undefined) => {
+  let teamIDStr = stringify(teamID);
+  teamIDStr = teamIDStr.replace('teamID=', '');
+  let teamIDInt = parseInt(teamIDStr);
+
   const employeesContext = useContext(employeeContext);
   const employeesListContext = useContext(employeeListContext);
+  const teamsContext = useContext(teamContext);
+  const teamsListContext = useContext(teamListContext);
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -71,7 +79,7 @@ const EmployeeSearch = () => {
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   const [employeeName, setEmployeeName] = useState("");
-  const [teamName, setTeamName] = useState("");
+  let [team, setTeam] = useState<number>();
   const [role, setRole] = useState("");
   const [department, setDepartment] = useState("");
 
@@ -79,6 +87,16 @@ const EmployeeSearch = () => {
     e === null ? setEmployeeName("") : setEmployeeName(e.value);
     console.log(e.value);
   };*/
+  const [listOfTeams, setTeamsList] = useState([])
+
+  useEffect(() => {
+    fetch(link + '/get-teams')
+    .then((res) => res.json())
+    .then((data) => {
+      setTeamsList(data.teams) 
+    })
+    .catch((error) => console.log("Error", error))
+  }, [])
 
   const handleChangeSelectEmployeeName = (e : any | null) => {
     if (e === null) {
@@ -92,7 +110,14 @@ const EmployeeSearch = () => {
   };
 
   const handleChangeSelectTeamName = (e: any | null) => {
-    e === null ? setTeamName("") : setTeamName(e.value);
+    e === null ? setTeam(0) : setTeam(parseInt(e.value));
+    if (e === null) {
+      setTeam(0);
+      teamsContext?.setCurrentTeam("")
+    } else {
+      setTeam(e.value);
+      teamsContext?.setCurrentTeam(String(e.value));
+    }
   };
 
   const handleChangeSelectRole = (e: any | null) => {
@@ -118,6 +143,14 @@ const EmployeeSearch = () => {
 
   useEffect(() => {
   }, [employeesContext?.setCurrentEmployee(employeeName)]);
+
+  useEffect(() => {
+    teamsContext?.setCurrentTeam(String(team))
+    console.log(teamsContext?.currentTeam)
+  }, [team]);
+
+  useEffect(() => {
+  }, [teamsContext?.setCurrentTeam(String(team))]);
 
   const handleSearch = (e: any) => {
     alert("buscando");
@@ -148,8 +181,9 @@ const EmployeeSearch = () => {
             <label className="form-label">Team:</label>
             <Select
               onChange={handleChangeSelectTeamName}
-              value={specialityOptions.find((obj) => obj.value === teamName)}
-              options={specialityOptions}
+              //value={listOfTeams.find((obj) => obj.value === team)}
+              value = {(team === undefined ||  team === 0) ? team = teamIDInt && listOfTeams.find((obj) => obj.value === teamIDInt) && teamsContext?.setCurrentTeam(teamIDInt): listOfTeams.find((obj) => obj.value === team)}
+              options={listOfTeams}
               isClearable
             />
           </div>

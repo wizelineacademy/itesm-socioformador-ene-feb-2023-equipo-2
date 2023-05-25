@@ -25,13 +25,25 @@ import { useHasMounted } from "@/components/useHasMounted";
 
 import { EmployeeListContext } from "@/context/employeeContext";
 import { EmployeeContext } from "@/context/employeeContext";
+import { TeamContext, TeamListContext } from "@/context/teamContext";
+
+import { useRouter } from 'next/router';
+import TeamList from "@/components/TeamList";
 
 const employees = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
+
+  const router = useRouter();
+  let teamID = router.query.slug;
    
   const [addEmployee, setAddEmployee] = useState(false); // True -> A to Z, False -> Z to A
+
+  useEffect(() => {
+    teamID = router.query.slug;
+    console.log(teamID);
+  }, [teamID])
 
   if (!hasMounted) {
     return null;
@@ -42,36 +54,40 @@ const employees = () => {
       <Menu titulo={"Employees"} descripcion={" "} />
       <EmployeeContext>
         <EmployeeListContext>
-          <EmployeeSearch />
-          <div className="container my-4">
-            <div className="row">
-              <div className="d-flex flex-row-reverse">
-                <button
-                  className="btn btn-primary w-10" 
-                  onClick={() => setAddEmployee(!addEmployee)}
-                  aria-controls="employeeCreation"
-                  aria-expanded={addEmployee}>
-                  {addEmployee ? (
-                    <>
-                      <FaIcons.FaTimes className="mb-1" />
-                      &nbsp;&nbsp;Close
-                    </>
-                  ) : (
-                    <>
-                      <FaIcons.FaUserCog className="mb-1" />
-                      &nbsp;&nbsp;Add Employee
-                    </>
-                  )}
-                </button>
+          <TeamContext>
+            <TeamListContext>
+              <EmployeeSearch teamID={teamID}/>
+              <div className="container my-4">
+                <div className="row">
+                  <div className="d-flex flex-row-reverse">
+                    <button
+                      className="btn btn-primary w-10" 
+                      onClick={() => setAddEmployee(!addEmployee)}
+                      aria-controls="employeeCreation"
+                      aria-expanded={addEmployee}>
+                      {addEmployee ? (
+                        <>
+                          <FaIcons.FaTimes className="mb-1" />
+                          &nbsp;&nbsp;Close
+                        </>
+                      ) : (
+                        <>
+                          <FaIcons.FaUserCog className="mb-1" />
+                          &nbsp;&nbsp;Add Employee
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <Collapse in={addEmployee}>
-            <div id="employeeCreation">
-              <EmployeeCreation />
-            </div>
-          </Collapse>
-          <EmployeeTable pageType={"listForAdmin"} />
+              <Collapse in={addEmployee}>
+                <div id="employeeCreation">
+                  <EmployeeCreation />
+                </div>
+              </Collapse>
+              <EmployeeTable teamID={teamID} />
+            </TeamListContext>
+          </TeamContext>
         </EmployeeListContext>
       </EmployeeContext>
     </>
