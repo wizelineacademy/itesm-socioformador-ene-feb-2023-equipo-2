@@ -183,6 +183,7 @@ const ProjectCreation = () => {
         <div className="mb-4">
           <Select
             onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
+            // @ts-ignore
             value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
             options={listOfClients} // sets the available options for the Select component
             placeholder="Select client..."
@@ -193,6 +194,7 @@ const ProjectCreation = () => {
           
           <Select
             onChange={handleFetchTeams} // sets the callback function to handle changes in selected option(s)
+            // @ts-ignore
             value={listOfTeams.find((obj) => obj.value === team)} // sets the currently selected option(s). Use when isMulti is specified.
             options={listOfTeams} // sets the available options for the Select component
             placeholder="Select team..."
@@ -247,7 +249,7 @@ const ProjectCreation = () => {
             onChange={(e) => setProjectName(e.target.value)}
             value={projectName}
             placeholder="Name of the project..."
-            rows="1"
+            rows={1}
             required
           />
 
@@ -262,7 +264,7 @@ const ProjectCreation = () => {
             onChange={(e) => setProjectDescription(e.target.value)}
             value={projectDescription}
             placeholder="General description of the project..."
-            rows="6"
+            rows={6}
             required
           />
 
@@ -281,7 +283,7 @@ const ProjectCreation = () => {
           </label>
 
           <textarea
-            rows="15"
+            rows={15}
             className="form-control"
             id="projectDescription"
             autoComplete="off"

@@ -158,14 +158,21 @@ const TeamList = (props: CardProps) => {
   let filteredData =
     selectedTeamID && selectedEmployeeID
       ? data?.filter(
-          (members) =>
-            members.idteam === selectedTeamID &&
-            members.value === selectedEmployeeID
+          (members) => { 
+            // @ts-ignore
+            members.idteam === selectedTeamID && members.value === selectedEmployeeID 
+          }
         )
       : selectedTeamID
-      ? data?.filter((members) => members.idteam === selectedTeamID)
+      ? data?.filter((members) => {
+        // @ts-ignore
+        members.idteam === selectedTeamID
+      })
       : selectedEmployeeID
-      ? data?.filter((members) => members.value === selectedEmployeeID)
+      ? data?.filter((members) => {
+        // @ts-ignore
+        members.value === selectedEmployeeID
+      })
       : data;
 
   const customStyles = {
@@ -218,7 +225,7 @@ const TeamList = (props: CardProps) => {
           <Fragment>
             <FaIcons.FaInfoCircle
               style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-              onClick={() => {router.push({pathname: '/employees', query: { slug: row.idteam },});}}
+              onClick={() => handleEmployeeSeeInfo()}
             />
           </Fragment>
         ),
@@ -283,6 +290,13 @@ const TeamList = (props: CardProps) => {
     [hideTrashCan, hidePlusSign, hideMinusSign]
   );
 
+  /*let selectedTeamID = teamsContext?.currentTeam;
+  let selectedEmployeeID = employeesContext?.currentEmployee;
+  
+  let filteredData = selectedTeamID && selectedEmployeeID ? data?.filter(team => team.value === selectedTeamID && team.value === selectedTeamID) :
+                        selectedTeamID ? data?.filter(team => team.value === selectedTeamID) :
+                        selectedEmployeeID ? data?.filter(team => team.label === selectedEmployeeID) : data;*/
+
   const hasMounted = useHasMounted();
 
   if (!hasMounted) {
@@ -294,6 +308,7 @@ const TeamList = (props: CardProps) => {
       <div className="container my-4">
         <DataTable
           columns={columns}
+          // @ts-ignore
           data={filteredData}
           customStyles={customStyles}
           highlightOnHover

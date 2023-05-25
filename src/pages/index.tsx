@@ -5,7 +5,7 @@ import * as BsIcons from "react-icons/bs";
 import Image from 'next/image';
 import transLogo from 'src/images/transLogo.jpg';
 import bg from 'src/images/wbg.webp';
-
+import Link from 'next/link';
 
 export default function Home() {
   // define state variables for email and password inputs
@@ -28,10 +28,6 @@ export default function Home() {
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error(error));
-
-
-
-
 
   };
 
@@ -97,7 +93,7 @@ export default function Home() {
                     &nbsp;&nbsp;Login
                   </Button>
 
-                  <a href="/api/auth/login">Login</a>
+                  <Link href="/api/auth/login">Login</Link>
 
                 </Col>
               </Row>

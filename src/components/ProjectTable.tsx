@@ -151,19 +151,45 @@ const ProjectTable = (props: CardProps) => {
     }
   })
 
+  // let filteredProjectData;
+  
+  // if (props.clientID) {
+  //   filteredProjectData = data?.filter(project => project.idclient === props.clientID);
+  // }
+
   let selectedProjectID = projectsContext?.currentProject;
   let selectedClientID = clientsContext?.currentClient;
   let selectedStatus = statusesContext?.selectedStatus;
 
+  // @ts-ignore
   let selectedProjectIDInt = parseInt(projectsContext?.currentProject);
+  // @ts-ignore
   let selectedClientIDInt = parseInt(clientsContext?.currentClient);
+  /*console.log(selectedClientID)
+  console.log(selectedProjectID)
   
+  console.log(selectedProjectID != "" && selectedClientID != "" && selectedProjectID != undefined && selectedClientID != undefined)
+  console.log(selectedProjectID != "" && selectedProjectID != undefined)
+  console.log(selectedClientID != "" && selectedClientID != undefined && selectedProjectID != "0")
+  console.log(selectedClientID === "undefined")
+
+  console.log(selectedClientID);
+  console.log(data[6].idclient);
+  console.log(selectedClientID === data[6].idclient);*/
+  
+  // @ts-ignore
   let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        // @ts-ignore
                         selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
+                        // @ts-ignore
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" && selectedStatus ? data?.filter(project => project.value === selectedProjectIDInt && project.orderstatus === selectedStatus) :
+                        // @ts-ignore
                         selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" && selectedStatus ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        // @ts-ignore
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" ? data?.filter(project => project.value === selectedProjectIDInt) :
+                        // @ts-ignore
                         selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) :
+                        // @ts-ignore
                         selectedStatus != "" && selectedStatus != "undefined" && selectedStatus != null ? data?.filter(project => project.orderstatus === selectedStatus) : data;
 
   return (
@@ -171,6 +197,7 @@ const ProjectTable = (props: CardProps) => {
       <div className="container my-4">
         <DataTable
           columns={columns}
+          // @ts-ignore
           data={filteredProjectData}
           customStyles={customStyles}
           highlightOnHover

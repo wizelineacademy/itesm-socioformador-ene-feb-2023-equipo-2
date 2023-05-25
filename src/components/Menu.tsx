@@ -107,10 +107,10 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                 {/* <Link href="/department" className="a-navbar">
+                {/* <Link href="/department" className="a-navbar">
                   <FaIcons.FaBriefcase className="mb-1" />
                   &nbsp;&nbsp;Department
-                </Link>  */}
+                </Link> */}
               </Nav.Link>
             </Nav>
             {/* Dropdown component */}
