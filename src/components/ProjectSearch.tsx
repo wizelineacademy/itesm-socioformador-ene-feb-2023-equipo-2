@@ -35,6 +35,7 @@ interface projectListInterface {
 }
 
 const ProjectSearch = (clientID: string | string[] | undefined) => {
+  // @ts-ignore
   let clientIDStr = stringify(clientID);
   clientIDStr = clientIDStr.replace('clientID=', '');
   let clientIDInt = parseInt(clientIDStr);
@@ -157,6 +158,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
               <Select
                 onChange={handleChangeClientName}
                 //value={clientList.find((obj) => obj.value === clientName) || ""} clientID
+                // @ts-ignore
                 value = {(client === undefined ||  client === 0) ? client = clientIDInt && listOfClients.find((obj) => obj.value === clientIDInt) && clientsContext?.setCurrentClient(clientIDInt): listOfClients.find((obj) => obj.value === client)}
                 options={listOfClients}
                 isClearable

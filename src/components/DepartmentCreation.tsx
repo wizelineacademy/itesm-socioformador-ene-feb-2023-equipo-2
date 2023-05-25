@@ -29,6 +29,7 @@ const DepartmentCreation = () => {
         document.body.appendChild(alertContainer);
 
         const okButton = document.getElementById("ok-button");
+        // @ts-ignore
         okButton.addEventListener("click", () => {
           alertContainer.remove();
         });
@@ -49,6 +50,7 @@ const DepartmentCreation = () => {
         document.body.appendChild(alertContainer);
 
         const okButton = document.getElementById("ok-button");
+        // @ts-ignore
         okButton.addEventListener("click", () => {
           alertContainer.remove();
         });

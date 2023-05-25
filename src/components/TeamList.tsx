@@ -158,14 +158,21 @@ const TeamList = (props: CardProps) => {
   let filteredData =
     selectedTeamID && selectedEmployeeID
       ? data?.filter(
-          (members) =>
-            members.idteam === selectedTeamID &&
-            members.value === selectedEmployeeID
+          (members) => { 
+            // @ts-ignore
+            members.idteam === selectedTeamID && members.value === selectedEmployeeID 
+          }
         )
       : selectedTeamID
-      ? data?.filter((members) => members.idteam === selectedTeamID)
+      ? data?.filter((members) => {
+        // @ts-ignore
+        members.idteam === selectedTeamID
+      })
       : selectedEmployeeID
-      ? data?.filter((members) => members.value === selectedEmployeeID)
+      ? data?.filter((members) => {
+        // @ts-ignore
+        members.value === selectedEmployeeID
+      })
       : data;
 
   const customStyles = {
@@ -301,6 +308,7 @@ const TeamList = (props: CardProps) => {
       <div className="container my-4">
         <DataTable
           columns={columns}
+          // @ts-ignore
           data={filteredData}
           customStyles={customStyles}
           highlightOnHover

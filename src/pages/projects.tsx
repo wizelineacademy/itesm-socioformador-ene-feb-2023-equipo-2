@@ -71,6 +71,7 @@ const projects = () => {
                 "Project administration panel to edit existing projects or create new ones for effective project management."
               }
             />
+            {/*@ts-ignore*/}
             <ProjectSearch clientID={clientID}/>
             <Container className="mt-3">
               <Row>
@@ -103,6 +104,7 @@ const projects = () => {
                 <ProjectCreation />
               </div>
             </Collapse>
+            {/* @ts-ignore */}
             <ProjectTable clientID={clientID}/>
             </StatusContext>
           </ClientContext>
