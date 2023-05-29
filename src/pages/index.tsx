@@ -92,11 +92,6 @@ export default function Home() {
                     <BsIcons.BsFillKeyFill className="mb-1" />
                     &nbsp;&nbsp;Login
                   </Button>
-                  {/* @ts-ignore */}
-                  <link href="/api/auth/login">Login</link>
-                  {/* @ts-ignore */}
-                  <link href="/api/auth/logout">Logout</link>
-
                 </Col>
               </Row>
 
