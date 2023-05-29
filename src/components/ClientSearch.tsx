@@ -5,12 +5,24 @@ import React, { useState , useEffect } from "react";
 import Select from "react-select";
 import * as FaIcons from 'react-icons/fa';
 import { useHasMounted } from "@/components/useHasMounted";
+import Collapse from 'react-bootstrap/Collapse';
+import { useContext } from 'react';
+import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
+import { any } from "cypress/types/bluebird";
+import ClientCreation from "@/components/ClientCreation";
 
 interface clientSelectionInterface {
-  value: string;
-  label: string;
+  value: string,
+  label: string,
+  email: string,
+  phone: string,
+  erased: boolean
 }
+
 const ClientSearch = () => {
+  const clientsContext = useContext(clientContext);
+  const clientsListContext = useContext(clientListContext);
+  
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
@@ -18,18 +30,23 @@ const ClientSearch = () => {
   //Hooks
   const [name, setName] = useState("");
   const [clientList, setClientList] = useState<clientSelectionInterface[] | null>(null);
-
+//Hook for showing add button option
+  const [addEmployee, setAddEmployee] = useState(false); 
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    fetch(link + '/get-clients')
+    fetch(`${link}/get-clients?id=${name}`)
       .then(res => res.json())
       .then(data => {
         setClientList(data.client)
+        clientsListContext?.setSelectedClientList(data.client);
       })
       .catch(error => console.log("Error ", error))
   }, [])
+
+  useEffect(() => {
+  }, [clientsContext?.setCurrentClient(name)]);
 
   //  const options = [
   //    { value: "1", label: "one" },
@@ -41,6 +58,9 @@ const ClientSearch = () => {
       setName("");
     } else {
       setName(e.value);
+      clientsContext?.setCurrentClient(e.value);
+      //console.log(clientsContext?.currentClient)
+      //console.log(clientsListContext?.selectedClient)
     }
   };
 
@@ -75,11 +95,33 @@ const ClientSearch = () => {
           </div>
           <div className="col-md-2">
             <label className="form-label">&nbsp;</label>
-            <button className="btn btn-primary w-100" onClick={handleSearch}>
+            {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
               &nbsp;&nbsp;Search
-            </button>
+            </button> */}
+              <button
+                    className="btn btn-primary w-100" 
+                    onClick={() => setAddEmployee(!addEmployee)}
+                    aria-controls="employeeCreation"
+                    aria-expanded={addEmployee}>
+                    {addEmployee ? (
+                      <>
+                        <FaIcons.FaTimes className="mb-1" />
+                        &nbsp;&nbsp;Close
+                      </>
+                    ) : (
+                      <>
+                        <FaIcons.FaUserTie className="mb-1" />
+                        &nbsp;&nbsp;Add Clients
+                      </>
+                    )}
+              </button>
           </div>
+          <Collapse in={addEmployee}>
+                <div id="employeeCreation" className="my-3">
+                  <ClientCreation/>
+                </div>
+          </Collapse>
         </div>
       </div>
     </>

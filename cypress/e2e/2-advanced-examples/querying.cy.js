@@ -7,6 +7,7 @@ context('Querying', () => {
 
   // The most commonly used query is 'cy.get()', you can
   // think of this like the '$' in jQuery
+  //bro
 
   it('cy.get() - query DOM elements', () => {
     // https://on.cypress.io/get

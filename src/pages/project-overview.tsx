@@ -1,6 +1,6 @@
 // TODO:
 
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import * as FaIcons from "react-icons/fa";
 import { Container, Row, Col, Collapse } from "react-bootstrap";
 
@@ -9,24 +9,104 @@ import { useHasMounted } from "@/components/useHasMounted";
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "@/components/TextBox";
 
+import { useRouter } from 'next/router';
 
-const data = {
-  "post": {
-      "_id": "62cd5b5ef2a39582f96ad514",
-      "title": "asdadsad",
-      "description": "sdasdasdasda",
-      "imageURL": "image 1",
-      "creator_id": "62cd5b1bf2a39582f96ad500",
-      "createdAt": "2022-07-12T11:30:38.255Z",
-      "updatedAt": "2022-07-12T11:30:38.255Z",
-      "__v": 0,
-      "id": "62cd5b5ef2a39582f96ad514"
-  }
+interface projectOverviewInterface {
+  id: string;
+  ordername: string;
+  orderstatus: string;
+  clientname: string;
+  email: string;
+  phone: string;
+  teamname: string;
+  orderstartdate: string; 
+  orderenddate: string;  
+  orderdesc: string;
 }
 
+interface projectTeamMembersInterface {
+  id: string;
+  employeename: string;
+  location: string;
+  idposition: string;
+  departmentname: string;
+  teamname: string;
+  idproject: string;
+}
 
 const projects = () => {
   const hasMounted = useHasMounted();
+
+  const router = useRouter();
+  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[] | null>(null);
+  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[] | null>(null);
+  const [projectDescription, setProjectDescription] = useState<any>([]);
+
+  let projectID = router.query.slug;
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    fetch(link + '/getProjectOverview')
+      .then(res => res.json())
+      .then(data => {
+        setSelectedProjectOverview(data.orders)
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
+
+  const projectOverviewData = selectedProjectOverview?.map((project) => {
+    return {
+      id: project.id,
+      ordername: project.ordername,
+      orderstatus: project.orderstatus,
+      clientname: project.clientname,
+      email: project.email,
+      phone: project.phone,
+      teamname: project.teamname,
+      orderstartdate: project.orderstartdate,
+      orderenddate: project.orderenddate,
+      orderdesc: project.orderdesc,
+    }
+  })
+
+  let filteredProjectOverviewData = projectID ? projectOverviewData?.filter(project => project.id === projectID) : projectOverviewData;
+
+  useEffect(() => {
+    fetch(link + '/getTeamEmployees')
+      .then(res => res.json())
+      .then(data => {
+        setProjectTeamMembers(data.teamMembers)
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
+
+  const projectTeamMembersData = projectTeamMembers?.map((members) => {
+    return {
+      id: members.id,
+      employeename: members.employeename,
+      location: members.location,
+      idposition: members.idposition,
+      departmentname: members.departmentname,
+      teamname: members.teamname,
+      idproject: members.idproject,
+    }
+  })
+
+  let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter(members => members.idproject === projectID) : projectTeamMembersData;
+  console.log(projectTeamMembersData);
+
+  /*const description = filteredProjectOverviewData?.[0]?.orderdesc;
+  if (description) {
+    let filteredDescription = getParsedJson(description);
+    let finalJson = JSON.parse(filteredDescription);
+    setProjectDescription(finalJson);
+    console.log(finalJson);
+  }*/
+  /*else {
+    setProjectDescription
+  }*/
+  //console.log(filteredProjectOverviewData);
 
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
@@ -37,14 +117,6 @@ const projects = () => {
 
   const handleEmployeeDelete = () => {
     alert("se va a eliminar el usuario del sistema");
-  };
-
-  const handleEmployeeAddToProject = () => {
-    alert("se van a agregar el usuario a la lista de la orden");
-  };
-  
-  const handleEmployeeEraseFromProject = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
   };
 
   const customStyles = {
@@ -61,15 +133,7 @@ const projects = () => {
     },
   };
 
-  const columns: TableColumn<EmployeeDataRow>[] = [
-      /*{
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaRegDotCircle className={`status-icon-size ${row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
-          </Fragment>
-        ),
-        width: '50px',
-      },*/
+  const columns: TableColumn<projectTeamMembersInterface>[] = [
       {
         cell: (row) => (
           <Fragment>
@@ -80,7 +144,12 @@ const projects = () => {
       },
       {
         name: 'Name',
-        selector: row => row.name,
+        selector: row => row.id,
+        sortable: true,
+      },
+      {
+        name: 'Name',
+        selector: row => row.employeename,
         sortable: true,
       },
       {
@@ -90,14 +159,14 @@ const projects = () => {
       {
         cell: (row) => (
           <Fragment>
-            {row.idposition === 2 ? 'admin' : ''}
+            {row.idposition === '2' ? 'admin' : ''}
           </Fragment>
         ),
       },
       {
         cell: (row) => (
           <Fragment>
-              <TextBox textBoxText={row.employeeAreaBadge} textBoxColorScheme={row.employeeArea} />
+              <TextBox textBoxText={row.departmentname} textBoxColorScheme={'backend'} />
           </Fragment>
         ),
       },
@@ -121,62 +190,7 @@ const projects = () => {
         ),
         width: '50px',
       },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaPlus
-                style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                onClick={() => handleEmployeeAddToProject()}/>
-          </Fragment>
-        ),
-        width: '50px',
-      },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaMinus
-                style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                onClick={() => handleEmployeeEraseFromProject()}/>
-          </Fragment>
-        ),
-        width: '50px',
-      },
     ]
-
-  const clientData = {
-    "id": "1",
-    "name": 'Andres Fuentes Alanis',
-    "email": 'andres@tec.mx',
-    "phone": '1234567890',
-    "erased": "false"
-  }
-
-  const teamEmployeesData = [
-    {
-      id: 1,
-      name: 'Mario Isaí Robles Lozano',
-      idposition: 1,
-      location: 'Monterrey',
-      employeeAreaBadge: 'Frontend Developer',
-      employeeArea: 'frontend'
-    },
-    {
-      id: 2,
-      name: 'Jorge Eduardo De Leon Reyna',
-      idposition: 2,
-      location: 'Reynosa',
-      employeeAreaBadge: 'Backend Developer',
-      employeeArea: 'backend'
-    },
-    {
-      id: 3,
-      name: 'Andrea Catalina Fernandez Mena',
-      idposition: 1,
-      location: 'La Paz',
-      employeeAreaBadge: 'Data Manager',
-      employeeArea: 'data'
-    }
-  ]
 
   interface EmployeeDataRow {
     id: number;
@@ -185,11 +199,6 @@ const projects = () => {
     location: string;
     employeeAreaBadge: string;
     employeeArea: string;
-  }
-
-  const teamData = {
-    "id": "1",
-    "name": "Team Awesome"
   }
 
   const projectData = {
@@ -216,19 +225,18 @@ const projects = () => {
         titulo={"Project Overview"}
         descripcion={""}
       />
-      
       <Container className="mt-3">
         <Row>
           <div className="container p-4">
             <div className="card-body d-flex flex-column">
               <div className="d-flex flex-row justify-content-between">
-                <h3 className="ml-5">{projectData.name}</h3>
-                <h6 className="mt-auto">{projectData.orderstartdate} - {projectData.orderenddate}</h6>
+                <h3 className="ml-5">{filteredProjectOverviewData?.[0]?.ordername}</h3>
+                <h6 className="mt-auto">{filteredProjectOverviewData?.[0]?.orderstartdate} - {filteredProjectOverviewData?.[0]?.orderenddate}</h6>
               </div>
-              <h6 className="ml-5 mt-2">{projectData.orderdesc}</h6>
-              <h5 className="ml-5 mt-4">{clientData.name}</h5>
-              <h6 className="ml-5">{clientData.email}</h6>
-              <h6 className="ml-5">{clientData.phone}</h6>
+              <h6 className="ml-5 mt-2">{filteredProjectOverviewData?.[0]?.orderdesc}</h6>
+              <h5 className="ml-5 mt-4">{filteredProjectOverviewData?.[0]?.clientname}</h5>
+              <h6 className="ml-5">{filteredProjectOverviewData?.[0]?.email}</h6>
+              <h6 className="ml-5">{filteredProjectOverviewData?.[0]?.phone}</h6>
             </div>
           </div>
           <Col className="d-flex flex-row-reverse">
@@ -254,13 +262,14 @@ const projects = () => {
         </Row>
         <Collapse in={collapse}>
           <div id="collapseProjectCreation" className="my-3">
-            Aqui van los requerimientos del proyecto
+            {filteredProjectOverviewData?.[0]?.orderdesc}
           </div>
         </Collapse>
         <DataTable
-            title={teamData.name}
+            title={'Team Members'}
             columns={columns}
-            data={teamEmployeesData}
+            // @ts-ignore
+            data={filteredProjectTeamMembersData}
             customStyles={customStyles}
             highlightOnHover
             pagination

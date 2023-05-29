@@ -23,6 +23,9 @@ import EmployeeCreation from "@/components/EmployeeCreation";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 
+import { EmployeeListContext } from "@/context/employeeContext";
+import { EmployeeContext } from "@/context/employeeContext";
+
 const employees = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -37,36 +40,40 @@ const employees = () => {
   return (
     <>
       <Menu titulo={"Employees"} descripcion={" "} />
-      <EmployeeSearch />
-      <div className="container my-4">
-        <div className="row">
-          <div className="d-flex flex-row-reverse">
-            <button
-              className="btn btn-primary w-10" 
-              onClick={() => setAddEmployee(!addEmployee)}
-              aria-controls="employeeCreation"
-              aria-expanded={addEmployee}>
-              {addEmployee ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaUserCog className="mb-1" />
-                  &nbsp;&nbsp;Add Employee
-                </>
-              )}
-            </button>
+      <EmployeeContext>
+        <EmployeeListContext>
+          <EmployeeSearch />
+          <div className="container my-4">
+            <div className="row">
+              <div className="d-flex flex-row-reverse">
+                {/* <button
+                  className="btn btn-primary w-10" 
+                  onClick={() => setAddEmployee(!addEmployee)}
+                  aria-controls="employeeCreation"
+                  aria-expanded={addEmployee}>
+                  {addEmployee ? (
+                    <>
+                      <FaIcons.FaTimes className="mb-1" />
+                      &nbsp;&nbsp;Close
+                    </>
+                  ) : (
+                    <>
+                      <FaIcons.FaUserCog className="mb-1" />
+                      &nbsp;&nbsp;Add Employee
+                    </>
+                  )}
+                </button> */}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <Collapse in={addEmployee}>
-        <div id="employeeCreation">
-          <EmployeeCreation />
-        </div>
-      </Collapse>
-      <EmployeeTable pageType={"listForAdmin"} />
+          {/* <Collapse in={addEmployee}>
+            <div id="employeeCreation">
+              <EmployeeCreation />
+            </div>
+          </Collapse> */}
+          <EmployeeTable pageType={"listForAdmin"} />
+        </EmployeeListContext>
+      </EmployeeContext>
     </>
   );
 };

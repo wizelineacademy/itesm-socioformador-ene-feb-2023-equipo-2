@@ -2,54 +2,43 @@
 // Poner una imagen de placeholden en caso de que no haya foto de perfil
 // Arreglar para la vista tipo telefono
 
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
 
-interface DataRow {
-  id: number;
-  isActive: 0 | 1 | 2;
-  projectName: string;
-  clientName: string;
-  clientCompany: string;
-  teamName: string;
-  startDate: string;
-  endDate: string;
-  name: string;
-}
+import { projectContext, projectListContext, statusContext } from '@/context/projectsContext';
+import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
+import { useRouter } from 'next/router';
 
 interface projectListInterface {
-  id: number;
-  ordername: string;
+  value: string;
+  label: string;
   orderstatus: string;
   orderstartdate: string; 
   orderenddate: string; 
+  idclient: string;
   clientname: string; 
+  idteam: string;
   teamname: string;
 }
 
-const ProjectTable = () => {
-  const handleSeeProjects = () => {
-    alert("se va a redireccionar al perfil del usuario");
-  };
+interface CardProps {
+  clientID: string;
+}
+
+const ProjectTable = (props: CardProps) => {
+  const projectsContext = useContext(projectContext);
+  const projectsListContext = useContext(projectListContext);
+  const statusesContext = useContext(statusContext);
+  const clientsContext = useContext(clientContext);
+  const clientsListContext = useContext(clientListContext);
+
+  const projectTableRouter = useRouter();
 
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
   };
-
-  const [projectList, setProjectList] = useState<projectListInterface[]>([]);
-
-  let link = process.env.NEXT_PUBLIC_API_URL;
-
-  useEffect(() => {
-    fetch(link + '/getProjectList')
-      .then(res => res.json())
-      .then(data => {
-        setProjectList(data.orders)
-      })
-      .catch(error => console.log("Error ", error))
-  }, [])
 
   const customStyles = {
     rows: {
@@ -80,7 +69,7 @@ const ProjectTable = () => {
     },
     {
       name: "Project",
-      selector: (row) => row.ordername,
+      selector: (row) => row.label,
       sortable: true,
     },
     {
@@ -103,10 +92,28 @@ const ProjectTable = () => {
     {
       cell: (row) => (
         <Fragment>
-          <Link href="/project-overview">
+          <div onClick={() => {projectTableRouter.push({pathname: '/project-modification',query: { slug: row.value },});}}>
+            <FaIcons.FaPencilAlt style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
+          </div>
+          {/*
+          href="/project-overview"
+          <FaIcons.FaInfoCircle
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => handleSeeProjects()}
+      />*/}
+        </Fragment>
+      ),
+      width: "50px",
+    },
+    {
+      cell: (row) => (
+        <Fragment>
+          <div onClick={() => {projectTableRouter.push({pathname: '/project-overview',query: { slug: row.value },});}}>
             <FaIcons.FaInfoCircle style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
-          </Link>
-          {/*<FaIcons.FaInfoCircle
+          </div>
+          {/*
+          href="/project-overview"
+          <FaIcons.FaInfoCircle
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleSeeProjects()}
       />*/}
@@ -127,42 +134,71 @@ const ProjectTable = () => {
     },
   ];
 
-  const data = [
-    {
-      "id": 1,
-      "isActive": 2,
-      "projectName": "project namesss",
-      "clientName": "client name",
-      "teamName": "team 1",
-      "startDate": "2019-01-16",
-      "endDate": "2019-01-16",
-    },
-    /*{
-      id: 2,
-      isActive: 1,
-      projectName: "project name",
-      clientName: "client name",
-      teamName: "team 1",
-      startDate: "2019-01-16",
-      endDate: "2019-01-16",
-    },
-    {
-      id: 3,
-      isActive: 0,
-      projectName: "project name",
-      clientName: "client name",
-      teamName: "team 1",
-      startDate: "2019-01-16",
-      endDate: "2019-01-16",
-    },*/
-  ];
+  let projects = projectsListContext?.selectedProject;
+  //let clients = clientsListContext?.selectedClient;
+
+  const data = projects?.map((project) => {
+    return {
+      value: project.value,
+      label: project.label,
+      orderstatus: project.orderstatus,
+      orderstartdate: project.orderstartdate,
+      orderenddate: project.orderenddate,
+      idclient: project.idclient,
+      clientname: project.clientname,
+      idteam: project.idteam,
+      teamname: project.teamname,
+    }
+  })
+
+  // let filteredProjectData;
+  
+  // if (props.clientID) {
+  //   filteredProjectData = data?.filter(project => project.idclient === props.clientID);
+  // }
+
+  let selectedProjectID = projectsContext?.currentProject;
+  let selectedClientID = clientsContext?.currentClient;
+  let selectedStatus = statusesContext?.selectedStatus;
+
+  // @ts-ignore
+  let selectedProjectIDInt = parseInt(projectsContext?.currentProject);
+  // @ts-ignore
+  let selectedClientIDInt = parseInt(clientsContext?.currentClient);
+  /*console.log(selectedClientID)
+  console.log(selectedProjectID)
+  
+  console.log(selectedProjectID != "" && selectedClientID != "" && selectedProjectID != undefined && selectedClientID != undefined)
+  console.log(selectedProjectID != "" && selectedProjectID != undefined)
+  console.log(selectedClientID != "" && selectedClientID != undefined && selectedProjectID != "0")
+  console.log(selectedClientID === "undefined")
+
+  console.log(selectedClientID);
+  console.log(data[6].idclient);
+  console.log(selectedClientID === data[6].idclient);*/
+  
+  // @ts-ignore
+  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        // @ts-ignore
+                        selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
+                        // @ts-ignore
+                        selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" && selectedStatus ? data?.filter(project => project.value === selectedProjectIDInt && project.orderstatus === selectedStatus) :
+                        // @ts-ignore
+                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" && selectedStatus ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        // @ts-ignore
+                        selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" ? data?.filter(project => project.value === selectedProjectIDInt) :
+                        // @ts-ignore
+                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) :
+                        // @ts-ignore
+                        selectedStatus != "" && selectedStatus != "undefined" && selectedStatus != null ? data?.filter(project => project.orderstatus === selectedStatus) : data;
 
   return (
     <>
       <div className="container my-4">
         <DataTable
           columns={columns}
-          data={projectList}
+          // @ts-ignore
+          data={filteredProjectData}
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover
