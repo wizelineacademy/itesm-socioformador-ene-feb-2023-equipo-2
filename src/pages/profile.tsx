@@ -69,6 +69,7 @@ const perfil = () => {
 
 
   if (userData !== undefined) {
+    // @ts-ignore
     console.log("user Data => ", parseJsonString(userData?.infoabout))
     //setUserData(parseJsonString(userData?.infoabout))
   }
