@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         erased: erased
       }
     });
-    return res.status(200).json({ message: "Updated client correctly" })
+    return res.status(200).json({ message: "Updated client correctly." })
   } catch (error) {
     return res.status(500).json({ message: "An error occurred." })
   } finally {
