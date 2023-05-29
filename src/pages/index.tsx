@@ -1,11 +1,10 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
 import * as FaIcons from "react-icons/fa";
 import * as BsIcons from "react-icons/bs";
 import Image from 'next/image';
 import transLogo from 'src/images/transLogo.jpg';
 import bg from 'src/images/wbg.webp';
-
 
 export default function Home() {
   // define state variables for email and password inputs
@@ -24,15 +23,10 @@ export default function Home() {
       body: JSON.stringify({ email: email, password: password })
     };
 
-  fetch('http://localhost:3000/api/login', requestOptions)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
-
-
-
-
-
+    fetch('http://localhost:3000/api/login', requestOptions)
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
   };
 
   return (
@@ -40,24 +34,24 @@ export default function Home() {
 
     <div className="bg-light d-flex justify-content-center align-items-center vh-100 position-relative">
       <div className={`position-absolute w-100 h-100`}>
-      <Image
-        src={bg}
-        alt='Wizeline Background'
-        layout="fill"
-        objectFit="cover"
-        quality={100}
-        loading="eager"
-        placeholder='blur'
-        style={{filter:'blur(10px)'}}
-      />
+        <Image
+          src={bg}
+          alt='Wizeline Background'
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          loading="eager"
+          placeholder='blur'
+          style={{ filter: 'blur(10px)' }}
+        />
       </div>
       <div className="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
         <Card style={{ width: '27rem' }}>
           <Card.Body>
-          <div className="text-center pt-3 pb-4">
-            <Image 
-              src={transLogo} alt='WizeLine Logo' height={100}
-            /></div>
+            <div className="text-center pt-3 pb-4">
+              <Image
+                src={transLogo} alt='WizeLine Logo' height={100}
+              /></div>
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="email">
                 <Form.Label>Email address</Form.Label>

@@ -15,7 +15,8 @@ import { getChatResponse } from "@/openai/openai";
 import { setTimeout } from "timers/promises";
 import { propTypes } from "react-bootstrap/esm/Image";
 import { useUser } from '@auth0/nextjs-auth0/client';
-import {useAuth0} from "@auth0/auth0-react";
+import { getAuth0Id } from '../utils/getAuth0Id'
+var AuthenticationClient = require('auth0').AuthenticationClient;
 
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
@@ -26,27 +27,13 @@ const generarPerfil: React.FC = () => {
   const [skills, setSkills] = useState("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
   const [responseRoadmap, setResponseRoadmap] = useState<any>("");
-  const [responseCV, setResponseCV] = useState<any>("");
+  const [responseCV, setResponseCV] = useState<any>("")
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   const { user, error, isLoading } = useUser();
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
-  console.log("isAuthenticated => ", isAuthenticated);
-  console.log(useUser())
-
-  useEffect(() => {
-    console.log("user => ", user?.name);
-    console.log("error => ", error?.message);
-  },[isLoading])
-
-  if(!isLoading){
-    console.log("user loading => ", user?.name);
-    console.log("error loading => ", error?.message);
-  }
-
-  // console.log("loading => ", isLoading);
-  
+  const idUser = getAuth0Id(user?.sub)
+  console.log("user id -> ", idUser)
 
   const handleOpenAIResponse = (e: any) => {
     console.log(e.target.id);
@@ -87,9 +74,9 @@ const generarPerfil: React.FC = () => {
     });
 
     const auxMessage =
-    `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma y los conocimientos previos necesarios para aprenderla tomando en cuenta que es para una persona con este perfil, habilidades y conocimientos: ` +
-    skills +
-    `. Dame únicamente la información de la ruta de aprendizaje que generaste acorde a los parámetros anteriores y hazlo únicamente en formato json siguiendo de manera muy precisa esta estructura: 
+      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma y los conocimientos previos necesarios para aprenderla tomando en cuenta que es para una persona con este perfil, habilidades y conocimientos: ` +
+      skills +
+      `. Dame únicamente la información de la ruta de aprendizaje que generaste acorde a los parámetros anteriores y hazlo únicamente en formato json siguiendo de manera muy precisa esta estructura: 
 
     {
     'tools'  [
@@ -143,7 +130,6 @@ const generarPerfil: React.FC = () => {
           "In order for artificial intelligence to generate a complete profile, we need you to provide us with your employment and educational information. You can do it in several ways: through your LinkedIn profile, by filling in the fields of our web application or by uploading your resume to our platform."
         }
       />
-      <a href="/api/auth/logout">Logout</a>
       <div className="container">
         <div className="row">
           <div className="col-md">

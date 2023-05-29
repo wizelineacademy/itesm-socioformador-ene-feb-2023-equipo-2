@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
-
-module.exports = nextConfig
+require('dotenv').config()
 
 module.exports = {
+  reactStrictMode: true,
   webpack5: true,
   webpack: (config) => {
     config.resolve.fallback = {
@@ -16,7 +13,3 @@ module.exports = {
     return config;
   },
 };
-
-require('dotenv').config()
-
-module.exports = {}
