@@ -90,7 +90,7 @@ const ClientCard = () => {
         <Fragment>
           <FaIcons.FaPencilAlt
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleClientEdit()}
+            onClick={() => router.push({pathname: '/client-modification', query: { slug: row.value }})}
           />
         </Fragment>
       ),

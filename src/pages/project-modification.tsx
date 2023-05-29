@@ -1,14 +1,11 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import * as FaIcons from "react-icons/fa";
 import { Container, Row, Col, Collapse } from "react-bootstrap";
-
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import DataTable, { TableColumn } from "react-data-table-component";
-import TextBox from "@/components/TextBox";
 import { projectContext, projectListContext } from "@/context/projectsContext";
 import { clientContext, clientListContext } from "@/context/clientContext";
 
@@ -102,11 +99,9 @@ const projectModification = () => {
         const dateEndObject = new Date(dateEnd);
         setEndDateProjectOverview(dateEndObject)
 
-        // console.log("Worked successfully");
       })
       .catch((error) => console.log("Error ", error));
 
-    // console.log("Worked successfully");
   }, [projectID]);
 
   useEffect(() => {
