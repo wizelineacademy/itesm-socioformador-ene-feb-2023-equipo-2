@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+const id = 1
 
 export default async function handler(req: any, res: any) {
   const { inforoadmap, infoabout } = req.body;
@@ -9,7 +10,6 @@ export default async function handler(req: any, res: any) {
   const infoabout_string = JSON.stringify(infoabout);
 
   //TODO: ID FIJO PROVISIONAL MIENTRAS IMPLEMENTAMOS AUTH0
-  const id = 13;
 
   try {
     const record = await prisma.employees.findUnique({ where: { id: id } });
