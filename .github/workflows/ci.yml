@@ -50,7 +50,6 @@ jobs:
       - name: 🔎 Type check
         run: npm run typecheck --if-present
 
-  #comentario
   cypress:
     name: ⚫️ Cypress
     runs-on: ubuntu-latest
