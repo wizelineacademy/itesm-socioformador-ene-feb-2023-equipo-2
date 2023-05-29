@@ -11,7 +11,7 @@ datasource db {
 }
 
 model employees {
-  id          Int      @id @default(autoincrement()) @unique
+  id          Int      @id @unique
   name        String
   linkedinlink String
   cvfile      String

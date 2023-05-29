@@ -14,6 +14,10 @@ import { useHasMounted } from "@/components/useHasMounted";
 import { getChatResponse } from "@/openai/openai";
 import { setTimeout } from "timers/promises";
 import { propTypes } from "react-bootstrap/esm/Image";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from '../utils/getAuth0Id'
+var AuthenticationClient = require('auth0').AuthenticationClient;
+import { useAuth0 } from "@auth0/auth0-react";
 
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
@@ -25,9 +29,13 @@ const generarPerfil: React.FC = () => {
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
   const [resLinkLinkedin, setResLinkLinkedin] = useState("");
   const [responseRoadmap, setResponseRoadmap] = useState<any>("");
-  const [responseCV, setResponseCV] = useState<any>("");
+  const [responseCV, setResponseCV] = useState<any>("")
 
   let link = process.env.NEXT_PUBLIC_API_URL;
+
+  const { user, error, isLoading } = useUser();
+  const idUser = getAuth0Id(user?.sub)
+  console.log("user id -> ", idUser)
 
   const flaskLinkedin = (linkLinkedin: string) => {
     return new Promise((resolve, reject) => {
@@ -38,7 +46,7 @@ const generarPerfil: React.FC = () => {
           link_linkedin: linkLinkedin,
         }),
       };
-  
+
       fetch("http://127.0.0.1:5000/cv-linkedin", requestOptions)
         .then((response) => response.json())
         .then((data) => {
@@ -54,21 +62,35 @@ const generarPerfil: React.FC = () => {
   };
 
   const handleOpenAIResponse = async (e: any) => {
-  console.log(e.target.id);
+    console.log(e.target.id);
 
-  let text = "";
-  if (e.target.id === "buttonManual") {
-    text = jobExperience + "and" + skills;
-  } else {
-    console.log("React");
-    try {
-      const response = await flaskLinkedin(linkLinkedin);
-      text = response as string;
-    } catch (error) {
-      console.error("Error:", error);
-      return;
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        inforoadmap: responseRoadmap,
+        infoabout: responseCV,
+      }),
+    };
+
+    fetch(link + "/save-employee-information", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+
+    let text = "";
+    if (e.target.id === "buttonManual") {
+      text = jobExperience + "and" + skills;
+    } else {
+      console.log("React");
+      try {
+        const response = await flaskLinkedin(linkLinkedin);
+        text = response as string;
+      } catch (error) {
+        console.error("Error:", error);
+        return;
+      }
     }
-  }
 
     const messageCV = [
       {
@@ -85,25 +107,25 @@ const generarPerfil: React.FC = () => {
     });
 
     const auxMessage =
-    `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma y los conocimientos previos necesarios para aprenderla tomando en cuenta que es para una persona con este perfil, habilidades y conocimientos: ` +
-    skills +
-    `. Dame únicamente la información de la ruta de aprendizaje que generaste acorde a los parámetros anteriores y hazlo únicamente en formato json siguiendo de manera muy precisa esta estructura: 
+      `Crea una ruta de aprendizaje con 5 herramientas o tecnologías mostrando el nombre de la herramienta o tecnología, la descripción de la misma y los conocimientos previos necesarios para aprenderla tomando en cuenta que es para una persona con este perfil, habilidades y conocimientos: ` +
+      skills +
+      `.Dame únicamente la información de la ruta de aprendizaje que generaste acorde a los parámetros anteriores y hazlo únicamente en formato json siguiendo de manera muy precisa esta estructura:
 
-    {
-    'tools'  [
-      {
-        'name': 'resource name 1',
-        'description': vresource description 1',
+          {
+            'tools'[
+              {
+                'name': 'resource name 1',
+                'description': vresource description 1',
         'previous_knowledge': 'previous knowledge 1'
-      },
-      {
-        'name': 'resource name 2',
-        'description': “resource description 2',
+              },
+              {
+                'name': 'resource name 2',
+                'description': “resource description 2',
         'previous_knowledge': ”previous knowledge 2
       }
-      ]
-    }
-    `
+            ]
+          }
+          `
     const messageRoadmap = [{ role: "user", content: auxMessage }];
 
     getChatResponse(messageRoadmap).then((res) => {
@@ -307,5 +329,4 @@ const generarPerfil: React.FC = () => {
     </>
   );
 };
-
 export default generarPerfil;

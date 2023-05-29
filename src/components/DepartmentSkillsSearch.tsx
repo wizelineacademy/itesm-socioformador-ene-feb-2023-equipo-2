@@ -58,7 +58,7 @@ const DepartmentSkillsSearch = () => {
   // }
 
   // useEffect(() => {
-  //   fetch(link + '/get-skills')
+     fetch(link + '/get-skills')
   //     .then(res => res.json())
   //     .then(data => {
   //       setSkillList(data.skills)
