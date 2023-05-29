@@ -1,4 +1,4 @@
-import React, { useState, Fragment  } from "react";
+import React, { useState, Fragment } from "react";
 import Image from "next/image";
 import {
   Navbar,
@@ -117,7 +117,7 @@ const Menu = (props: MenuProps) => {
             <NavDropdown
               title={
                 <Fragment>
-                  <FaIcons.FaUser className="mb-1"/>
+                  <FaIcons.FaUser className="mb-1" />
                   &nbsp;&nbsp;My Account
                 </Fragment>
               }
@@ -125,11 +125,11 @@ const Menu = (props: MenuProps) => {
               className="a-navbar"
             >
               <NavDropdown.Item href="/profile" className="a-navbar">
-                <FaIcons.FaUser className="mb-1"/>
+                <FaIcons.FaUser className="mb-1" />
                 &nbsp;&nbsp;Profile
               </NavDropdown.Item>
               <NavDropdown.Item href="/settings" className="a-navbar">
-                <FaIcons.FaCog className="mb-1"/>
+                <FaIcons.FaCog className="mb-1" />
                 &nbsp;&nbsp;Settings
               </NavDropdown.Item>
               <NavDropdown.Item href="/roadmap" className="a-navbar">
@@ -142,9 +142,8 @@ const Menu = (props: MenuProps) => {
                 className="a-logout"
                 onClick={handleLogout}
               >
-                <FaIcons.FaDoorOpen className="mb-1"/>
+                <FaIcons.FaDoorOpen className="mb-1" />
                 &nbsp;&nbsp;
-                <a href="/api/auth/logout">LogOut</a>
               </NavDropdown.Item>
               <Modal
                 show={
