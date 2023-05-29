@@ -163,7 +163,6 @@ const generarPerfil: React.FC = () => {
           "In order for artificial intelligence to generate a complete profile, we need you to provide us with your employment and educational information. You can do it in several ways: through your LinkedIn profile, by filling in the fields of our web application or by uploading your resume to our platform."
         }
       />
-      <a href="/api/auth/logout">Logout</a>
       <div className="container">
         <div className="row">
           <div className="col-md">
