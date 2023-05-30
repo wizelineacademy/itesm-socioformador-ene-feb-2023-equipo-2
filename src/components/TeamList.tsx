@@ -86,7 +86,7 @@ const TeamList = (props: CardProps) => {
       .then((res) => res.json())
       .then((data) => {
         setProjectTeamMembers(data.teamMembers);
-        console.log(data.teamMembers);
+        //console.log(data.teamMembers);
       })
       .catch((error) => console.log("Error", error));
   }, []);
@@ -135,13 +135,13 @@ const TeamList = (props: CardProps) => {
     };
   });
 
-  console.log(data);
+  //console.log(data);
 
   let teams = teamsListContext?.selectedTeam;
   let employees = employeesListContext?.selectedEmployee;
 
   // let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter(members => members.idproject === projectID) : projectTeamMembersData;
-  // console.log(projectTeamMembersData);
+  // //console.log(projectTeamMembersData);
   const data2 = teams?.map((team) => {
     return {
       value: team.value,
@@ -152,7 +152,7 @@ const TeamList = (props: CardProps) => {
   let selectedTeamID = teamsContext?.currentTeam;
   let selectedEmployeeID = employeesContext?.currentEmployee;
 
-  console.log(selectedEmployeeID);
+  //console.log(selectedEmployeeID);
   //console.log(selectedEmployeeID)
 
   let filteredData =
@@ -250,18 +250,18 @@ const TeamList = (props: CardProps) => {
         ),
         width: "50px",
       },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaTrash
-              style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-              onClick={() => handleEmployeeDelete()}
-            />
-          </Fragment>
-        ),
-        omit: hideTrashCan,
-        width: "50px",
-      },
+      // {
+      //   cell: (row) => (
+      //     <Fragment>
+      //       <FaIcons.FaTrash
+      //         style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+      //         onClick={() => handleEmployeeDelete()}
+      //       />
+      //     </Fragment>
+      //   ),
+      //   omit: hideTrashCan,
+      //   width: "50px",
+      // },
       {
         cell: (row) => (
           <Fragment>

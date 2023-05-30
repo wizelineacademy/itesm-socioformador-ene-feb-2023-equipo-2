@@ -1,0 +1,51 @@
+name: CD
+on:
+  push: 
+    branches:
+      - development
+
+env:
+  AWS_REGION: us-east-1
+  AWS_LIGHTSAIL_SERVICE_NAME: wizeq-dev
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+
+      - name: Install Utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq unzip
+      - name: Install AWS Client
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install || true
+          aws --version
+          curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "lightsailctl"
+          sudo mv "lightsailctl" "/usr/local/bin/lightsailctl"
+          sudo chmod +x /usr/local/bin/lightsailctl
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Remove existing folder
+        run: |
+          sudo rm -rf itesm-socioformador-ene-feb-2023-equipo-2
+
+      - name: Clone repository
+        run: |
+          git clone https://github.com/wizelineacademy/itesm-socioformador-ene-feb-2023-equipo-2.git
+
+      - name: Install dependencies and build application
+        run: |
+          cd itesm-socioformador-ene-feb-2023-equipo-2
+          npm install
+          npm run dev

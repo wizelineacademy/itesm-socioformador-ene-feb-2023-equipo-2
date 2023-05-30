@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
+require('dotenv').config()
 
-module.exports = nextConfig
+module.exports = {
+  reactStrictMode: true,
+  webpack5: true,
+  webpack: (config) => {
+    config.resolve.fallback = {
+      fs: false,
+      'superagent-proxy': false
+    };
+
+    return config;
+  },
+};

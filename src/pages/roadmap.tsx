@@ -3,11 +3,11 @@ import Menu from "@/components/Menu";
 import Link from "next/link";
 
 import { useState, useEffect } from "react";
-
 import { useHasMounted } from "@/components/useHasMounted";
 import { AutoprefixerIconConfig } from "@patternfly/react-icons";
-
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useRouter } from "next/router";
+
 
 
 interface apiResponse {
@@ -16,7 +16,7 @@ interface apiResponse {
   linkedinlink: string,
   cvfile: string,
   profileimage: string,
-  inforoadmap: string 
+  inforoadmap: string
 }
 
 interface roadMap {
@@ -29,10 +29,13 @@ function Roadmap() {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
+  const router = useRouter();
+
 
   const [selectedMenu, setSelectedMenu] = useState("");
   const [data, setData] = useState<apiResponse[]>([]);
   const [roadmap, setRoadmap] = useState<any>([]);
+  const [isRoadmap, setIsRoadmap] = useState(false);
 
   const { user, error, isLoading } = useUser();
 
@@ -44,6 +47,15 @@ function Roadmap() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (roadmap?.tools) {
+      setIsRoadmap(true)
+    }
+    else (
+      router.push("/generar-perfil")
+    )
+  }, roadmap)
 
   const getParsedJson = (string: string) => {
     //removing breakpoints and "/" characters
@@ -60,7 +72,7 @@ function Roadmap() {
     return parsedJson;
 
 
-  } 
+  }
 
   const fetchData = async () => {
     const response = await fetch(
@@ -70,13 +82,15 @@ function Roadmap() {
     const data: any = json as apiResponse[];
     const obj = data?.userRoadMap?.inforoadmap
 
-    console.log("json sin procesar", obj)
-      
-    //calling function to clean string
-    let jsonString = getParsedJson(obj)
+    //calling function to clean string only if there are a string to parse
+    try {
+      let jsonString = getParsedJson(obj)
+      let finalJson = JSON.parse(jsonString);
+      setRoadmap(finalJson)
+    } catch (e: any) {
+      console.log("JSON not parsed");
+    }
 
-    let finalJson = JSON.parse(jsonString);
-    setRoadmap(finalJson)
   };
 
   if (!hasMounted) {
@@ -87,7 +101,6 @@ function Roadmap() {
 
   return (
     <div>
-      return <Link href="/api/auth/logout">Logout</Link>;
       <Menu
         titulo={"Roadmap"}
         descripcion={
@@ -96,75 +109,84 @@ function Roadmap() {
       />
 
       <div className="container">
-        <div className="row">
-          <div className="col-3">
-            <div
-              className="nav flex-column nav-pills"
-              id="v-pills-tab"
-              role="tablist"
-              aria-orientation="vertical"
-            >
-              {roadmap?.tools.map((element: any) => {
-                return (
-                  // eslint-disable-next-line react/jsx-key
-                  <Link
-                    className={
-                      element.name == selectedMenu
-                        ? "nav-link active selectedAncore nav-roadmap"
-                        : "nav-link nav-roadmap"
-                    }
-                    id={element.name + "-tab"}
-                    data-toggle="pill"
-                    href={"#" + element.name}
-                    role="tab"
-                    aria-controls="v-pills-profile"
-                    aria-selected="false"
-                    onClick={() => setSelectedMenu(element.name)}
-                    style={{
-                      color:
-                      element.name === selectedMenu
-                          ? "white !important"
-                          : "black !important",
-                    }}
-                  >
-                    {element.name}
-                  </Link>
-                );
-              })}
+        {isRoadmap &&
+          <div className="row">
+            <div className="col-3">
+              <div
+                className="nav flex-column nav-pills"
+                id="v-pills-tab"
+                role="tablist"
+                aria-orientation="vertical"
+              >
+                {roadmap?.tools.map((element: any) => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <Link
+                      className={
+                        element.name == selectedMenu
+                          ? "nav-link active selectedAncore nav-roadmap"
+                          : "nav-link nav-roadmap"
+                      }
+                      id={element.name + "-tab"}
+                      data-toggle="pill"
+                      href={"#" + element.name}
+                      role="tab"
+                      aria-controls="v-pills-profile"
+                      aria-selected="false"
+                      onClick={() => setSelectedMenu(element.name)}
+                      style={{
+                        color:
+                          element.name === selectedMenu
+                            ? "white !important"
+                            : "black !important",
+                      }}
+                    >
+                      {element.name}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="col-9">
+              <div className="tab-content" id="v-pills-tabContent">
+                {roadmap?.tools.map((element: any) => {
+                  console.log("selected menu => ", selectedMenu);
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <div
+                      className={
+                        element.name == selectedMenu
+                          ? "tab-pane fade show active"
+                          : "tab-pane fade"
+                      }
+                      id={element.name.toString()}
+                      role="tabpanel"
+                      aria-labelledby="v-pills-profile-tab"
+                    >
+                      <h1>{element.description}</h1>
+
+                      <br />
+
+                      <h2>Description</h2>
+                      {element.description}
+
+                      <h2>Previous Knowledge</h2>
+                      {element.previous_knowledge}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-          <div className="col-9">
-            <div className="tab-content" id="v-pills-tabContent">
-              {roadmap?.tools.map((element: any) => {
-                console.log("selected menu => ", selectedMenu);
-                return (
-                  // eslint-disable-next-line react/jsx-key
-                  <div
-                    className={
-                      element.name == selectedMenu
-                        ? "tab-pane fade show active"
-                        : "tab-pane fade"
-                    }
-                    id={element.name.toString()}
-                    role="tabpanel"
-                    aria-labelledby="v-pills-profile-tab"
-                  >
-                    <h1>{element.description}</h1>
+        }
 
-                    <br />
-
-                    <h2>Description</h2>
-                    {element.description}
-
-                    <h2>Previous Knowledge</h2>
-                    {element.previous_knowledge}
-                  </div>
-                );
-              })}
-            </div>
+        {
+          !isRoadmap && <div>
+            <h1>You will be redirected to Perfil Generation page because you have not your roadmap generated</h1>
           </div>
-        </div>
-      </div> 
+        }
+
+      </div>
     </div>
   );
 }
