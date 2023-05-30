@@ -13,16 +13,6 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { getAuth0Id } from '../utils/getAuth0Id'
 import { parseJsonString } from "@/utils/parseJsonString";
 
-
-const profileData = [
-  {
-    isActive: 1,
-    clientName: 'Mario Isaí Robles Lozano',
-    clientLocation: 'Monterrey',
-    clientEnterprise: 'Microsoft',
-  },
-]
-
 interface perfilInterface {
   name: string;
   position: string;
@@ -71,7 +61,7 @@ const perfil = () => {
   if (userData !== undefined) {
     // @ts-ignore
     console.log("user Data => ", parseJsonString(userData?.infoabout))
-    //setUserData(parseJsonString(userData?.infoabout))
+    setUserData(parseJsonString(userData?.infoabout))
   }
 
   if (!hasMounted) {
@@ -94,7 +84,7 @@ const perfil = () => {
                   className="image-circle" />
               </div>
               <div className="col-5">
-                <h3 className="ml-5">Nombre</h3>
+                <h3 className="ml-5">{userData?.name}</h3>
                 <h5 className="ml-5">Intern</h5>
                 <h6 className="ml-5">Guadalajara</h6>
                 <h6 className="ml-5">correo@gmail.com</h6>
