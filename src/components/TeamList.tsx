@@ -261,7 +261,7 @@ const TeamList = (props: CardProps) => {
       //   ),
       //   omit: hideTrashCan,
       //   width: "50px",
-      // },
+      // }, 
       {
         cell: (row) => (
           <Fragment>
