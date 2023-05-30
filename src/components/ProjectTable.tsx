@@ -121,17 +121,17 @@ const ProjectTable = (props: CardProps) => {
       ),
       width: "50px",
     },
-    {
-      cell: (row) => (
-        <Fragment>
-          <FaIcons.FaTrash
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleEraseFromSystem()}
-          />
-        </Fragment>
-      ),
-      width: "50px",
-    },
+    // {
+    //   cell: (row) => (
+    //     <Fragment>
+    //       <FaIcons.FaTrash
+    //         style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+    //         onClick={() => handleEraseFromSystem()}
+    //       />
+    //     </Fragment>
+    //   ),
+    //   width: "50px",
+    // },
   ];
 
   let projects = projectsListContext?.selectedProject;
