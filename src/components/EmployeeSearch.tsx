@@ -83,7 +83,7 @@ const EmployeeSearch = () => {
     console.log(e.value);
   };*/
 
-  const handleChangeSelectEmployeeName = (e : any | null) => {
+  const handleChangeSelectEmployeeName = (e: any | null) => {
     if (e === null) {
       setEmployeeName("");
     } else {
@@ -179,22 +179,22 @@ const EmployeeSearch = () => {
           <div className="col-md">
             <label className="form-label">&nbsp;</label>
             <button
-                  className="btn btn-primary w-100" 
-                  onClick={() => setAddEmployee(!addEmployee)}
-                  aria-controls="employeeCreation"
-                  aria-expanded={addEmployee}>
-                  {addEmployee ? (
-                    <>
-                      <FaIcons.FaTimes className="mb-1" />
-                      &nbsp;&nbsp;Close
-                    </>
-                  ) : (
-                    <>
-                      <FaIcons.FaUserCog className="mb-1" />
-                      &nbsp;&nbsp;Add Employee
-                    </>
-                  )}
-                </button>
+              className="btn btn-primary w-100"
+              onClick={() => setAddEmployee(!addEmployee)}
+              aria-controls="employeeCreation"
+              aria-expanded={addEmployee}>
+              {addEmployee ? (
+                <>
+                  <FaIcons.FaTimes className="mb-1" />
+                  &nbsp;&nbsp;Close
+                </>
+              ) : (
+                <>
+                  <FaIcons.FaUserCog className="mb-1" />
+                  &nbsp;&nbsp;Add Employee
+                </>
+              )}
+            </button>
             {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
               &nbsp;&nbsp;Search
