@@ -45,6 +45,7 @@ const perfil = () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const info = urlParams.get('info');
+    // @ts-ignore
     const idProfile = parseInt(info);
     console.log(info);
 

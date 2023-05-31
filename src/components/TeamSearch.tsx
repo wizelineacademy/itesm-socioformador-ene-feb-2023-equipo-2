@@ -5,17 +5,10 @@ import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 import TeamCreation from "@/components/TeamCreation";
 
-// const options = [
-//   { value: "juan-garcia", label: "Juan García" },
-//   { value: "ana-gonzalez", label: "Ana González" },
-//   { value: "jose-martinez", label: "José Martínez" },
-//   { value: "maria-hernandez", label: "María Hernández" },
-//   { value: "carlos-perez", label: "Carlos Pérez" },
-// ];
 
 import { useContext } from 'react';
-import { teamContext, teamListContext, TeamListContext } from "@/context/teamContext";
-import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
+import { teamContext, teamListContext } from "@/context/teamContext";
+import { employeeContext, employeeListContext } from "@/context/employeeContext";
 import { any } from "cypress/types/bluebird";
 import { idText } from "typescript";
 
@@ -23,6 +16,10 @@ import { idText } from "typescript";
 interface teamSelectionInterface {
   value: string,
   label: string,
+  employeeid: string,
+  employeename: string,
+  location: string,
+  idposition: string,
 }
 
 //Interface for employee
@@ -57,11 +54,8 @@ const TeamSearch = () => {
   const [teamList, setTeamList] = useState<teamSelectionInterface[] | null>(null);
 
   //Hook for employee data
-  const [employeesList, setEmployeesList] = useState<employeeSelectionInterface[]>([]);
+  const [employeesList, setEmployeesList] = useState<employeeSelectionInterface[] | null>(null);
   const [employeeName, setEmployeeName] = useState("");
-  const [teamName, setTeamName] = useState("");
-  const [role, setRole] = useState("");
-  const [department, setDepartment] = useState("");
 
   // React Hooks for managing component state for add new client
   const [collapse, setCollapse] = useState(false);
@@ -74,11 +68,11 @@ const TeamSearch = () => {
 
 
   useEffect(() => {
-    fetch(`${link}/get-teams?id=${name}`)
+    fetch(link + '/getTeamMembers')
       .then(res => res.json())
       .then(data => {
-        setTeamList(data.teams)
-        teamsListContext?.setSelectedTeamList(data.team);
+        setTeamList(data.teamMembers)
+        teamsListContext?.setSelectedTeamList(data.teamMembers);
       })
       .catch(error => console.log("Error ", error))
   }, [])
@@ -102,17 +96,6 @@ const TeamSearch = () => {
   useEffect(() => {
   }, [employeesContext?.setCurrentEmployee(employeeName)]);
 
-  //  const options = [
-  //    { value: "1", label: "one" },
-  //    { value: "2", label: "two" },
-  //  ];
-
-
-  // const options = [
-  //   { value: "1", label: "one" },
-  //   { value: "2", label: "two" },
-  // ];
-
   //Handle func for table
   const handleChangeSelect = (e : any | null) => {
     if (e === null) {
@@ -130,9 +113,6 @@ const TeamSearch = () => {
     } else {
       setEmployeeName(e.value);
       employeesContext?.setCurrentEmployee(e.value);
-      //console.log(employeesContext?.currentEmployee)
-      //console.log(employeesListContext?.selectedEmployee)
-      //console.log('\n\n\n\n\n\n\n\n\n' + employeesContext?.currentEmployee)
     }
   };
 

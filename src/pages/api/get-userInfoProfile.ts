@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 export default async function handler(req: any, res: any) {
     const { id } = req.body;
-    console.log("id destructured => ", id)
 
   try {
     const user = await prisma.employees.findUnique({

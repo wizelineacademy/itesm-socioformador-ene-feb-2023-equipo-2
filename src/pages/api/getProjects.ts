@@ -12,7 +12,6 @@ export default async function handler(req: any, res: any) {
     const response = {
       orders: projectSelectList,
     };
-    console.log(JSON.stringify(response));
     res.status(201).json(response);
   } catch (error) {
     console.error(error);

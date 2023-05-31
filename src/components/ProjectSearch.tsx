@@ -89,7 +89,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
 
   useEffect(() => {
     clientsContext?.setCurrentClient(String(client))
-    console.log(clientsContext?.currentClient)
+    //console.log(clientsContext?.currentClient)
   }, [client]);
 
   useEffect(() => {

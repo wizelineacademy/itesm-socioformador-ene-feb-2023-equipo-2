@@ -16,6 +16,7 @@ export function parseJsonStringProfile(string: any) {
     
     const replaceAccentedCharacters = (text: string): string => {
         const pattern = /[àáâãäåèéêëìíîïñòóôõöùúûüýÿ]/g;
+        // @ts-ignore
         return text.replace(pattern, (match) => replacements[match] || match);
     };
 

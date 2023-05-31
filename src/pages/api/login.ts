@@ -5,7 +5,6 @@ const prisma = new PrismaClient()
 
 export default async function handler(req: any, res: any) {
   const { email, password } = req.body;
-  console.log(req.body)
 
   try {
     const newUser = await prisma.employees.create({

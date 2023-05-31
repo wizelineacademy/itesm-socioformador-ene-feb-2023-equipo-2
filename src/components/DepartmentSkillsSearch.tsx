@@ -26,7 +26,7 @@ const DepartmentSkillsSearch = () => {
     //setSelectedDepartment(selectedOption);
     if (selectedDepartment) {
       selectedDepartment.setSelectedDepartment(selectedOption)
-      console.log(selectedOption);
+      //console.log(selectedOption);
     }
   };
 
@@ -40,7 +40,7 @@ const DepartmentSkillsSearch = () => {
     e === null ? setDepartment("") : setDepartment(e.value);
     if (selectedDepartment) {
       selectedDepartment.setSelectedDepartment(e)
-      console.log(e);
+      //console.log(e);
     }
   }
 
