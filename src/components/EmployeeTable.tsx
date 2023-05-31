@@ -7,6 +7,7 @@ import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
 
+
 import { useContext } from 'react'
 import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
 
@@ -31,8 +32,11 @@ const EmployeeTable = (props: CardProps) => {
   // const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
 
 
-  const handleEmployeeSeeInfo = () => {
-    alert("se va a redireccionar al perfil del usuario");
+  const handleEmployeeSeeInfo = (id: any) => {
+    //alert("se va a redireccionar al perfil del usuario");
+    const encodedInfo = encodeURIComponent(id);
+    window.location.href = `/profileInformation?info=${encodedInfo}`;
+    console.log(id);
   };
 
   const handleEmployeeDelete = () => {
@@ -143,7 +147,7 @@ const EmployeeTable = (props: CardProps) => {
           <Fragment>
             <FaIcons.FaInfoCircle
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-              onClick={() => handleEmployeeSeeInfo()}/>
+              onClick={() => handleEmployeeSeeInfo(row.value)}/>
           </Fragment>
         ),
         width: '50px',
