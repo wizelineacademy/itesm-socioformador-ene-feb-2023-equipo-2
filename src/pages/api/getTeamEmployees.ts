@@ -13,8 +13,9 @@ export default async function handler(req: any, res: any) {
       employees.location,  
       CAST(employees.idposition AS VARCHAR) AS idposition, 
       department.name AS departmentname,
+      CAST(teams.id AS VARCHAR) AS idteam,
       teams.name AS teamname,
-	  CAST(orders.id AS VARCHAR) AS idproject
+	    CAST(orders.id AS VARCHAR) AS idproject
     FROM employees
     INNER JOIN departmentemployees
         ON employees.id = departmentemployees.idemployee
@@ -25,12 +26,11 @@ export default async function handler(req: any, res: any) {
     INNER JOIN teams
         ON teamemployees.idteam = teams.id
     INNER JOIN orders
-          ON teams.id = orders.idteam
+        ON teams.id = orders.idteam
     `
     const response = {
       teamMembers: teamMembers,
     };
-    console.log(JSON.stringify(response));
     res.status(201).json(response);
   } catch (error) {
     console.error(error);

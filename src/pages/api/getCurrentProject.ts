@@ -28,8 +28,6 @@ export default async function handler(req: any, res: any) {
       orders: projectSelectList,
     };
     res.status(201).json(response);
-
-    console.log(projectSelectList.orderstartdate);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred." });

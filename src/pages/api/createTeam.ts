@@ -29,9 +29,6 @@ export default async function handler(req: any, res: any) {
       }
     });
 
-    console.log('teamName', teamName)
-    console.log('setSelectedEmployees', selectedValues)
-
     res.status(201).json(newTeam);
   } catch (error) {
     console.error(error);

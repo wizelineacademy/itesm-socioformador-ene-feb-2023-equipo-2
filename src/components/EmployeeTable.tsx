@@ -36,7 +36,7 @@ const EmployeeTable = (props: CardProps) => {
     //alert("se va a redireccionar al perfil del usuario");
     const encodedInfo = encodeURIComponent(id);
     window.location.href = `/profileInformation?info=${encodedInfo}`;
-    console.log(id);
+    //console.log(id);
   };
 
   const handleEmployeeDelete = () => {

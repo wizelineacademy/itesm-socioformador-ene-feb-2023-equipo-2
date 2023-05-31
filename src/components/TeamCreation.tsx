@@ -55,7 +55,7 @@ const TeamCreation = () => {
     fetch(link + "/createTeam", requestOptionsList)
       .then((response) => response.json())
       .then((data) => {
-        console.log('data', data)
+        //console.log('data', data)
       })
       .catch((error) => {
         console.log('Error ', error);

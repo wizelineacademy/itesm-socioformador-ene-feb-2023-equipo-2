@@ -29,6 +29,7 @@ interface projectTeamMembersInterface {
   location: string;
   idposition: string;
   departmentname: string;
+  idteam: string;
   teamname: string;
   idproject: string;
 }
@@ -37,12 +38,8 @@ const projects = () => {
   const hasMounted = useHasMounted();
 
   const router = useRouter();
-  const [selectedProjectOverview, setSelectedProjectOverview] = useState<
-    projectOverviewInterface[] | null
-  >(null);
-  const [projectTeamMembers, setProjectTeamMembers] = useState<
-    projectTeamMembersInterface[] | null
-  >(null);
+  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[]>();
+  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[]>();
   const [projectDescription, setProjectDescription] = useState("");
 
   let projectID = router.query.slug;
@@ -53,8 +50,7 @@ const projects = () => {
     fetch(link + "/getProjectOverview")
       .then((res) => res.json())
       .then((data) => {
-        console.log("orders");
-        console.log(data.orders[0].orderdesc);
+        //console.log("orders");
         setSelectedProjectOverview(data.orders);
         // setProjectDescription(data.orders[0].orderdesc)
       })
@@ -96,36 +92,14 @@ const projects = () => {
       location: members.location,
       idposition: members.idposition,
       departmentname: members.departmentname,
+      idteam: members.idteam,
       teamname: members.teamname,
       idproject: members.idproject,
     };
   });
 
-  let filteredProjectTeamMembersData = projectID
-    ? projectTeamMembersData?.filter(
-        (members) => members.idproject === projectID
-      )
-    : projectTeamMembersData;
-  console.log(projectTeamMembersData);
-
-  /*const description = filteredProjectOverviewData?.[0]?.orderdesc;
-  if (description) {
-    let filteredDescription = getParsedJson(description);
-    let finalJson = JSON.parse(filteredDescription);
-    setProjectDescription(finalJson);
-    console.log(finalJson);
-  }*/
-  /*else {
-    setProjectDescription
-  }*/
-  //console.log(filteredProjectOverviewData);
-
-  // function replaceWithBr(text: string | undefined) {
-  //   if (!text) return '';
-  //   const parsedText = JSON.parse(text);
-  //   const replacedText = parsedText.replace(/\n/g, "<br />");
-  //   return replacedText;
-  // }
+  let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter((members) => members.idproject === projectID) : projectTeamMembersData;
+//  console.log(projectTeamMembersData);
 
   function extractProjectDescription(text: string | undefined) {
     if (!text) return "";
@@ -247,16 +221,6 @@ const projects = () => {
     {
       cell: (row) => (
         <Fragment>
-          <TextBox
-            textBoxText={row.departmentname}
-            textBoxColorScheme={"backend"}
-          />
-        </Fragment>
-      ),
-    },
-    {
-      cell: (row) => (
-        <Fragment>
           <FaIcons.FaInfoCircle
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleEmployeeSeeInfo()}
@@ -278,28 +242,6 @@ const projects = () => {
     },
   ];
 
-  interface EmployeeDataRow {
-    id: number;
-    name: string;
-    idposition: 1 | 2;
-    location: string;
-    employeeAreaBadge: string;
-    employeeArea: string;
-  }
-
-  const projectData = {
-    id: "1",
-    name: "awesome project",
-    orderstatus: "pending",
-    orderdesc:
-      "Our project aims to create an e-commerce platform that allows customers to purchase products online. The platform must be user-friendly and easy to use, ensuring that the customers find the products they are willing to buy in an effortless way. This will be achieved by developing a website that contains a detailed product catalogue, searching options, and an intuitive checkout process.",
-    idclient: "1",
-    idteam: "1",
-    orderstartdate: "2023-05-6",
-    orderenddate: "2023-05-25",
-    erased: "false",
-  };
-
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   if (!hasMounted) {
@@ -318,7 +260,7 @@ const projects = () => {
                   {filteredProjectOverviewData?.[0]?.ordername}
                 </h3>
                 <h6 className="mt-auto">
-                  {filteredProjectOverviewData?.[0]?.orderstartdate} -{" "}
+                  {filteredProjectOverviewData?.[0]?.orderstartdate} - {" "}
                   {filteredProjectOverviewData?.[0]?.orderenddate}
                 </h6>
               </div>
