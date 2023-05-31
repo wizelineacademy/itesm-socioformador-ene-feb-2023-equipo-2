@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export default async function handler(req: any, res: any) {
   try {
 
-    const teamMembers = await prisma.$queryRaw`
+    const teamEmployees = await prisma.$queryRaw`
     SELECT 
       CAST(employees.id AS VARCHAR) AS id, 
       employees.name AS employeename, 
@@ -29,7 +29,7 @@ export default async function handler(req: any, res: any) {
         ON teams.id = orders.idteam
     `
     const response = {
-      teamMembers: teamMembers,
+      teamEmployees: teamEmployees,
     };
     res.status(201).json(response);
   } catch (error) {

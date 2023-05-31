@@ -21,9 +21,22 @@ const TeamTable = () => {
   const employeesContext = useContext(employeeContext);
   const employeesListContext = useContext(employeeListContext);
 
+  const [employeesList, setEmployeesList] = useState<teamSelectionInterface[] | null>(null);
+
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
   };
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    fetch(link + '/getTeamMembers')
+      .then(res => res.json())
+      .then(data => {
+        setEmployeesList(data.teamMembers)
+      })
+      .catch(error => console.log("Error ", error))
+  }, [])
 
   const customStyles = {
     rows: {
@@ -41,13 +54,13 @@ const TeamTable = () => {
 
   const columns: TableColumn<teamSelectionInterface>[] = [
     {
-      name: "Team Name",
-      selector: (row) => row.label,
+      name: "Member Name",
+      selector: (row) => row.employeename,
       sortable: true,
     },
     {
-      name: "Member Name",
-      selector: (row) => row.employeename,
+      name: "Team",
+      selector: (row) => row.label,
       sortable: true,
     },
     {
@@ -60,11 +73,21 @@ const TeamTable = () => {
         <Fragment>{row.idposition === '2' ? "admin" : ""}</Fragment>
       ),
     },
+    {
+      cell: (row) => (
+        <Fragment>
+          <FaIcons.FaTrash
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => handleEraseFromSystem()}
+          />
+        </Fragment>
+      ),
+      width: "50px",
+    },
   ];
 
-  let teams = teamsListContext?.selectedTeam;
   //let clients = clientsListContext?.selectedClient;
-  const data = teams?.map((team) => {
+  const data = employeesList?.map((team) => {
     return {
       value: team.value,
       label: team.label,
@@ -74,22 +97,19 @@ const TeamTable = () => {
       idposition: team.idposition,
     }
   })
-  console.log('data', data)
 
   let selectedTeamID = teamsContext?.currentTeam;
   let selectedEmployeeID = employeesContext?.currentEmployee;
   
   // @ts-ignore
-  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedTeamID != "undefined" && selectedEmployeeID != "undefined" && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID && team.employeeid === selectedEmployeeID.toString()) :
+  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedTeamID != "undefined" && selectedEmployeeID != "undefined" && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID.toString() && team.employeeid === selectedEmployeeID.toString()) :
                         // @ts-ignore
-                        selectedTeamID != "" && selectedTeamID != "undefined" && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID) :
+                        selectedTeamID != "" && selectedTeamID != "undefined" && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID.toString()) :
                         // @ts-ignore
                         selectedEmployeeID != "" && selectedEmployeeID != "undefined" && selectedEmployeeID != "0" ? data?.filter(team => team.employeeid === selectedEmployeeID.toString()) :
                         // @ts-ignore                        
                         data;
-  console.log('filteredTeamData', filteredTeamData)
-  console.log('selectedTeamID', selectedTeamID)
-  console.log('selectedEmployeeID', selectedEmployeeID)
+
   return (
     <>
       <div className="container my-4">
