@@ -30,9 +30,8 @@ const perfil = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
-  const [userData, setUserData] = useState<perfilInterface>()
-
-
+  const [userData, setUserData] = useState<perfilInterface>();
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   const { user, error, isLoading } = useUser();
 
@@ -52,21 +51,38 @@ const perfil = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Información de usuario obtneida correcatmente");
-        setUserData(data);
+        console.log("Data received:", data);
+        const parsedData = parseJsonString(data.infoabout);
+        console.log("Info parseada", parsedData);
+        setUserData(parsedData);
+        setIsLoadingData(false);
+
       })
-      .catch((error) => console.error("Error al obtener informacion de usuario"));
+      .catch((error) => {
+        console.error("Error al obtener informacion de usuario", error);
+        setIsLoadingData(false);
+      });
+
   }, [])
 
 
   if (userData !== undefined) {
     // @ts-ignore
-    console.log("user Data => ", parseJsonString(userData?.infoabout))
-    setUserData(parseJsonString(userData?.infoabout))
+    //console.log("user Data => ", parseJsonString(userData?.infoabout))
+    //setUserData(parseJsonString(userData.infoabout));
   }
 
-  if (!hasMounted) {
-    return null;
+  if (!hasMounted || isLoading || !userData) {
+    // Check if data is still loading or userData is undefined
+    return null; // Or render a loading indicator
   }
+
+  if (isLoadingData) {
+    // Handle loading state
+    return <div>Loading...</div>;
+  }
+
+  console.log(userData)
 
   return (
     <>
@@ -84,9 +100,9 @@ const perfil = () => {
                   className="image-circle" />
               </div>
               <div className="col-5">
-                <h3 className="ml-5">{userData?.name}</h3>
-                <h5 className="ml-5">Intern</h5>
-                <h6 className="ml-5">Guadalajara</h6>
+                <h3 className="ml-5">{userData?.name ?? "No name available"}</h3>
+                <h5 className="ml-5">{userData?.position ?? "No position available"}</h5>
+                <h6 className="ml-5">{userData?.location ?? "No location available"}</h6>
                 <h6 className="ml-5">correo@gmail.com</h6>
                 <Link href="/generar-perfil" className="a-navbar">
                   <button className="btn btn-primary w-10 mt-auto">
@@ -98,9 +114,44 @@ const perfil = () => {
             </div>
           </div>
         </div>
-        <ProfileTextBox boxTitle="About Me" boxText="gysdfwdmfiguhidgr" />
-        <ProfileTextBox boxTitle="Past Work" boxText="gysdfwdmfiguhidgr" />
-        <ProfileListBox boxTitle="Skills" />
+        {/* Section of showing the Experience*/}
+        {userData?.Experience.map((experience, index) => (
+          <div key={index} className="row">
+            <div className="container bg-light border p-4">
+              <div className="d-flex flex-row">
+                <div className="col-3">
+                  <h4>Past Work</h4>
+                </div>
+                <div className="col-5">
+                  <h5>Experience #{index + 1}:</h5>
+                  <p>Job Title: {experience.job_title}</p>
+                  <p>Company: {experience.job_company}</p>
+                  <p>Duration: {experience.job_duration}</p>
+                  <p>Location: {experience.job_location}</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Display skills */}
+        <div className="row">
+          <div className="container bg-light border p-4">
+            <div className="d-flex flex-row">
+              <div className="col-3">
+                <h4>Skills</h4>
+              </div>
+              <div className="col-5">
+                {userData?.Skills.map((skill, index) => (
+                  <p key={index}>{skill}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+
 
         {/*<div className="col-3">
             <div className="card align-items-center">
