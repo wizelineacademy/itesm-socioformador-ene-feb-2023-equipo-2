@@ -17,6 +17,14 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
+import {
+  Navbar,
+  Nav,
+  Button,
+  Modal,
+  Container,
+  NavDropdown,
+} from "react-bootstrap";
 
 import { useHasMounted } from "@/components/useHasMounted";
 var AuthenticationClient = require('auth0').AuthenticationClient;
@@ -31,6 +39,7 @@ const EmployeeCreation = () => {
   const [role, setRole] = useState("");
   const [department, setDepartment] = useState("");
   const [token, setToken] = useState("")
+  const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
 
   function generateRandomPassword(): string {
     const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
@@ -55,20 +64,20 @@ const EmployeeCreation = () => {
   const password = generateRandomPassword()
   const userId = generateRandomUserId()
 
-  console.log("token => ", `Bearer ${token}`)
-
   const handleSubmit = async (event: any) => {
 
+    // credentials to generate the auth0 token necessary to create new users
     var auth0 = new AuthenticationClient({
       domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
       clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
       clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
     });
 
+    // method to geerate the auth0 token necessary to create new users
     auth0.clientCredentialsGrant(
       {
         audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
-        scope: 'create:users read:users',
+        scope: 'create:users read:users update:users read:roles',
       },
       function (err: any, response: any) {
         if (err) {
@@ -82,7 +91,8 @@ const EmployeeCreation = () => {
       }
     );
 
-    const requestOptionsAuth0 = {
+    //method to create new users in the auth0 app
+    const requestOptionsAuth0NewUser = {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -100,40 +110,47 @@ const EmployeeCreation = () => {
       )
     };
 
-    fetch('https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users', requestOptionsAuth0)
+    fetch('https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users', requestOptionsAuth0NewUser)
       .then(response => response.json())
-      .then(data => console.log("Usuario guardado correctamente en Auth0"))
-      .catch(error => console.error("Error al guardar usuario en Auth0"));
+      .then(data => {
+        console.log("Usuario guardado correctamente en Auth0")
 
-    //fetch to create users in db
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(
-        {
-          email: email,
-          userId: userId
-        }
-      )
-    };
+        //method to create users in db (only executed if auth0 registration is correct)
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(
+            {
+              email: email,
+              userId: userId,
+              position: role,
+              name: name
+            }
+          )
+        };
 
-    fetch('http://localhost:3000/api/createUsers', requestOptions)
-      .then(response => response.json())
-      .then(data => console.log("Usuario guardado correctamente"))
-      .catch(error => console.error("Error al guardar usuario"));
+        fetch('http://localhost:3000/api/createUsers', requestOptions)
+          .then(response => response.json())
+          .then(data => console.log("Usuario guardado correctamente"))
+          .catch(error => console.error("Error al guardar usuario"));
+
+        setUserRegistrationErrorModal(true)
 
 
-    event.preventDefault();
+        event.preventDefault();
+      })
+      .catch(error => {
+        console.error("Error al guardar usuario en Auth0")
+        setUserRegistrationErrorModal(true)
+      });
+
+
   };
 
   const roleOptions = [
-    { value: "monterrey", label: "Monterrey" },
-    { value: "saltillo", label: "Saltillo" },
-    { value: "reynosa", label: "Reynosa" },
-    { value: "victoria", label: "Ciudad Victoria" },
-    { value: "lapaz", label: "La Paz" },
-    { value: "guadalajara", label: "Guadalajara" },
-    { value: "queretaro", label: "Queretaro" },
+    { value: 1, label: "Administrador" },
+    { value: 2, label: "Empleado General" },
+    { value: 3, label: "Cliente" }
   ];
 
   const departmentOptions = [
@@ -149,6 +166,16 @@ const EmployeeCreation = () => {
   if (!hasMounted) {
     return null;
   }
+
+  const handleRoleSelect = (e: any | null) => {
+    if (e === null) {
+      setName("");
+    } else {
+      setRole(e.value);
+    }
+  };
+
+  console.log("role", role)
 
   return (
     <>
@@ -183,7 +210,12 @@ const EmployeeCreation = () => {
             <label htmlFor="role" className="form-label">
               Role:
             </label>
-            <Select isClearable options={roleOptions} />
+            <Select
+              isClearable
+              value={role}
+              onChange={handleRoleSelect}
+              options={roleOptions}
+            />
           </div>
         </div>
         <div className="row mt-3">
@@ -197,6 +229,27 @@ const EmployeeCreation = () => {
           </div>
         </div>
       </div>
+      <Modal
+        show={
+          userRegistrationErrorModal ? true : false
+        }
+        backdrop="static"
+      >
+        <Modal.Header>
+          <Modal.Title>Error al registrar usuario</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Favor de volver a intententar el registro</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={(e) => setUserRegistrationErrorModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={(e) => setUserRegistrationErrorModal(false)}>
+            Continue
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
