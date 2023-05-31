@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
-import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table-component";
+import DataTable, { TableColumn } from "react-data-table-component";
 
 import { teamContext, teamListContext } from "@/context/teamContext";
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
@@ -70,8 +70,9 @@ const TeamTable = () => {
     },
     {
       cell: (row) => (
-        <Fragment>{row.idposition === '2' ? "admin" : ""}</Fragment>
+        <Fragment>{row.idposition === '1' ? "admin" : ""}</Fragment>
       ),
+      width: "150px",
     },
     {
       cell: (row) => (
@@ -114,6 +115,7 @@ const TeamTable = () => {
     <>
       <div className="container my-4">
         <DataTable
+          title='Members'
           // @ts-ignore
           columns={columns}
           // @ts-ignore
