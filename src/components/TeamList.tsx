@@ -1,4 +1,5 @@
 import React, { Fragment, useContext, useState, useEffect } from "react";
+import { Collapse } from "react-bootstrap";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table-component";
 
@@ -21,12 +22,36 @@ type teamSelectionInterface = {
 }
 
 const TeamList = () => {
+
+  var isAdmin:Boolean = true;
+
   const teamsContext = useContext(teamContext);
   const teamsListContext = useContext(teamListContext);
   const employeesContext = useContext(employeeContext);
   const employeesListContext = useContext(employeeListContext);
+  const [collapse, setCollapse] = useState(false);
+  const [name, setName] = useState("");
+  const [changeTeamId, setChangeTeamId] = useState("");
 
   const [employeesList, setEmployeesList] = useState<teamSelectionInterface[] | null>(null);
+
+  const handleChangeTeamName = () => {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({  id: changeTeamId, 
+                              name: name }),
+    };
+
+    fetch(link + "/updateTeamName", requestOptions)
+      .then((response) => response.json())
+      .then((editedMovie) => {})
+      .catch(error => console.log("Error ", error));
+
+    setCollapse(!collapse);
+    setChangeTeamId('');
+    setName('');
+  };
 
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
@@ -66,6 +91,21 @@ const TeamList = () => {
     {
       cell: (row) => (
         <Fragment>
+          <FaIcons.FaPencilAlt
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => {collapse && changeTeamId === row.value ? setCollapse(!collapse) : 
+                              collapse && changeTeamId !== row.value ? setCollapse(collapse) : 
+                              setCollapse(!collapse); 
+                            setChangeTeamId(row.value); 
+                            setName(row.label);} }
+          />
+        </Fragment>
+      ),
+      width: "50px",
+    },
+    {
+      cell: (row) => (
+        <Fragment>
           <FaIcons.FaTrash
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleEraseFromSystem()}
@@ -92,7 +132,26 @@ const TeamList = () => {
   return (
     <>
       <div className="container my-4">
+          <Collapse in={collapse}>
+            <div id="collapseProjectCreation" className="my-3">
+              <label htmlFor="name" className="form-label">
+                Name:
+              </label>
+              <input
+                className="form-control"
+                type="name"
+                id="name"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                required />
+              <button className="btn btn-primary w-100 mt-2" onClick={handleChangeTeamName}>
+                <FaIcons.FaPlus className="mb-1" />
+                &nbsp;&nbsp;Add
+              </button>
+            </div>
+          </Collapse>
         <DataTable
+          title='Teams'
           // @ts-ignore
           columns={columns}
           // @ts-ignore

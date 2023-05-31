@@ -38,11 +38,11 @@ const teams = () => {
               <TeamSearch />
               <div className="container">
                 <div className="d-flex flex-row">
-                  <div className='col-2'>
+                  <div className='col-3'>
                     <TeamList />
                   </div>
                   <div className='col-1'></div>
-                  <div className='col-9'>
+                  <div className='col-8'>
                     <TeamTable />
                   </div>
                 </div>
