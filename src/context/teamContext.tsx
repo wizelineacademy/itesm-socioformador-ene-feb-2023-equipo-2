@@ -28,10 +28,6 @@ export const TeamContext = ({children}: currentTeamContextProviderProps) => {
 type teamSelectionInterface = {
   value: string;
   label: string;
-  employeeid: string;
-  employeename: string;
-  location: string;
-  idposition: string;
 }
 
 type teamOptionsTypes = {

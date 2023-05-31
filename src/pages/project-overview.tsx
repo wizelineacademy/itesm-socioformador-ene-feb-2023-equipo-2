@@ -76,31 +76,6 @@ const projects = () => {
     ? projectOverviewData?.filter((project) => project.id === projectID)
     : projectOverviewData;
 
-  useEffect(() => {
-    fetch(link + "/getTeamEmployees")
-      .then((res) => res.json())
-      .then((data) => {
-        setProjectTeamMembers(data.teamMembers);
-      })
-      .catch((error) => console.log("Error ", error));
-  }, []);
-
-  const projectTeamMembersData = projectTeamMembers?.map((members) => {
-    return {
-      id: members.id,
-      employeename: members.employeename,
-      location: members.location,
-      idposition: members.idposition,
-      departmentname: members.departmentname,
-      idteam: members.idteam,
-      teamname: members.teamname,
-      idproject: members.idproject,
-    };
-  });
-
-  let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter((members) => members.idproject === projectID) : projectTeamMembersData;
-//  console.log(projectTeamMembersData);
-
   function extractProjectDescription(text: string | undefined) {
     if (!text) return "";
     const parsedText = JSON.parse(text);
@@ -201,11 +176,6 @@ const projects = () => {
     },
     {
       name: "Name",
-      selector: (row) => row.id,
-      sortable: true,
-    },
-    {
-      name: "Name",
       selector: (row) => row.employeename,
       sortable: true,
     },
@@ -242,6 +212,48 @@ const projects = () => {
     },
   ];
 
+  const missingEmployees = [
+    {
+      id: '',
+      employeename: 'No team members',
+      location: '',
+      idposition: '',
+      departmentname: '',
+      idteam: '',
+      teamname: '',
+      idproject: '',
+    },
+  ]
+
+  useEffect(() => {
+    fetch(link + "/getTeamEmployees")
+      .then((res) => res.json())
+      .then((data) => {
+        setProjectTeamMembers(data.teamEmployees);
+      })
+      .catch((error) => console.log("Error ", error));
+  }, []);
+
+  const projectTeamMembersData = projectTeamMembers?.map((members) => {
+    console.log('members.idproject', members.idproject)
+    return {
+      id: members.id,
+      employeename: members.employeename,
+      location: members.location,
+      idposition: members.idposition,
+      departmentname: members.departmentname,
+      idteam: members.idteam,
+      teamname: members.teamname,
+      idproject: members.idproject,
+    };
+  });
+
+  let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter((members) => members.idproject === projectID) : projectTeamMembersData;
+
+  if (!filteredProjectTeamMembersData) {
+    filteredProjectTeamMembersData = missingEmployees;
+  }
+
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   if (!hasMounted) {
@@ -271,7 +283,7 @@ const projects = () => {
                   }}
                 />
               </h6>
-              <h5 className="ml-5 mt-4">
+              <h5 className="ml-5 mt-1">
                 {filteredProjectOverviewData?.[0]?.clientname}
               </h5>
               <h6 className="ml-5">

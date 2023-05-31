@@ -16,10 +16,6 @@ import { idText } from "typescript";
 interface teamSelectionInterface {
   value: string,
   label: string,
-  employeeid: string,
-  employeename: string,
-  location: string,
-  idposition: string,
 }
 
 //Interface for employee
@@ -64,15 +60,14 @@ const TeamSearch = () => {
   
   
   let link = process.env.NEXT_PUBLIC_API_URL;
-  let employees = employeesListContext?.selectedEmployee;
 
 
   useEffect(() => {
-    fetch(link + '/getTeamMembers')
+    fetch(link + '/get-teams')
       .then(res => res.json())
       .then(data => {
-        setTeamList(data.teamMembers)
-        teamsListContext?.setSelectedTeamList(data.teamMembers);
+        setTeamList(data.teams)
+        teamsListContext?.setSelectedTeamList(data.teams);
       })
       .catch(error => console.log("Error ", error))
   }, [])

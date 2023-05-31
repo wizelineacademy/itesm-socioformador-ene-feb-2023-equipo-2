@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Menu from "@/components/Menu";
 
 import TeamSearch from "@/components/TeamSearch";
-import TeamCreation from "@/components/TeamCreation";
+import TeamList from "@/components/TeamList";
 import TeamTable from "@/components/TeamTable";
 import { useHasMounted } from "@/components/useHasMounted";
 
@@ -36,36 +36,17 @@ const teams = () => {
                 }
               />
               <TeamSearch />
-              {/* {isAdmin ? <Container className="mt-3">
-                <Row>
-                  <Col className="d-flex flex-row-reverse">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => setCollapse(!collapse)}
-                      aria-controls="collapseProjectCreation"
-                      aria-expanded={collapse}
-                    >
-                      {collapse ? (
-                        <>
-                          <FaIcons.FaTimes className="mb-1" />
-                          &nbsp;&nbsp;Close
-                        </>
-                      ) : (
-                        <>
-                          <FaIcons.FaUsers className="mb-1" />
-                          &nbsp;&nbsp;Add Team
-                        </>
-                      )}
-                    </button>
-                  </Col>
-                </Row>
-              </Container> : <div></div>}
-              {isAdmin ? <Collapse in={collapse}>
-                <div id="collapseProjectCreation" className="my-3">
-                  <TeamCreation />
+              <div className="container">
+                <div className="d-flex flex-row">
+                  <div className='col-2'>
+                    <TeamList />
+                  </div>
+                  <div className='col-1'></div>
+                  <div className='col-9'>
+                    <TeamTable />
+                  </div>
                 </div>
-              </Collapse> : <div></div>} */}
-              <TeamTable />
+              </div>
             </EmployeeListContext>
           </EmployeeContext>
         </TeamStatusContext>
