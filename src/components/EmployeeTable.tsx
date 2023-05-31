@@ -105,42 +105,52 @@ const EmployeeTable = (props: CardProps) => {
         name: 'Name',
         selector: row => row.label,
         sortable: true,
+        width: '110px',
       },
       {
         name: 'LinkedIn Link',
         selector: row => row.linkedinlink,
+        //width: '200px',
       },
       {
         name: 'CV File',
         selector: row => row.cvfile,
+        width: '100px',
       },
       {
         name: 'Profile Image',
         selector: row => row.profileimg,
+        width: '100px',
       },
       {
         name: 'Roadmap Information',
         selector: row => row.inforoadmap,
+        width: '100px',
       },
       {
         name: 'Email',
         selector: row => row.email,
+        width: '150px',
       },
-      {
+      /*{
         name: 'Password',
         selector: row => row.password,
-      },
+        width: '100px',
+      },*/
       {
         name: 'Location',
         selector: row => row.location,
+        width: '150px',
       },
       {
         name: 'About',
         selector: row => row.infoabout,
+        width: '100px',
       },
       {
         name: 'Status',
         selector: row => String(row.status),
+        width: '100px',
       },
       {
         cell: (row) => (
