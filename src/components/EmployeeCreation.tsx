@@ -50,61 +50,35 @@ const EmployeeCreation = () => {
 
     let userIdInt = +userId
     return userIdInt;
-}
+  }
 
-const password = generateRandomPassword()
-const userId = generateRandomUserId()
+  const password = generateRandomPassword()
+  const userId = generateRandomUserId()
 
-console.log("token => ", token)
+  console.log("token => ", `Bearer ${token}`)
 
   const handleSubmit = async (event: any) => {
-
-    //fetch to generate the Auth0 JWT
-    // const requestOptionsJWT = {
-    //   method: 'POST',
-    //   url: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/oauth/token',
-    //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    //   body: new URLSearchParams({
-    //     grant_type: 'client_credentials',
-    //     client_id: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
-    //     client_secret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp-vYsqIlPK',
-    //     audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/'
-    //   }),
-    //   mode: 'no-cors' 
-    // };
-    
-    // fetch(requestOptionsJWT.url, requestOptionsJWT)
-    // .then(response => {
-    //   if (response.ok) {
-    //     console.log('La solicitud se realizó correctamente (sin acceso a los datos de respuesta)');
-    //   } else {
-    //     console.log('La solicitud no se completó correctamente (sin acceso a los datos de respuesta)');
-    //   }
-    // })
-    // .catch(error => console.error(error));
-
-    //fetch to create users in Auth0
 
     var auth0 = new AuthenticationClient({
       domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
       clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
       clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
     });
-    
+
     auth0.clientCredentialsGrant(
       {
         audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
-        scope: 'create:users read:users	',
+        scope: 'create:users read:users',
       },
       function (err: any, response: any) {
         if (err) {
           console.error(err)
           console.error(response)
-        }else{
+        } else {
           console.log(response?.access_token);
           setToken(response?.access_token)
         }
-    
+
       }
     );
 
@@ -120,12 +94,13 @@ console.log("token => ", token)
           user_id: userId.toString(),
           connection: "Username-Password-Authentication",
           password: generateRandomPassword(),
-          email_verified: true
+          email_verified: true,
+          name: name
         }
       )
     };
 
-      fetch('https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users', requestOptionsAuth0)
+    fetch('https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users', requestOptionsAuth0)
       .then(response => response.json())
       .then(data => console.log("Usuario guardado correctamente en Auth0"))
       .catch(error => console.error("Error al guardar usuario en Auth0"));
@@ -133,7 +108,7 @@ console.log("token => ", token)
     //fetch to create users in db
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
           email: email,
@@ -142,13 +117,13 @@ console.log("token => ", token)
       )
     };
 
-      fetch('http://localhost:3000/api/createUsers', requestOptions)
+    fetch('http://localhost:3000/api/createUsers', requestOptions)
       .then(response => response.json())
       .then(data => console.log("Usuario guardado correctamente"))
       .catch(error => console.error("Error al guardar usuario"));
-    
-  
-    event.preventDefault(); 
+
+
+    event.preventDefault();
   };
 
   const roleOptions = [
