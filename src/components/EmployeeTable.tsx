@@ -7,6 +7,7 @@ import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
 
+
 import { useContext } from 'react'
 import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
 
@@ -31,8 +32,11 @@ const EmployeeTable = (props: CardProps) => {
   // const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
 
 
-  const handleEmployeeSeeInfo = () => {
-    alert("se va a redireccionar al perfil del usuario");
+  const handleEmployeeSeeInfo = (id: any) => {
+    //alert("se va a redireccionar al perfil del usuario");
+    const encodedInfo = encodeURIComponent(id);
+    window.location.href = `/profileInformation?info=${encodedInfo}`;
+    //console.log(id);
   };
 
   const handleEmployeeDelete = () => {
@@ -101,64 +105,74 @@ const EmployeeTable = (props: CardProps) => {
         name: 'Name',
         selector: row => row.label,
         sortable: true,
+        width: '110px',
       },
       {
         name: 'LinkedIn Link',
         selector: row => row.linkedinlink,
+        //width: '200px',
       },
       {
         name: 'CV File',
         selector: row => row.cvfile,
+        width: '100px',
       },
       {
         name: 'Profile Image',
         selector: row => row.profileimg,
+        width: '100px',
       },
       {
         name: 'Roadmap Information',
         selector: row => row.inforoadmap,
+        width: '100px',
       },
       {
         name: 'Email',
         selector: row => row.email,
+        width: '150px',
       },
-      {
+      /*{
         name: 'Password',
         selector: row => row.password,
-      },
+        width: '100px',
+      },*/
       {
         name: 'Location',
         selector: row => row.location,
+        width: '150px',
       },
       {
         name: 'About',
         selector: row => row.infoabout,
+        width: '100px',
       },
       {
         name: 'Status',
         selector: row => String(row.status),
+        width: '100px',
       },
       {
         cell: (row) => (
           <Fragment>
             <FaIcons.FaInfoCircle
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-              onClick={() => handleEmployeeSeeInfo()}/>
+              onClick={() => handleEmployeeSeeInfo(row.value)}/>
           </Fragment>
         ),
         width: '50px',
       },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaTrash
-                style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                onClick={() => handleEmployeeDelete()}/>
-          </Fragment>
-        ),
-        omit: hideTrashCan,
-        width: '50px',
-      },
+      // {
+      //   cell: (row) => (
+      //     <Fragment>
+      //       <FaIcons.FaTrash
+      //           style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
+      //           onClick={() => handleEmployeeDelete()}/>
+      //     </Fragment>
+      //   ),
+      //   omit: hideTrashCan,
+      //   width: '50px',
+      // },
       {
         cell: (row) => (
           <Fragment>

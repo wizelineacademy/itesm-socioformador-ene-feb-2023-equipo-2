@@ -39,12 +39,21 @@ const perfil = () => {
   const idUser = getAuth0Id(user?.sub)
   console.log(idUser)
 
+  
+
   useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const info = urlParams.get('info');
+    // @ts-ignore
+    const idProfile = parseInt(info);
+    console.log(info);
+
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id: 29518,
+        id: idProfile,
       }),
     };
 
@@ -105,12 +114,6 @@ const perfil = () => {
                 <h5 className="ml-5">{userData?.position ?? "No position available"}</h5>
                 <h6 className="ml-5">{userData?.location ?? "No location available"}</h6>
                 <h6 className="ml-5">correo@gmail.com</h6>
-                <Link href="/generar-perfil" className="a-navbar">
-                  <button className="btn btn-primary w-10 mt-auto">
-                    <FaIcons.FaUserAlt className="mb-1" />
-                    &nbsp;&nbsp;Editar perfíl
-                  </button>
-                </Link>
               </div>
             </div>
           </div>

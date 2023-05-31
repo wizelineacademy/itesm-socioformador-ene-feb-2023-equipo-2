@@ -14,7 +14,6 @@ export default async function handler(req: any, res: any) {
     const idclient_int = parseInt(JSON.stringify(idclient));
     const name_string = name;
     
-    console.log(req.body)
 
   try {
     const newProject = await prisma.orders.create({

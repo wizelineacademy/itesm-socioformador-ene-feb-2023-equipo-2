@@ -89,8 +89,8 @@ const EmployeeSearch = () => {
     } else {
       setEmployeeName(e.value);
       employeesContext?.setCurrentEmployee(e.value);
-      console.log(employeesContext?.currentEmployee)
-      console.log(employeesListContext?.selectedEmployee)
+      //console.log(employeesContext?.currentEmployee)
+      //console.log(employeesListContext?.selectedEmployee)
     }
   };
 

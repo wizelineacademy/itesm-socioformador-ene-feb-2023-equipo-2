@@ -28,7 +28,6 @@ export default async function handler(req: any, res: any) {
       orders: orders,
     };
 
-    console.log(JSON.stringify(response));
     res.status(201).json(response);
   } catch (error) {
     console.error(error);

@@ -96,17 +96,17 @@ const ClientCard = () => {
       ),
       width: "50px",
     },
-    {
-      cell: (row) => (
-        <Fragment>
-          <FaIcons.FaTrash
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleClientEraseFromSystem()}
-          />
-        </Fragment>
-      ),
-      width: "50px",
-    },
+    // {
+    //   cell: (row) => (
+    //     <Fragment>
+    //       <FaIcons.FaTrash
+    //         style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+    //         onClick={() => handleClientEraseFromSystem()}
+    //       />
+    //     </Fragment>
+    //   ),
+    //   width: "50px",
+    // },
   ];
 
   const data = clients?.map((client) => {
