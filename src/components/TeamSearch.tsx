@@ -154,26 +154,28 @@ const TeamSearch = () => {
           </div>
           <div className="col-md-2">
             <label className="form-label">&nbsp;</label>
-            {isAdmin ? <Container className="mt">
-              <button
-                className="btn btn-primary w-100"
-                onClick={() => setCollapse(!collapse)}
-                aria-controls="collapseProjectCreation"
-                aria-expanded={collapse}
-              >
-                {collapse ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaUsers className="mb-1" />
-                  &nbsp;&nbsp;Add Team
-                </>
-              )}
-            </button>
-          </Container> : <div></div>}
+            {isAdmin ? 
+              <Container className="mt">
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={() => setCollapse(!collapse)}
+                  aria-controls="collapseProjectCreation"
+                  aria-expanded={collapse}
+                >
+                  {collapse ? (
+                  <>
+                    <FaIcons.FaTimes className="mb-1" />
+                    &nbsp;&nbsp;Close
+                  </>
+                ) : (
+                  <>
+                    <FaIcons.FaUsers className="mb-1" />
+                    &nbsp;&nbsp;Add Team
+                  </>
+                )}
+                </button>
+              </Container> : <div></div>
+            }
             {/* Botón anteriormente ejecutado previo al call */}
             {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
@@ -181,11 +183,12 @@ const TeamSearch = () => {
             </button> */}
           </div>
           {isAdmin ? 
-          <Collapse in={collapse}>
-            <div id="collapseProjectCreation" className="my-3">
-              <TeamCreation />
-            </div>
-          </Collapse> : <div></div>}
+            <Collapse in={collapse}>
+              <div id="collapseProjectCreation" className="my-3">
+                <TeamCreation setCollapse={setCollapse}/>
+              </div>
+            </Collapse> : <div></div>
+          }
         </div>
       </div>
     </>

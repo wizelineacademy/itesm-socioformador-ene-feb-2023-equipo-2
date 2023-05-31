@@ -146,7 +146,7 @@ const TeamList = () => {
                 required />
               <button className="btn btn-primary w-100 mt-2" onClick={handleChangeTeamName}>
                 <FaIcons.FaPlus className="mb-1" />
-                &nbsp;&nbsp;Add
+                &nbsp;&nbsp;Update
               </button>
             </div>
           </Collapse>
