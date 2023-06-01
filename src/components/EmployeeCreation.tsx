@@ -1,3 +1,5 @@
+
+
 // TODO:
 
 // The presentation of the user management features has not been decided yet.
@@ -16,6 +18,7 @@
 
 import React, { useState } from "react";
 import Select from "react-select";
+import { GroupBase } from 'react-select';
 import * as FaIcons from "react-icons/fa";
 import {
   Navbar,
@@ -143,14 +146,12 @@ const EmployeeCreation = () => {
         console.error("Error al guardar usuario en Auth0")
         setUserRegistrationErrorModal(true)
       });
-
-
   };
 
   const roleOptions = [
-    { value: 1, label: "Administrador" },
-    { value: 2, label: "Empleado General" },
-    { value: 3, label: "Cliente" }
+    { value: "1", label: "Administrador" },
+    { value: "2", label: "Empleado General" },
+    { value: "3", label: "Cliente" }
   ];
 
   const departmentOptions = [
@@ -214,7 +215,7 @@ const EmployeeCreation = () => {
               isClearable
               value={role}
               onChange={handleRoleSelect}
-              // ts-ignore
+              // @ts-ignore
               options={roleOptions}
             />
           </div>
