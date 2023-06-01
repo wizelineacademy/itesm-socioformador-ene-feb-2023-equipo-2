@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Collapse } from "react-bootstrap";
 import * as FaIcons from "react-icons/fa";
 import Menu from "@/components/Menu";
@@ -7,13 +7,28 @@ import DepartmentCreation from "../components/DepartmentCreation";
 import SkillsCreation from "@/components/SkillsCreation";
 import DepartmentTable from "../components/DepartmentTable";
 import { useHasMounted } from "@/components/useHasMounted";
-
 import { DepartmentContextProvider } from "@/context/departmentContext";
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const department = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
+
+  const router = useRouter();
+  const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
 
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
@@ -24,57 +39,61 @@ const department = () => {
   }
 
   return (
-    <DepartmentContextProvider>
-      <Menu
-        titulo="Department"
-        descripcion="In order to establish a connection between skills and departments, it is necessary for them to be directly linked. Create a department to be later linked to various skills"
-      />
-      <DepartmentSkillsSearch />
-      <Container className="mt-3">
-        <Row>
-          <div className="d-flex flex-row-reverse">
-            <div>
-              <button
-                className="btn btn-primary"
-                onClick={() => setCollapse(!collapse)}
-                aria-controls="collapseDepartmentCreation"
-                aria-expanded={collapse}
-              >
-                {collapse ? (
-                  <>
-                    <FaIcons.FaTimes className="mb-1" />
-                    &nbsp;&nbsp;Close
-                  </>
-                ) : (
-                  <>
-                    <FaIcons.FaClipboardList className="mb-1" />
-                    &nbsp;&nbsp;Add Department
-                  </>
-                )}
-              </button>
+    user === undefined ? <div>
+      <h1>Loading...</h1>
+    </div>
+      :
+      <DepartmentContextProvider>
+        <Menu
+          titulo="Department"
+          descripcion="In order to establish a connection between skills and departments, it is necessary for them to be directly linked. Create a department to be later linked to various skills"
+        />
+        <DepartmentSkillsSearch />
+        <Container className="mt-3">
+          <Row>
+            <div className="d-flex flex-row-reverse">
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setCollapse(!collapse)}
+                  aria-controls="collapseDepartmentCreation"
+                  aria-expanded={collapse}
+                >
+                  {collapse ? (
+                    <>
+                      <FaIcons.FaTimes className="mb-1" />
+                      &nbsp;&nbsp;Close
+                    </>
+                  ) : (
+                    <>
+                      <FaIcons.FaClipboardList className="mb-1" />
+                      &nbsp;&nbsp;Add Department
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="me-5">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setCollapseSkills(!collapseSkills)}
+                  aria-controls="collapseSkillsCreation"
+                  aria-expanded={collapseSkills}
+                >
+                  {collapseSkills ? (
+                    <>
+                      <FaIcons.FaTimes className="mb-1" />
+                      &nbsp;&nbsp;Close
+                    </>
+                  ) : (
+                    <>
+                      <FaIcons.FaClipboardList className="mb-1" />
+                      &nbsp;&nbsp;Add Skill
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="me-5">
-              <button
-                className="btn btn-primary"
-                onClick={() => setCollapseSkills(!collapseSkills)}
-                aria-controls="collapseSkillsCreation"
-                aria-expanded={collapseSkills}
-              >
-                {collapseSkills ? (
-                  <>
-                    <FaIcons.FaTimes className="mb-1" />
-                    &nbsp;&nbsp;Close
-                  </>
-                ) : (
-                  <>
-                    <FaIcons.FaClipboardList className="mb-1" />
-                    &nbsp;&nbsp;Add Skill
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-          {/* <Col className="d-flex flex-row-reverse">
+            {/* <Col className="d-flex flex-row-reverse">
             <button
               className="btn btn-primary"
               onClick={() => setCollapse(!collapse)}
@@ -94,20 +113,20 @@ const department = () => {
               )}
             </button>
           </Col> */}
-        </Row>
-      </Container>
-      <Collapse in={collapseSkills}>
-        <div id="collapseSkillsCreation" className="my-3">
-          <SkillsCreation />
-        </div>
-      </Collapse>
-      <Collapse in={collapse}>
-        <div id="collapseDepartmentCreation" className="my-3">
-          <DepartmentCreation />
-        </div>
-      </Collapse>
-      <DepartmentTable departmentName="senior dev" />
-    </DepartmentContextProvider>
+          </Row>
+        </Container>
+        <Collapse in={collapseSkills}>
+          <div id="collapseSkillsCreation" className="my-3">
+            <SkillsCreation />
+          </div>
+        </Collapse>
+        <Collapse in={collapse}>
+          <div id="collapseDepartmentCreation" className="my-3">
+            <DepartmentCreation />
+          </div>
+        </Collapse>
+        <DepartmentTable departmentName="senior dev" />
+      </DepartmentContextProvider>
   );
 };
 

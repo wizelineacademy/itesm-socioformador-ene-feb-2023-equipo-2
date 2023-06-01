@@ -31,18 +31,24 @@ function Roadmap() {
   const hasMounted = useHasMounted();
   const router = useRouter();
 
+  const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
+
 
   const [selectedMenu, setSelectedMenu] = useState("");
   const [data, setData] = useState<apiResponse[]>([]);
   const [roadmap, setRoadmap] = useState<any>([]);
   const [isRoadmap, setIsRoadmap] = useState(false);
-
-  const { user, error, isLoading } = useUser();
-
-  console.log("user => ", user);
-  console.log("error => ", error);
-  console.log("isLoading => ", isLoading);
-
 
   useEffect(() => {
     fetchData();
@@ -100,94 +106,98 @@ function Roadmap() {
   console.log("roadmap => ", roadmap?.tools)
 
   return (
-    <div>
-      <Menu
-        titulo={"Roadmap"}
-        descripcion={
-          "Our AI suggests new technologies and programming languages based on your abilities and provides specific learning dates."
-        }
-      />
-
-      <div className="container">
-        {isRoadmap &&
-          <div className="row">
-            <div className="col-3">
-              <div
-                className="nav flex-column nav-pills"
-                id="v-pills-tab"
-                role="tablist"
-                aria-orientation="vertical"
-              >
-                {roadmap?.tools.map((element: any) => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <Link
-                      className={
-                        element.name == selectedMenu
-                          ? "nav-link active selectedAncore nav-roadmap"
-                          : "nav-link nav-roadmap"
-                      }
-                      id={element.name + "-tab"}
-                      data-toggle="pill"
-                      href={"#" + element.name}
-                      role="tab"
-                      aria-controls="v-pills-profile"
-                      aria-selected="false"
-                      onClick={() => setSelectedMenu(element.name)}
-                      style={{
-                        color:
-                          element.name === selectedMenu
-                            ? "white !important"
-                            : "black !important",
-                      }}
-                    >
-                      {element.name}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="col-9">
-              <div className="tab-content" id="v-pills-tabContent">
-                {roadmap?.tools.map((element: any) => {
-                  console.log("selected menu => ", selectedMenu);
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <div
-                      className={
-                        element.name == selectedMenu
-                          ? "tab-pane fade show active"
-                          : "tab-pane fade"
-                      }
-                      id={element.name.toString()}
-                      role="tabpanel"
-                      aria-labelledby="v-pills-profile-tab"
-                    >
-                      <h1>{element.description}</h1>
-
-                      <br />
-
-                      <h2>Description</h2>
-                      {element.description}
-
-                      <h2>Previous Knowledge</h2>
-                      {element.previous_knowledge}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        }
-
-        {
-          !isRoadmap && <div>
-            <h1>You will be redirected to Perfil Generation page because you have not your roadmap generated</h1>
-          </div>
-        }
-
-      </div>
+    user === undefined ? <div>
+      <h1>Loading...</h1>
     </div>
+      :
+      <div>
+        <Menu
+          titulo={"Roadmap"}
+          descripcion={
+            "Our AI suggests new technologies and programming languages based on your abilities and provides specific learning dates."
+          }
+        />
+
+        <div className="container">
+          {isRoadmap &&
+            <div className="row">
+              <div className="col-3">
+                <div
+                  className="nav flex-column nav-pills"
+                  id="v-pills-tab"
+                  role="tablist"
+                  aria-orientation="vertical"
+                >
+                  {roadmap?.tools.map((element: any) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <Link
+                        className={
+                          element.name == selectedMenu
+                            ? "nav-link active selectedAncore nav-roadmap"
+                            : "nav-link nav-roadmap"
+                        }
+                        id={element.name + "-tab"}
+                        data-toggle="pill"
+                        href={"#" + element.name}
+                        role="tab"
+                        aria-controls="v-pills-profile"
+                        aria-selected="false"
+                        onClick={() => setSelectedMenu(element.name)}
+                        style={{
+                          color:
+                            element.name === selectedMenu
+                              ? "white !important"
+                              : "black !important",
+                        }}
+                      >
+                        {element.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="col-9">
+                <div className="tab-content" id="v-pills-tabContent">
+                  {roadmap?.tools.map((element: any) => {
+                    console.log("selected menu => ", selectedMenu);
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div
+                        className={
+                          element.name == selectedMenu
+                            ? "tab-pane fade show active"
+                            : "tab-pane fade"
+                        }
+                        id={element.name.toString()}
+                        role="tabpanel"
+                        aria-labelledby="v-pills-profile-tab"
+                      >
+                        <h1>{element.description}</h1>
+
+                        <br />
+
+                        <h2>Description</h2>
+                        {element.description}
+
+                        <h2>Previous Knowledge</h2>
+                        {element.previous_knowledge}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          }
+
+          {
+            !isRoadmap && <div>
+              <h1>You will be redirected to Perfil Generation page because you have not your roadmap generated</h1>
+            </div>
+          }
+
+        </div>
+      </div>
   );
 }
 

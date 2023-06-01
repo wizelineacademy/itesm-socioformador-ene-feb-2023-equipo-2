@@ -8,8 +8,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { projectContext, projectListContext } from "@/context/projectsContext";
 import { clientContext, clientListContext } from "@/context/clientContext";
-
 import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 interface projectTeamMembersInterface {
   id: string;
@@ -39,6 +39,21 @@ const projectModification = () => {
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
   const hasMounted = useHasMounted();
+
+  const router = useRouter();
+  const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
+
 
   const projectModificationRouter = useRouter();
   let projectID = projectModificationRouter.query.slug;
@@ -109,7 +124,7 @@ const projectModification = () => {
     console.log(startDateProjectOverview);
   }, [startDateProjectOverview]);
 
-  useEffect(() => {}, [projectsContext?.setCurrentProject(projectName)]);
+  useEffect(() => { }, [projectsContext?.setCurrentProject(projectName)]);
 
   useEffect(() => {
     fetch(`${link}/get-clients?id=${clientName}`)
@@ -130,7 +145,7 @@ const projectModification = () => {
       .catch((error) => console.log("Error", error));
   }, []);
 
-  useEffect(() => {}, [clientsContext?.setCurrentClient(clientName)]);
+  useEffect(() => { }, [clientsContext?.setCurrentClient(clientName)]);
 
   const handleSendForm = () => {
     let requestOptions;
@@ -242,36 +257,40 @@ const projectModification = () => {
   }
 
   return (
-    <>
-      <Menu titulo={"Project Modification"} descripcion={""} />
-      <div className="container bg-light border p-4">
-        <div className="mb-4">
-          <Select
-            onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
-            value={
-              client === undefined || client === 0
-                ? (client =
+    user === undefined ? <div>
+      <h1>Loading...</h1>
+    </div>
+      :
+      <>
+        <Menu titulo={"Project Modification"} descripcion={""} />
+        <div className="container bg-light border p-4">
+          <div className="mb-4">
+            <Select
+              onChange={handleFetchClients} // sets the callback function to handle changes in selected option(s)
+              value={
+                client === undefined || client === 0
+                  ? (client =
                     selectedProjectOverview?.idclient &&
                     listOfClients.find(
                       // @ts-ignore
                       (obj) => obj.value === selectedProjectOverview.idclient
                     ))
-                    // @ts-ignore
-                : listOfClients.find((obj) => obj.value === client)
-            }
-            //value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
-            options={listOfClients} // sets the available options for the Select component
-            placeholder={"Select client..."}
-            isClearable
-          />
+                  // @ts-ignore
+                  : listOfClients.find((obj) => obj.value === client)
+              }
+              //value={listOfClients.find((obj) => obj.value === client)} // sets the currently selected option(s). Use when isMulti is specified.
+              options={listOfClients} // sets the available options for the Select component
+              placeholder={"Select client..."}
+              isClearable
+            />
 
-          <br></br>
+            <br></br>
 
-          <Select
-            onChange={handleFetchTeams} // sets the callback function to handle changes in selected option(s)
-            value={
-              team === undefined || team === 0
-                ? (team =
+            <Select
+              onChange={handleFetchTeams} // sets the callback function to handle changes in selected option(s)
+              value={
+                team === undefined || team === 0
+                  ? (team =
                     listOfTeams.find(
                       // @ts-ignore
                       (obj) => obj.value === selectedProjectOverview?.idteam
@@ -280,122 +299,122 @@ const projectModification = () => {
                       // @ts-ignore
                       (obj) => obj.value === selectedProjectOverview?.idteam
                     ))
-                    // @ts-ignore
-                : listOfTeams.find((obj) => obj.value === team)
-            }
-            //value={listOfTeams.find((obj) => obj.value === team)} // sets the currently selected option(s). Use when isMulti is specified.
-            options={listOfTeams} // sets the available options for the Select component
-            placeholder={"Select team..."}
-            isClearable
-          />
+                  // @ts-ignore
+                  : listOfTeams.find((obj) => obj.value === team)
+              }
+              //value={listOfTeams.find((obj) => obj.value === team)} // sets the currently selected option(s). Use when isMulti is specified.
+              options={listOfTeams} // sets the available options for the Select component
+              placeholder={"Select team..."}
+              isClearable
+            />
 
-          <br></br>
-          <div className="container">
-            <div className="row">
-              {/* Start date calendar */}
-              <div className="col-sm">
-                <label className="form-label">Order Start Date</label>
+            <br></br>
+            <div className="container">
+              <div className="row">
+                {/* Start date calendar */}
+                <div className="col-sm">
+                  <label className="form-label">Order Start Date</label>
 
-                <DatePicker
-                  //selected={new Date(JSON.stringify(selectedProjectOverview?.orderstartdate))}
-                  selected={startDateProjectOverview}
-                  onChange={(date: Date) => setStartDateProjectOverview(date)}
-                />
-              </div>
+                  <DatePicker
+                    //selected={new Date(JSON.stringify(selectedProjectOverview?.orderstartdate))}
+                    selected={startDateProjectOverview}
+                    onChange={(date: Date) => setStartDateProjectOverview(date)}
+                  />
+                </div>
 
-              {/* End date calendar */}
-              <div className="col-sm">
-                <label className="form-label">Order End Date</label>
+                {/* End date calendar */}
+                <div className="col-sm">
+                  <label className="form-label">Order End Date</label>
 
-                <DatePicker
-                  //selected={new Date(JSON.stringify(selectedProjectOverview?.orderenddate))}
-                  selected={endDateProjectOverview}
-                  onChange={(date: Date) => setEndDateProjectOverview(date)}
-                />
-              </div>
+                  <DatePicker
+                    //selected={new Date(JSON.stringify(selectedProjectOverview?.orderenddate))}
+                    selected={endDateProjectOverview}
+                    onChange={(date: Date) => setEndDateProjectOverview(date)}
+                  />
+                </div>
 
-              {/* Order status buttons */}
-              <div className="col-sm">
-                <label className="form-label">Order Status</label>
-                <Select
-                  //onSelect={(eventKey: any, e) => handleDropdownSelect}
-                  onChange={handleDropdownSelect} // sets the callback function to handle changes in selected option(s)
-                  value={
-                    orderStatus === "undefined" ||
-                    orderStatus === "" ||
-                    orderStatus === null
-                    // @ts-ignore
-                      ? (orderStatus =
+                {/* Order status buttons */}
+                <div className="col-sm">
+                  <label className="form-label">Order Status</label>
+                  <Select
+                    //onSelect={(eventKey: any, e) => handleDropdownSelect}
+                    onChange={handleDropdownSelect} // sets the callback function to handle changes in selected option(s)
+                    value={
+                      orderStatus === "undefined" ||
+                        orderStatus === "" ||
+                        orderStatus === null
+                        // @ts-ignore
+                        ? (orderStatus =
                           selectedProjectOverview?.orderstatus &&
                           listOfStatus.find(
                             (obj) =>
                               obj.value === selectedProjectOverview.orderstatus
                           ))
-                      : listOfStatus.find((obj) => obj.value === orderStatus)
-                  }
-                  //value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)} // sets the currently selected option(s). Use when isMulti is specified.
-                  options={listOfStatus} // sets the available options for the Select component
-                  placeholder={"Select status..."}
-                  isClearable
-                />
+                        : listOfStatus.find((obj) => obj.value === orderStatus)
+                    }
+                    //value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)} // sets the currently selected option(s). Use when isMulti is specified.
+                    options={listOfStatus} // sets the available options for the Select component
+                    placeholder={"Select status..."}
+                    isClearable
+                  />
+                </div>
               </div>
+
+              <br></br>
+
+              {/* Project description input field */}
+              <p>{projectName}</p>
+              <label className="form-label">Project name...</label>
+              <textarea
+                className="form-control"
+                id="projectDescription"
+                autoComplete="off"
+                onChange={(e) => setProjectName(e.target.value)}
+                value={
+                  projectName === "undefined" ||
+                    projectName === "" ||
+                    projectName === null
+                    // @ts-ignore
+                    ? (projectName = selectedProjectOverview?.label)
+                    : projectName
+                }
+                //value={projectName}
+                placeholder={"Select project name..."}
+                rows={1}
+                required
+              />
+
+              <br></br>
+
+              {/* Description of the project generated by AI */}
+              <label className="form-label">
+                AI-generated project description...
+              </label>
+
+              <textarea
+                rows={15}
+                className="form-control"
+                id="projectDescription"
+                autoComplete="off"
+                onChange={(e) => setResponse(e.target.value)}
+                value={
+                  response === "undefined" || response === null || response === ""
+                    ? // @ts-ignore
+                    (response = selectedProjectOverview?.orderdesc)
+                    : response
+                }
+                placeholder="This is the response generated byt the AI. Feel free to modify it..."
+              />
+
+              {/* Submit button */}
+              <button className="btn btn-primary mt-3" onClick={handleSendForm}>
+                <FaIcons.FaBrain className="mb-1" />
+                &nbsp;&nbsp;Update project
+              </button>
             </div>
-
-            <br></br>
-
-            {/* Project description input field */}
-            <p>{projectName}</p>
-            <label className="form-label">Project name...</label>
-            <textarea
-              className="form-control"
-              id="projectDescription"
-              autoComplete="off"
-              onChange={(e) => setProjectName(e.target.value)}
-              value={
-                projectName === "undefined" ||
-                projectName === "" ||
-                projectName === null
-                // @ts-ignore
-                  ? (projectName = selectedProjectOverview?.label)
-                  : projectName
-              }
-              //value={projectName}
-              placeholder={"Select project name..."}
-              rows={1}
-              required
-            />
-
-            <br></br>
-
-            {/* Description of the project generated by AI */}
-            <label className="form-label">
-              AI-generated project description...
-            </label>
-
-            <textarea
-              rows={15}
-              className="form-control"
-              id="projectDescription"
-              autoComplete="off"
-              onChange={(e) => setResponse(e.target.value)}
-              value={
-                response === "undefined" || response === null || response === ""
-                  ? // @ts-ignore
-                  (response = selectedProjectOverview?.orderdesc)
-                  : response
-              }
-              placeholder="This is the response generated byt the AI. Feel free to modify it..."
-            />
-
-            {/* Submit button */}
-            <button className="btn btn-primary mt-3" onClick={handleSendForm}>
-              <FaIcons.FaBrain className="mb-1" />
-              &nbsp;&nbsp;Update project
-            </button>
           </div>
         </div>
-      </div>
-    </>
+      </>
   );
 };
 
