@@ -25,12 +25,28 @@ import { useHasMounted } from "@/components/useHasMounted";
 
 import { EmployeeListContext } from "@/context/employeeContext";
 import { EmployeeContext } from "@/context/employeeContext";
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const employees = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
-   
+
+  const router = useRouter();
+  const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
+
   const [addEmployee, setAddEmployee] = useState(false); // True -> A to Z, False -> Z to A
 
   if (!hasMounted) {
@@ -38,15 +54,19 @@ const employees = () => {
   }
 
   return (
-    <>
-      <Menu titulo={"Employees"} descripcion={" "} />
-      <EmployeeContext>
-        <EmployeeListContext>
-          <EmployeeSearch />
-          <div className="container my-4">
-            <div className="row">
-              <div className="d-flex flex-row-reverse">
-                {/* <button
+    user === undefined ? <div>
+      <h1>Loading...</h1>
+    </div>
+      :
+      <>
+        <Menu titulo={"Employees"} descripcion={" "} />
+        <EmployeeContext>
+          <EmployeeListContext>
+            <EmployeeSearch />
+            <div className="container my-4">
+              <div className="row">
+                <div className="d-flex flex-row-reverse">
+                  {/* <button
                   className="btn btn-primary w-10" 
                   onClick={() => setAddEmployee(!addEmployee)}
                   aria-controls="employeeCreation"
@@ -63,18 +83,18 @@ const employees = () => {
                     </>
                   )}
                 </button> */}
+                </div>
               </div>
             </div>
-          </div>
-          {/* <Collapse in={addEmployee}>
+            {/* <Collapse in={addEmployee}>
             <div id="employeeCreation">
               <EmployeeCreation />
             </div>
           </Collapse> */}
-          <EmployeeTable pageType={"listForAdmin"} />
-        </EmployeeListContext>
-      </EmployeeContext>
-    </>
+            <EmployeeTable pageType={"listForAdmin"} />
+          </EmployeeListContext>
+        </EmployeeContext>
+      </>
   );
 };
 

@@ -7,8 +7,9 @@ import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 import DataTable, { TableColumn } from "react-data-table-component";
 import TextBox from "@/components/TextBox";
-
 import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
+
 
 interface projectOverviewInterface {
   id: string;
@@ -38,6 +39,19 @@ const projects = () => {
   const hasMounted = useHasMounted();
 
   const router = useRouter();
+  const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
+
   const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[]>();
   const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[]>();
   const [projectDescription, setProjectDescription] = useState("");
@@ -261,78 +275,82 @@ const projects = () => {
   }
 
   return (
-    <>
-      <Menu titulo={"Project Overview"} descripcion={""} />
-      <Container className="mt-3">
-        <Row>
-          <div className="container p-4">
-            <div className="card-body d-flex flex-column">
-              <div className="d-flex flex-row justify-content-between">
-                <h3 className="ml-5">
-                  {filteredProjectOverviewData?.[0]?.ordername}
-                </h3>
-                <h6 className="mt-auto">
-                  {filteredProjectOverviewData?.[0]?.orderstartdate} - {" "}
-                  {filteredProjectOverviewData?.[0]?.orderenddate}
+    user === undefined ? <div>
+      <h1>Loading...</h1>
+    </div>
+      :
+      <>
+        <Menu titulo={"Project Overview"} descripcion={""} />
+        <Container className="mt-3">
+          <Row>
+            <div className="container p-4">
+              <div className="card-body d-flex flex-column">
+                <div className="d-flex flex-row justify-content-between">
+                  <h3 className="ml-5">
+                    {filteredProjectOverviewData?.[0]?.ordername}
+                  </h3>
+                  <h6 className="mt-auto">
+                    {filteredProjectOverviewData?.[0]?.orderstartdate} - {" "}
+                    {filteredProjectOverviewData?.[0]?.orderenddate}
+                  </h6>
+                </div>
+                <h6 className="ml-5 mt-2">
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: extractProjectDescription(descripcion),
+                    }}
+                  />
+                </h6>
+                <h5 className="ml-5 mt-1">
+                  {filteredProjectOverviewData?.[0]?.clientname}
+                </h5>
+                <h6 className="ml-5">
+                  {filteredProjectOverviewData?.[0]?.email}
+                </h6>
+                <h6 className="ml-5">
+                  {filteredProjectOverviewData?.[0]?.phone}
                 </h6>
               </div>
-              <h6 className="ml-5 mt-2">
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: extractProjectDescription(descripcion),
-                  }}
-                />
-              </h6>
-              <h5 className="ml-5 mt-1">
-                {filteredProjectOverviewData?.[0]?.clientname}
-              </h5>
-              <h6 className="ml-5">
-                {filteredProjectOverviewData?.[0]?.email}
-              </h6>
-              <h6 className="ml-5">
-                {filteredProjectOverviewData?.[0]?.phone}
-              </h6>
             </div>
-          </div>
-          <Col className="d-flex flex-row-reverse">
-            <button
-              className="btn btn-primary"
-              onClick={() => setCollapse(!collapse)}
-              aria-controls="collapseProjectCreation"
-              aria-expanded={collapse}
-            >
-              {collapse ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaClipboardList className="mb-1" />
-                  &nbsp;&nbsp;View Requirements
-                </>
-              )}
-            </button>
-          </Col>
-        </Row>
-        <Collapse in={collapse}>
-          <div id="collapseProjectCreation" className="my-3">
-            <p
-              dangerouslySetInnerHTML={{ __html: replaceWithBrFR(descripcion) }}
-            />
-          </div>
-        </Collapse>
-        <DataTable
-          title={"Team Members"}
-          columns={columns}
-          // @ts-ignore
-          data={filteredProjectTeamMembersData}
-          customStyles={customStyles}
-          highlightOnHover
-          pagination
-        />
-      </Container>
-    </>
+            <Col className="d-flex flex-row-reverse">
+              <button
+                className="btn btn-primary"
+                onClick={() => setCollapse(!collapse)}
+                aria-controls="collapseProjectCreation"
+                aria-expanded={collapse}
+              >
+                {collapse ? (
+                  <>
+                    <FaIcons.FaTimes className="mb-1" />
+                    &nbsp;&nbsp;Close
+                  </>
+                ) : (
+                  <>
+                    <FaIcons.FaClipboardList className="mb-1" />
+                    &nbsp;&nbsp;View Requirements
+                  </>
+                )}
+              </button>
+            </Col>
+          </Row>
+          <Collapse in={collapse}>
+            <div id="collapseProjectCreation" className="my-3">
+              <p
+                dangerouslySetInnerHTML={{ __html: replaceWithBrFR(descripcion) }}
+              />
+            </div>
+          </Collapse>
+          <DataTable
+            title={"Team Members"}
+            columns={columns}
+            // @ts-ignore
+            data={filteredProjectTeamMembersData}
+            customStyles={customStyles}
+            highlightOnHover
+            pagination
+          />
+        </Container>
+      </>
   );
 };
 

@@ -9,10 +9,11 @@ import ProfileListBox from "@/components/ProfileListBox";
 import { useHasMounted } from "@/components/useHasMounted";
 import * as FaIcons from "react-icons/fa";
 import Link from "next/link";
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { getAuth0Id } from '../utils/getAuth0Id'
 import { parseJsonString } from "@/utils/parseJsonString";
 import { parseJsonStringProfile } from "@/utils/parseJsonStringProfile";
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 interface perfilInterface {
   name: string;
@@ -38,6 +39,19 @@ const perfil = () => {
 
   const idUser = getAuth0Id(user?.sub)
   console.log(idUser)
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     const requestOptions = {
@@ -86,75 +100,79 @@ const perfil = () => {
   console.log(userData)
 
   return (
-    <>
-      <Menu titulo={""} descripcion={" "} />
-      <div className="container mt-4">
-        <div className="row">
-          <div className="container bg-light border p-4">
-            <div className="d-flex flex-row">
-              <div className="col-3">
-                <Image src={imgExample}
-                  alt="Wizeline Background"
-                  loading="eager"
-                  width={200}
-                  height={200}
-                  className="image-circle" />
-              </div>
-              <div className="col-5">
-                <h3 className="ml-5">{userData?.name ?? "No name available"}</h3>
-                <h5 className="ml-5">{userData?.position ?? "No position available"}</h5>
-                <h6 className="ml-5">{userData?.location ?? "No location available"}</h6>
-                <h6 className="ml-5">correo@gmail.com</h6>
-                <Link href="/generar-perfil" className="a-navbar">
-                  <button className="btn btn-primary w-10 mt-auto">
-                    <FaIcons.FaUserAlt className="mb-1" />
-                    &nbsp;&nbsp;Editar perfíl
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Section of showing the Experience*/}
-        {userData?.Experience.map((experience, index) => (
-          <div key={index} className="row">
+    user === undefined ? <div>
+      <h1>Loading...</h1>
+    </div>
+      :
+      <>
+        <Menu titulo={""} descripcion={" "} />
+        <div className="container mt-4">
+          <div className="row">
             <div className="container bg-light border p-4">
               <div className="d-flex flex-row">
                 <div className="col-3">
-                  <h4>Past Work</h4>
+                  <Image src={imgExample}
+                    alt="Wizeline Background"
+                    loading="eager"
+                    width={200}
+                    height={200}
+                    className="image-circle" />
                 </div>
                 <div className="col-5">
-                  <h5>Experience #{index + 1}:</h5>
-                  <p>Job Title: {experience.job_title}</p>
-                  <p>Company: {experience.job_company}</p>
-                  <p>Duration: {experience.job_duration}</p>
-                  <p>Location: {experience.job_location}</p>
+                  <h3 className="ml-5">{userData?.name ?? "No name available"}</h3>
+                  <h5 className="ml-5">{userData?.position ?? "No position available"}</h5>
+                  <h6 className="ml-5">{userData?.location ?? "No location available"}</h6>
+                  <h6 className="ml-5">correo@gmail.com</h6>
+                  <Link href="/generar-perfil" className="a-navbar">
+                    <button className="btn btn-primary w-10 mt-auto">
+                      <FaIcons.FaUserAlt className="mb-1" />
+                      &nbsp;&nbsp;Editar perfíl
+                    </button>
+                  </Link>
                 </div>
-
               </div>
             </div>
           </div>
-        ))}
+          {/* Section of showing the Experience*/}
+          {userData?.Experience.map((experience, index) => (
+            <div key={index} className="row">
+              <div className="container bg-light border p-4">
+                <div className="d-flex flex-row">
+                  <div className="col-3">
+                    <h4>Past Work</h4>
+                  </div>
+                  <div className="col-5">
+                    <h5>Experience #{index + 1}:</h5>
+                    <p>Job Title: {experience.job_title}</p>
+                    <p>Company: {experience.job_company}</p>
+                    <p>Duration: {experience.job_duration}</p>
+                    <p>Location: {experience.job_location}</p>
+                  </div>
 
-        {/* Display skills */}
-        <div className="row">
-          <div className="container bg-light border p-4">
-            <div className="d-flex flex-row">
-              <div className="col-3">
-                <h4>Skills</h4>
+                </div>
               </div>
-              <div className="col-5">
-                {userData?.Skills.map((skill, index) => (
-                  <p key={index}>{skill}</p>
-                ))}
+            </div>
+          ))}
+
+          {/* Display skills */}
+          <div className="row">
+            <div className="container bg-light border p-4">
+              <div className="d-flex flex-row">
+                <div className="col-3">
+                  <h4>Skills</h4>
+                </div>
+                <div className="col-5">
+                  {userData?.Skills.map((skill, index) => (
+                    <p key={index}>{skill}</p>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
 
 
-        {/*<div className="col-3">
+          {/*<div className="col-3">
             <div className="card align-items-center">
               <div className="card-body">
                 <Image
@@ -211,8 +229,8 @@ const perfil = () => {
               </div>
             </div>
           </div>*/}
-      </div>
-    </>
+        </div>
+      </>
   );
 };
 

@@ -31,6 +31,7 @@ import { useRouter } from 'next/router';
 
 import { ProjectListContext, ProjectContext, StatusContext } from "@/context/projectsContext";
 import { ClientListContext, ClientContext } from "@/context/clientContext";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 // 'options' will later be replaced by table skills in database
 const listOfClients = [
@@ -40,6 +41,20 @@ const listOfClients = [
 ];
 
 const projects = () => {
+
+  const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
+
   const hasMounted = useHasMounted();
 
   const router = useRouter();
@@ -60,20 +75,24 @@ const projects = () => {
   }
 
   return (
-    <ProjectListContext>
-      <ProjectContext>
-        <ClientListContext>
-          <ClientContext>
-            <StatusContext>
-            <Menu
-              titulo={"Projects"}
-              descripcion={
-                "Project administration panel to edit existing projects or create new ones for effective project management."
-              }
-            />
-            {/*@ts-ignore*/}
-            <ProjectSearch clientID={clientID}/>
-            {/* <Container className="mt-3">
+    user === undefined ? <div>
+      <h1>Loading...</h1>
+    </div>
+      :
+      <ProjectListContext>
+        <ProjectContext>
+          <ClientListContext>
+            <ClientContext>
+              <StatusContext>
+                <Menu
+                  titulo={"Projects"}
+                  descripcion={
+                    "Project administration panel to edit existing projects or create new ones for effective project management."
+                  }
+                />
+                {/*@ts-ignore*/}
+                <ProjectSearch clientID={clientID} />
+                {/* <Container className="mt-3">
               <Row>
                 <Col></Col>
                 <Col></Col>
@@ -104,13 +123,13 @@ const projects = () => {
                 <ProjectCreation />
               </div>
             </Collapse>  */}
-            {/* @ts-ignore */}
-            <ProjectTable clientID={clientID}/>
-            </StatusContext>
-          </ClientContext>
-        </ClientListContext>
-      </ProjectContext>
-    </ProjectListContext>
+                {/* @ts-ignore */}
+                <ProjectTable clientID={clientID} />
+              </StatusContext>
+            </ClientContext>
+          </ClientListContext>
+        </ProjectContext>
+      </ProjectListContext>
   );
 };
 
