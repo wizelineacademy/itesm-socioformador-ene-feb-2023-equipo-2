@@ -214,7 +214,7 @@ const EmployeeCreation = () => {
               isClearable
               value={role}
               onChange={handleRoleSelect}
-              //ts-ignore
+              // ts-ignore
               options={roleOptions}
             />
           </div>
