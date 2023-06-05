@@ -1,19 +1,3 @@
-// TODO:
-
-// The presentation of the user management features has not been decided yet.
-// It could be implemented as a pop-up, another page, or as part of the same page.
-// Some of the features that we want to include are:
-//   - Add button: This button will allow the user to add new accounts to the system.
-//   - Edit button: This button will allow the user to edit existing accounts.
-//   - Delete button: This button will allow the user to delete accounts from the system.
-// For now, add form to add / edit / erase at the boton of page
-
-// To make it easier for users to find specific employees, we will also include the EmployeeSearch.tsx component.
-// This component will allow users to search for employees by name, department, or other criteria.
-
-// We will display a table showing all the users in the system.
-// This table will include basic information about each user, such as their name, email, and role.
-
 import React, { useState } from "react";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -21,16 +5,20 @@ import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 
 const ClientCreation = () => {
-  // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
-  // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [isClientAdded, setClientAdded] = useState(false);
+  const [missingField, setMissingField] = useState("");
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
+
+    if (!name || !email || !phone) {
+      setMissingField("Please fill in all fields");
+      return;
+    }
 
     let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -41,8 +29,8 @@ const ClientCreation = () => {
       },
       body: JSON.stringify({
         name: name,
-        email: email, 
-        phone: phone
+        email: email,
+        phone: phone,
       }),
     };
     fetch(link + "/create-client", requestOptions)
@@ -53,10 +41,14 @@ const ClientCreation = () => {
         throw new Error("Network response was not ok.");
       })
       .then((data) => {
-        alert("Exito");
-        //console.log(data);
+        console.log(data);
+        setClientAdded(true); // Set the flag to indicate client addition
+        setMissingField(""); // Clear the missing field message
       })
-      .catch((error) => console.error("Error", error));
+      .catch((error) => {
+        console.error("Error", error);
+        setMissingField("An error occurred."); // Display error message
+      });
   };
 
   if (!hasMounted) {
@@ -65,7 +57,6 @@ const ClientCreation = () => {
 
   return (
     <>
-      {/* componente con los inputs de generar perfil */}
       <div className="container bg-light border p-4">
         <div className="row">
           <p>Please fill out the following fields to create a client:</p>
@@ -120,6 +111,16 @@ const ClientCreation = () => {
             </button>
           </div>
         </div>
+        {missingField && (
+          <div className="row mt-3">
+            <p className="text-danger">{missingField}</p>
+          </div>
+        )}
+        {isClientAdded && (
+          <div className="row mt-3">
+            <p className="text-success">Client added successfully</p>
+          </div>
+        )}
       </div>
     </>
   );

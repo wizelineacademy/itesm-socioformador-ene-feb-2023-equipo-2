@@ -1,0 +1,18 @@
+{
+  "client": [
+    {
+      "value": "1",
+      "label": "Client 1",
+      "email": "client1@example.com",
+      "phone": "123456789",
+      "erased": "false"
+    },
+    {
+      "value": "2",
+      "label": "Client 2",
+      "email": "client2@example.com",
+      "phone": "987654321",
+      "erased": "false"
+    }
+  ]
+}
