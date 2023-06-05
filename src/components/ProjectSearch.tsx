@@ -123,6 +123,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
       .catch(error => console.log("Error ", error))
   }, [])
 
+  //comentario prueba
   useEffect(() => {
   }, [clientsContext?.setCurrentClient(String(client))]);
 
