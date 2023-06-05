@@ -1,5 +1,4 @@
 import React from 'react';
-import { mount } from 'cypress-react-unit-test';
 import ProjectSearch from '@/components/ProjectSearch';
 
 describe('ProjectSearch Component', () => {
