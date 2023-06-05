@@ -96,3 +96,6 @@ jobs:
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v5
+        with:
+          start: npm run start # Add this line if you need to start your application before running Cypress
+          working-directory: ./cypress/components # Update this line to point to the new location of your test files
