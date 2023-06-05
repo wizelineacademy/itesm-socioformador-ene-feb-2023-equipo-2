@@ -101,7 +101,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
       projectsContext?.setCurrentProject(e.value);
     }
   };
-
+//comentaro
   useEffect(() => {
     fetch(`${link}/get-clients?id=${client}`)
       .then(res => res.json())
