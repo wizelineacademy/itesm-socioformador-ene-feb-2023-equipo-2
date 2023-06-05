@@ -47,7 +47,7 @@ describe('ClientCreation Component', () => {
 
     cy.contains("Please fill in all fields").should("be.visible");
   });
-  //comment
+
   it("displays an error message when an error occurs", () => {
     cy.intercept("POST", "/api/create-client", {
       statusCode: 500,

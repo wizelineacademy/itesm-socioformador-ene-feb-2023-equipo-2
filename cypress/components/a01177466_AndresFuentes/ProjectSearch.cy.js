@@ -97,4 +97,8 @@ describe('ProjectSearch Component', () => {
   it('should have order statuses in the select', () => {
     cy.get('#order-status-select').should('not.be.empty');
   });
+
+  it('Button Loads', () => {
+    cy.contains('Add Project').should('exist');
+  });
 });
