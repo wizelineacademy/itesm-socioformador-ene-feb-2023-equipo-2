@@ -24,8 +24,6 @@ jobs:
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
-        with:
-          force: true # Add this line to force legacy peer dependency resolution
 
       - name: 🔬 Lint
         run: npm run lint
@@ -96,10 +94,3 @@ jobs:
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v5
-        with:
-          working-directory: ./cypress/components
-          config: >
-            {
-              "fileServerFolder": "./",
-              "testFiles": "**/*.cy.{js,jsx,ts,tsx}"
-            }
