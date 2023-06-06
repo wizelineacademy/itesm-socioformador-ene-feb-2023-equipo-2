@@ -77,6 +77,7 @@ function Roadmap() {
     return parsedJson;
 
   }
+
   const fetchData = async (_userId: number) => {
     const response = await fetch("http://localhost:3000/api/getRoadMap", {
       method: "POST",
