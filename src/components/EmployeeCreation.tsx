@@ -16,7 +16,7 @@
 // We will display a table showing all the users in the system.
 // This table will include basic information about each user, such as their name, email, and role.
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { GroupBase } from 'react-select';
 import * as FaIcons from "react-icons/fa";
@@ -44,6 +44,33 @@ const EmployeeCreation = () => {
   const [token, setToken] = useState("")
   const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
 
+  useEffect(() => {
+    // credentials to generate the auth0 token necessary to create new users
+    // @ts-ignore
+    var auth0 = new AuthenticationClient({
+      domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
+      clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
+      clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
+    });
+
+    // method to geerate the auth0 token necessary to create new users
+    auth0.clientCredentialsGrant(
+      {
+        audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
+        scope: 'create:users read:users update:users read:roles',
+      },
+      function (err: any, response: any) {
+        if (err) {
+          console.error(err)
+          console.error(response)
+        } else {
+          setToken(response?.access_token)
+        }
+
+      }
+    );
+  })
+
   function generateRandomPassword(): string {
     const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
     let password = "";
@@ -68,32 +95,6 @@ const EmployeeCreation = () => {
   const userId = generateRandomUserId()
 
   const handleSubmit = async (event: any) => {
-
-    // credentials to generate the auth0 token necessary to create new users
-    // @ts-ignore
-    var auth0 = new AuthenticationClient({
-      domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
-      clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
-      clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
-    });
-
-    // method to geerate the auth0 token necessary to create new users
-    auth0.clientCredentialsGrant(
-      {
-        audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
-        scope: 'create:users read:users update:users read:roles',
-      },
-      function (err: any, response: any) {
-        if (err) {
-          console.error(err)
-          console.error(response)
-        } else {
-          console.log(response?.access_token);
-          setToken(response?.access_token)
-        }
-
-      }
-    );
 
     //method to create new users in the auth0 app
     const requestOptionsAuth0NewUser = {
@@ -135,10 +136,11 @@ const EmployeeCreation = () => {
 
         fetch('http://localhost:3000/api/createUsers', requestOptions)
           .then(response => response.json())
-          .then(data => console.log("Usuario guardado correctamente"))
-          .catch(error => console.error("Error al guardar usuario"));
-
-        setUserRegistrationErrorModal(true)
+          .then(data => console.log("Usuario guardado correctamente en BD"))
+          .catch(error => {
+            console.error(error, "Error al guardar usuario en BD")
+            setUserRegistrationErrorModal(true)
+          });
 
 
         event.preventDefault();
@@ -176,8 +178,6 @@ const EmployeeCreation = () => {
       setRole(e.value);
     }
   };
-
-  console.log("role", role)
 
   return (
     <>
