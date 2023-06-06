@@ -145,7 +145,7 @@ const Menu = (props: MenuProps) => {
                 onClick={handleLogout}
               >
                 <FaIcons.FaDoorOpen className="mb-1" />
-                &nbsp;&nbsp;
+                &nbsp;&nbsp;Log Out
               </NavDropdown.Item>
               <Modal
                 show={

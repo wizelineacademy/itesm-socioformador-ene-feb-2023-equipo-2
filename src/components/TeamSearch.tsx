@@ -1,16 +1,13 @@
-import React, {useEffect, useState } from "react";
-import { Container, Row, Col, Collapse } from "react-bootstrap";
+import React, {useEffect, useState, useContext } from "react";
+import { Container, Collapse } from "react-bootstrap";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { useHasMounted } from "@/components/useHasMounted";
 import TeamCreation from "@/components/TeamCreation";
 
-
-import { useContext } from 'react';
 import { teamContext, teamListContext } from "@/context/teamContext";
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
-import { any } from "cypress/types/bluebird";
-import { idText } from "typescript";
+
 
 //Interface for teams
 interface teamSelectionInterface {
@@ -110,10 +107,6 @@ const TeamSearch = () => {
       employeesContext?.setCurrentEmployee(e.value);
     }
   };
-
-  const handleSearch = (e : any) => {
-    alert("buscando")
-  }
 
   if (!hasMounted) {
     return null;

@@ -1,3 +1,5 @@
+
+
 // TODO:
 
 // The presentation of the user management features has not been decided yet.
@@ -16,6 +18,7 @@
 
 import React, { useState } from "react";
 import Select from "react-select";
+import { GroupBase } from 'react-select';
 import * as FaIcons from "react-icons/fa";
 import {
   Navbar,
@@ -27,7 +30,7 @@ import {
 } from "react-bootstrap";
 
 import { useHasMounted } from "@/components/useHasMounted";
-var AuthenticationClient = require('auth0').AuthenticationClient;
+//var AuthenticationClient = require('auth0').AuthenticationClient;
 
 const EmployeeCreation = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -67,6 +70,7 @@ const EmployeeCreation = () => {
   const handleSubmit = async (event: any) => {
 
     // credentials to generate the auth0 token necessary to create new users
+    // @ts-ignore
     var auth0 = new AuthenticationClient({
       domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
       clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
@@ -143,14 +147,12 @@ const EmployeeCreation = () => {
         console.error("Error al guardar usuario en Auth0")
         setUserRegistrationErrorModal(true)
       });
-
-
   };
 
   const roleOptions = [
-    { value: 1, label: "Administrador" },
-    { value: 2, label: "Empleado General" },
-    { value: 3, label: "Cliente" }
+    { value: "1", label: "Administrador" },
+    { value: "2", label: "Empleado General" },
+    { value: "3", label: "Cliente" }
   ];
 
   const departmentOptions = [
@@ -214,6 +216,7 @@ const EmployeeCreation = () => {
               isClearable
               value={role}
               onChange={handleRoleSelect}
+              // @ts-ignore
               options={roleOptions}
             />
           </div>

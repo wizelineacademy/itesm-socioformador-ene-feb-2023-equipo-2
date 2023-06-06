@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-//const id = 1
+const id = 56049
 
 export default async function handler(req: any, res: any) {
   const { inforoadmap, infoabout, userId } = req.body;

@@ -326,15 +326,6 @@ const generarPerfil: React.FC = () => {
                   placeholder="AI's response will generate after clicking the Generate button..."
                 />
               </Tab>
-              <Tab eventKey="curriculum" title="PDF Resume">
-                <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>
-                    Please provide your resume in PDF format in order to review
-                    it.
-                  </Form.Label>
-                  <Form.Control type="file" />
-                </Form.Group>
-              </Tab>
             </Tabs>
             <button
               className="btn btn-primary mt-3"
