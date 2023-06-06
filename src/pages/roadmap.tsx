@@ -31,7 +31,7 @@ function Roadmap() {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const [selectedMenu, setSelectedMenu] = useState("");
   const [data, setData] = useState<apiResponse[]>([]);
-  const [roadmap, setRoadmap] = useState<any>([]);
+  const [roadmap, setRoadmap] = useState<any>();
   const [isRoadmap, setIsRoadmap] = useState(false);
   const [userId, setUserId] = useState<number>();
 
@@ -55,24 +55,14 @@ function Roadmap() {
   }, [isLoading]);
 
 
-
-
-  // useEffect(() => {
-  //   if (user) {
-
-  //   }
-
-  // }, [isLoading]);
-
   // useEffect(() => {
   //   if (roadmap) {
   //     setIsRoadmap(true)
   //   }
   //   else (
-  //     // router.push("/generar-perfil")
-  //     undefined
+  //     router.push("/generar-perfil")
   //   )
-  // }, roadmap)
+  // }, [roadmap, isRoadmap])
 
   const getParsedJson = (string: string) => {
     //removing breakpoints and "/" characters
@@ -105,9 +95,13 @@ function Roadmap() {
       let jsonString = getParsedJson(obj)
       let finalJson = JSON.parse(jsonString);
       setRoadmap(finalJson.tools)
+      setIsRoadmap(true)
+
     } catch (e: any) {
       console.log("JSON not parsed");
+      router.push("/generar-perfil");
     }
+
 
   };
 
@@ -198,20 +192,6 @@ function Roadmap() {
               </div>
             </div>
           }
-          {/* <div className="card">
-            <div className="card-body">
-              <p className="card-text">
-                {roadmapData}
-              </p>
-            </div>
-          </div> */}
-
-          {
-            !isRoadmap && <div>
-              {/* <h1>You will be redirected to Perfil Generation page because you have not your roadmap generated</h1> */}
-            </div>
-          }
-
         </div>
       </div>
   );
