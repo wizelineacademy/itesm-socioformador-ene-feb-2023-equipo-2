@@ -30,7 +30,7 @@ import {
 } from "react-bootstrap";
 
 import { useHasMounted } from "@/components/useHasMounted";
-//var AuthenticationClient = require('auth0').AuthenticationClient;
+var AuthenticationClient = require('auth0').AuthenticationClient;
 
 const EmployeeCreation = () => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
