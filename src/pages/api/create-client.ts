@@ -25,7 +25,8 @@ export default async function handler(req: any, res: any) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred." });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
+  // finally {
+  //   await prisma.$disconnect();
+  // }
 }
