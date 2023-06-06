@@ -11,7 +11,10 @@ import { stringify } from "querystring";
 import Menu from "@/components/Menu";
 import ProjectCreation from "@/components/ProjectCreation";
 import ProjectTable from "@/components/ProjectTable";
-import { useRouter } from 'next/router';
+
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
 
 const listOfStatus = [
   { value: "Approved", label: "Approved" },
@@ -61,6 +64,12 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   const [orderStatus, setOrderStatus] = useState("");
   const [estatus, setEstatus] = useState("");
   const [listOfClients, setClientsList] = useState([]);
+  const [userInfo, setUserInfo] = useState<any>()
+
+  const router = useRouter();
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  console.log("userInfo -> ", userInfo)
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -72,7 +81,21 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
         projectsListContext?.setSelectedProjectList(data.orders);
       })
       .catch(error => console.log("Error ", error))
-  }, [])
+
+    let id: number = getAuth0Id(user?.sub)
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   useEffect(() => {
   }, [projectsContext?.setCurrentProject(name)]);
@@ -101,7 +124,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
       projectsContext?.setCurrentProject(e.value);
     }
   };
-//comentaro
+  //comentaro
   useEffect(() => {
     fetch(`${link}/get-clients?id=${client}`)
       .then(res => res.json())
@@ -130,7 +153,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   }
 
   return (
-    <>
+    <>{userInfo?.idposition === 1 &&
       <Container>
         <Row>
           <Col>
@@ -201,7 +224,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
             </div>
           </Collapse>
         </Row>
-      </Container>
+      </Container>}
     </>
   );
 };
