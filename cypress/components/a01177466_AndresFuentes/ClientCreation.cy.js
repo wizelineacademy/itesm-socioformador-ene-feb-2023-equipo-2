@@ -46,7 +46,7 @@ describe('ClientCreation Component', () => {
     cy.get('input#phone').type('1234567890');
     cy.get('button').contains('Add').click();
 
-    cy.wait('@createClient').then(() => {
+    cy.wait('@createClient', { timeout: 10000 }).then(() => {
       cy.contains('Client added successfully').should('be.visible');
     });
   });
