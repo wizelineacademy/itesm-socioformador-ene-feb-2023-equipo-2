@@ -6,16 +6,29 @@ import * as BsIcons from "react-icons/bs";
 import Image from "next/image";
 import transLogo from "src/images/transLogo.jpg";
 import bg from "src/images/wbg.webp";
-import Link from "next/link";
-import Login from "./login";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from '../utils/getAuth0Id'
 
 export default function Home() {
   const router = useRouter();
 
+  const { user, error, isLoading } = useUser();
+
+  console.log('user', user)
+
   useEffect(() => {
     // Redirect logic here
-    router.push("/api/auth/login");
-  }, []);
+    if (user) {
+      router.push("/generar-perfil");
+    } else {
+      if (isLoading) {
+        undefined
+      } else {
+        router.push("/api/auth/login");
+      }
+    }
+
+  }, [isLoading]);
 
   return (
     // Login form layout

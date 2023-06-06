@@ -30,7 +30,7 @@ const SkillsCreation = () => {
       })
       .then((data) => {
         alert("Exito");
-        console.log(data);
+        //console.log(data);
       })
       .catch((error) => console.error("Error", error));
   };

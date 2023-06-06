@@ -12,6 +12,7 @@ import * as FaIcons from "react-icons/fa";
 import Link from "next/link";
 import logoBtn from "src/images/logoSearch.jpg";
 import styles from "src/components/Menu.module.css";
+import { useRouter } from "next/router";
 
 interface MenuProps {
   titulo: string;
@@ -20,6 +21,7 @@ interface MenuProps {
 
 const Menu = (props: MenuProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleLogout = () => {
     setShowModal(true);
@@ -30,8 +32,8 @@ const Menu = (props: MenuProps) => {
   };
 
   const handleConfirmLogout = () => {
+    router.push("/api/auth/logout");
     setShowModal(false);
-    window.location.href = "/";
   };
 
   return (
@@ -128,7 +130,7 @@ const Menu = (props: MenuProps) => {
                 <FaIcons.FaUser className="mb-1" />
                 &nbsp;&nbsp;Profile
               </NavDropdown.Item>
-              <NavDropdown.Item href="/settings" className="a-navbar">
+              <NavDropdown.Item href="/generar-perfil" className="a-navbar">
                 <FaIcons.FaCog className="mb-1" />
                 &nbsp;&nbsp;Settings
               </NavDropdown.Item>
@@ -143,7 +145,7 @@ const Menu = (props: MenuProps) => {
                 onClick={handleLogout}
               >
                 <FaIcons.FaDoorOpen className="mb-1" />
-                &nbsp;&nbsp;
+                &nbsp;&nbsp;Log Out
               </NavDropdown.Item>
               <Modal
                 show={

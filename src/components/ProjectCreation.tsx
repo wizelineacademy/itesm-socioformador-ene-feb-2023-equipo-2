@@ -128,7 +128,7 @@ const ProjectCreation = () => {
         .then((data) =>{
           alert("Exito");
           console.log("Esqueleto de requerimientos guardados exitosamente");
-          console.log(data);
+          //console.log(data);
         })
         .catch((error) => console.error("Error", error)
         );

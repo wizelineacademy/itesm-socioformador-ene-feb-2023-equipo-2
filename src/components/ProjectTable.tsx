@@ -8,7 +8,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
 
 import { projectContext, projectListContext, statusContext } from '@/context/projectsContext';
-import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
+import { clientContext, clientListContext } from "@/context/clientContext";
 import { useRouter } from 'next/router';
 
 interface projectListInterface {
@@ -151,12 +151,6 @@ const ProjectTable = (props: CardProps) => {
     }
   })
 
-  // let filteredProjectData;
-  
-  // if (props.clientID) {
-  //   filteredProjectData = data?.filter(project => project.idclient === props.clientID);
-  // }
-
   let selectedProjectID = projectsContext?.currentProject;
   let selectedClientID = clientsContext?.currentClient;
   let selectedStatus = statusesContext?.selectedStatus;
@@ -165,17 +159,6 @@ const ProjectTable = (props: CardProps) => {
   let selectedProjectIDInt = parseInt(projectsContext?.currentProject);
   // @ts-ignore
   let selectedClientIDInt = parseInt(clientsContext?.currentClient);
-  /*console.log(selectedClientID)
-  console.log(selectedProjectID)
-  
-  console.log(selectedProjectID != "" && selectedClientID != "" && selectedProjectID != undefined && selectedClientID != undefined)
-  console.log(selectedProjectID != "" && selectedProjectID != undefined)
-  console.log(selectedClientID != "" && selectedClientID != undefined && selectedProjectID != "0")
-  console.log(selectedClientID === "undefined")
-
-  console.log(selectedClientID);
-  console.log(data[6].idclient);
-  console.log(selectedClientID === data[6].idclient);*/
   
   // @ts-ignore
   let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :

@@ -14,10 +14,9 @@ import { useHasMounted } from "@/components/useHasMounted";
 import { getChatResponse } from "@/openai/openai";
 import { setTimeout } from "timers/promises";
 import { propTypes } from "react-bootstrap/esm/Image";
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { getAuth0Id } from '../utils/getAuth0Id'
-var AuthenticationClient = require('auth0').AuthenticationClient;
-import { useAuth0 } from "@auth0/auth0-react";
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
@@ -32,10 +31,25 @@ const generarPerfil: React.FC = () => {
   const [responseCV, setResponseCV] = useState<any>("")
 
   let link = process.env.NEXT_PUBLIC_API_URL;
+  const router = useRouter();
 
   const { user, error, isLoading } = useUser();
-  const idUser = getAuth0Id(user?.sub)
-  console.log("user id -> ", idUser)
+  const userId = getAuth0Id(user?.sub)
+  console.log(userId)
+
+  console.log(user)
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
+
 
   const flaskLinkedin = (linkLinkedin: string) => {
     return new Promise((resolve, reject) => {
@@ -70,6 +84,7 @@ const generarPerfil: React.FC = () => {
       body: JSON.stringify({
         inforoadmap: responseRoadmap,
         infoabout: responseCV,
+        userId: userId
       }),
     };
 
@@ -140,6 +155,7 @@ const generarPerfil: React.FC = () => {
       body: JSON.stringify({
         inforoadmap: responseRoadmap,
         infoabout: responseCV,
+        userId: userId
       }),
     };
 
@@ -156,177 +172,172 @@ const generarPerfil: React.FC = () => {
   }
 
   return (
-    <>
-      <Menu
-        titulo={"Complete Profile"}
-        descripcion={
-          "In order for artificial intelligence to generate a complete profile, we need you to provide us with your employment and educational information. You can do it in several ways: through your LinkedIn profile, by filling in the fields of our web application or by uploading your resume to our platform."
-        }
-      />
-      <div className="container">
-        <div className="row">
-          <div className="col-md">
-            <label className="form-label">Name:</label>
-            <input
-              className="form-control"
-              type="text"
-              onChange={(e: any) => setName(e.target.value)}
-              value={name}
-            />
-          </div>
-          <div className="col-md">
-            <label className="form-label">Position:</label>
-            <input
-              className="form-control"
-              type="text"
-              onChange={(e: any) => setName(e.target.value)}
-              value={name}
-              disabled
-            />
-          </div>
-          <div className="col-md">
-            <label className="form-label">Location:</label>
-            <input
-              className="form-control"
-              type="text"
-              onChange={(e: any) => setLocation(e.target.value)}
-              value={location}
-            />
-          </div>
-        </div>
-
-        <div className="mt-4 mb-4">
-          <Tabs
-            defaultActiveKey="linkedin"
-            id="fill-tab-generar-perfil"
-            className="mb-3"
-            fill
-          >
-            <Tab eventKey="linkedin" title="LinkedIn Profile">
-              <label className="form-label">
-                Please provide the link to your LinkedIn profile for so that we
-                can carry out an analysis of your account.
-              </label>
+    user === undefined ? <div>
+      <h1>Inicia sesión para acceder</h1>
+    </div>
+      :
+      <>
+        <Menu
+          titulo={"Complete Profile"}
+          descripcion={
+            "In order for artificial intelligence to generate a complete profile, we need you to provide us with your employment and educational information. You can do it in several ways: through your LinkedIn profile, by filling in the fields of our web application or by uploading your resume to our platform."
+          }
+        />
+        <div className="container">
+          <div className="row">
+            <div className="col-md">
+              <label className="form-label">Name:</label>
               <input
                 className="form-control"
                 type="text"
-                id="linkLinkedin"
-                autoComplete="off"
-                onChange={(e) => setLinkLinkedin(e.target.value)}
-                value={linkLinkedin}
+                onChange={(e: any) => setName(e.target.value)}
+                value={name}
               />
-              {/* Submit button */}
-              <button
-                className="btn btn-primary mt-3"
-                onClick={handleOpenAIResponse}
-                id="buttonLinkedin"
-              >
-                <FaIcons.FaLinkedin className="mb-1" />
-                &nbsp;&nbsp;Analyse Profile
-              </button>
-
-              <br></br>
-              <br></br>
-
-              <label className="form-label">AI-generated CV Summary...</label>
-
-              <textarea
-                rows={7}
+            </div>
+            <div className="col-md">
+              <label className="form-label">Position:</label>
+              <input
                 className="form-control"
-                id="projectDescription"
-                autoComplete="off"
-                value={responseCV}
-                onChange={(e: any) => setResponseCV(e.target.value)}
-                placeholder="AI's response will generate after clicking the Generate button..."
+                type="text"
+                onChange={(e: any) => setName(e.target.value)}
+                value={name}
+                disabled
               />
-
-              {/* CV from LinkedIn generated by AI */}
-              <label className="form-label">AI-generated Roadmap...</label>
-              <textarea
-                rows={7}
+            </div>
+            <div className="col-md">
+              <label className="form-label">Location:</label>
+              <input
                 className="form-control"
-                id="projectDescription"
-                autoComplete="off"
-                value={responseRoadmap}
-                onChange={(e: any) => setResponseRoadmap(e.target.value)}
-                placeholder="AI's response will generate after clicking the Generate button..."
+                type="text"
+                onChange={(e: any) => setLocation(e.target.value)}
+                value={location}
               />
-            </Tab>
-            <Tab eventKey="manual" title="Manual Form">
-              <label className="form-label">
-                Please write about your job experience, specifying your
-                position, the company, and how long you worked there.
-              </label>
-              <textarea
-                className="form-control"
-                onChange={(e: any) => setJobExperience(e.target.value)}
-                value={jobExperience}
-              />
-              <label className="form-label">
-                Please write about your skills:
-              </label>
-              <textarea
-                className="form-control"
-                onChange={(e: any) => setSkills(e.target.value)}
-                value={skills}
-              />
-              <button
-                className="btn btn-primary mt-3"
-                onClick={handleOpenAIResponse}
-                id="buttonManual"
-              >
-                <FaIcons.FaBrain className="mb-1" />
-                &nbsp;&nbsp;Make Resume
-              </button>
+            </div>
+          </div>
 
-              <br></br>
-              <br></br>
+          <div className="mt-4 mb-4">
+            <Tabs
+              defaultActiveKey="linkedin"
+              id="fill-tab-generar-perfil"
+              className="mb-3"
+              fill
+            >
+              <Tab eventKey="linkedin" title="LinkedIn Profile">
+                <label className="form-label">
+                  Please provide the link to your LinkedIn profile for so that we
+                  can carry out an analysis of your account.
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="linkLinkedin"
+                  autoComplete="off"
+                  onChange={(e) => setLinkLinkedin(e.target.value)}
+                  value={linkLinkedin}
+                />
+                {/* Submit button */}
+                <button
+                  className="btn btn-primary mt-3"
+                  onClick={handleOpenAIResponse}
+                  id="buttonLinkedin"
+                >
+                  <FaIcons.FaLinkedin className="mb-1" />
+                  &nbsp;&nbsp;Analyse Profile
+                </button>
 
-              <label className="form-label">AI-generated CV Summary...</label>
+                <br></br>
+                <br></br>
 
-              <textarea
-                rows={7}
-                className="form-control"
-                id="projectDescription"
-                autoComplete="off"
-                value={responseCV}
-                onChange={(e: any) => setResponseCV(e.target.value)}
-                placeholder="AI's response will generate after clicking the Generate button..."
-              />
+                <label className="form-label">AI-generated CV Summary...</label>
 
-              {/* CV from LinkedIn generated by AI */}
-              <label className="form-label">AI-generated Roadmap...</label>
-              <textarea
-                rows={7}
-                className="form-control"
-                id="projectDescription"
-                autoComplete="off"
-                value={responseRoadmap}
-                onChange={(e: any) => setResponseRoadmap(e.target.value)}
-                placeholder="AI's response will generate after clicking the Generate button..."
-              />
-            </Tab>
-            <Tab eventKey="curriculum" title="PDF Resume">
-              <Form.Group controlId="formFile" className="mb-3">
-                <Form.Label>
-                  Please provide your resume in PDF format in order to review
-                  it.
-                </Form.Label>
-                <Form.Control type="file" />
-              </Form.Group>
-            </Tab>
-          </Tabs>
-          <button
-            className="btn btn-primary mt-3"
-            onClick={handleSubmit}
-            id="buttonManual"
-          >
-            <FaIcons.FaSave className="mb-1" />
-            &nbsp;&nbsp;Guardar
-          </button>
+                <textarea
+                  rows={7}
+                  className="form-control"
+                  id="projectDescription"
+                  autoComplete="off"
+                  value={responseCV}
+                  onChange={(e: any) => setResponseCV(e.target.value)}
+                  placeholder="AI's response will generate after clicking the Generate button..."
+                />
+
+                {/* CV from LinkedIn generated by AI */}
+                <label className="form-label">AI-generated Roadmap...</label>
+                <textarea
+                  rows={7}
+                  className="form-control"
+                  id="projectDescription"
+                  autoComplete="off"
+                  value={responseRoadmap}
+                  onChange={(e: any) => setResponseRoadmap(e.target.value)}
+                  placeholder="AI's response will generate after clicking the Generate button..."
+                />
+              </Tab>
+              <Tab eventKey="manual" title="Manual Form">
+                <label className="form-label">
+                  Please write about your job experience, specifying your
+                  position, the company, and how long you worked there.
+                </label>
+                <textarea
+                  className="form-control"
+                  onChange={(e: any) => setJobExperience(e.target.value)}
+                  value={jobExperience}
+                />
+                <label className="form-label">
+                  Please write about your skills:
+                </label>
+                <textarea
+                  className="form-control"
+                  onChange={(e: any) => setSkills(e.target.value)}
+                  value={skills}
+                />
+                <button
+                  className="btn btn-primary mt-3"
+                  onClick={handleOpenAIResponse}
+                  id="buttonManual"
+                >
+                  <FaIcons.FaBrain className="mb-1" />
+                  &nbsp;&nbsp;Make Resume
+                </button>
+
+                <br></br>
+                <br></br>
+
+                <label className="form-label">AI-generated CV Summary...</label>
+
+                <textarea
+                  rows={7}
+                  className="form-control"
+                  id="projectDescription"
+                  autoComplete="off"
+                  value={responseCV}
+                  onChange={(e: any) => setResponseCV(e.target.value)}
+                  placeholder="AI's response will generate after clicking the Generate button..."
+                />
+
+                {/* CV from LinkedIn generated by AI */}
+                <label className="form-label">AI-generated Roadmap...</label>
+                <textarea
+                  rows={7}
+                  className="form-control"
+                  id="projectDescription"
+                  autoComplete="off"
+                  value={responseRoadmap}
+                  onChange={(e: any) => setResponseRoadmap(e.target.value)}
+                  placeholder="AI's response will generate after clicking the Generate button..."
+                />
+              </Tab>
+            </Tabs>
+            <button
+              className="btn btn-primary mt-3"
+              onClick={handleSubmit}
+              id="buttonManual"
+            >
+              <FaIcons.FaSave className="mb-1" />
+              &nbsp;&nbsp;Guardar
+            </button>
+          </div>
         </div>
-      </div>
-    </>
+      </>
   );
 };
 export default generarPerfil;

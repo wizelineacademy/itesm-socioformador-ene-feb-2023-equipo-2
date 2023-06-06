@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
 import { Container, Row, Col } from "react-bootstrap";
@@ -21,7 +21,8 @@ type employeeSelectionInterface = {
   status: boolean
 }
 
-const TeamCreation = () => {
+// @ts-ignore
+const TeamCreation = ({ setCollapse }) => {
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
@@ -55,11 +56,15 @@ const TeamCreation = () => {
     fetch(link + "/createTeam", requestOptionsList)
       .then((response) => response.json())
       .then((data) => {
-        console.log('data', data)
+        //console.log('data', data)
       })
       .catch((error) => {
         console.log('Error ', error);
       });
+    setSelectedEmployees([]);
+    setName('');
+    // @ts-ignore
+    setCollapse(prevCollapse => !prevCollapse);
   };
 
   //Handle func for employees
@@ -69,10 +74,6 @@ const TeamCreation = () => {
     } else {
       const selectedValues = e.map((option) => option.value);
       setSelectedEmployees(selectedValues);
-      //console.log('setSelectedEmployees', selectedValues)
-      //console.log(employeesContext?.currentEmployee)
-      //console.log(employeesListContext?.selectedEmployee)
-      //console.log('\n\n\n\n\n\n\n\n\n' + employeesContext?.currentEmployee)
     }
   };
 

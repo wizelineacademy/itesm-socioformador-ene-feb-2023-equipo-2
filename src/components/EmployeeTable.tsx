@@ -2,13 +2,14 @@
 // Poner una imagen de placeholden en caso de que no haya foto de perfil
 // Arreglar para la vista tipo telefono
 
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
 
-import { useContext } from 'react'
-import { employeeContext, EmployeeListContext, employeeListContext } from "@/context/employeeContext";
+import { employeeContext, employeeListContext } from "@/context/employeeContext";
+import { roleContext } from "@/context/roleContext";
+
 
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
@@ -18,6 +19,7 @@ interface CardProps {
 const EmployeeTable = (props: CardProps) => {
   const employeesContext = useContext(employeeContext);
   const employeesListContext = useContext(employeeListContext);
+  const rolesContext = useContext(roleContext);
 
   const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
@@ -31,21 +33,17 @@ const EmployeeTable = (props: CardProps) => {
   // const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
 
 
-  const handleEmployeeSeeInfo = () => {
-    alert("se va a redireccionar al perfil del usuario");
+  const handleEmployeeSeeInfo = (id: any) => {
+    //alert("se va a redireccionar al perfil del usuario");
+    const encodedInfo = encodeURIComponent(id);
+    window.location.href = `/profileInformation?info=${encodedInfo}`;
+    //console.log(id);
   };
 
   const handleEmployeeDelete = () => {
     alert("se va a eliminar el usuario del sistema");
   };
 
-  const handleEmployeeAddToProject = () => {
-    alert("se van a agregar el usuario a la lista de la orden");
-  };
-  
-  const handleEmployeeEraseFromProject = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
-  };
 
   const customStyles = {
     rows: {
@@ -80,15 +78,18 @@ const EmployeeTable = (props: CardProps) => {
 
   const columns: TableColumn<employeeSelectionInterface>[] = React.useMemo(
     () => [
-      /*{
+      {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaRegDotCircle className={`status-icon-size ${row.isActive === 1 ? 'state-active-employee' : 'state-inactive-employee'}`} />
+            <FaIcons.FaRegDotCircle
+              className={`status-icon-size ${
+                String(row.status) === 'true' ? "state-active" : "state-inactive" 
+              }`}
+            />
           </Fragment>
         ),
-        omit: hideStatusIcon,
-        width: '50px',
-      },*/
+        width: "50px",
+      },
       {
         cell: (row) => (
           <Fragment>
@@ -103,83 +104,37 @@ const EmployeeTable = (props: CardProps) => {
         sortable: true,
       },
       {
-        name: 'LinkedIn Link',
-        selector: row => row.linkedinlink,
-      },
-      {
-        name: 'CV File',
-        selector: row => row.cvfile,
-      },
-      {
-        name: 'Profile Image',
-        selector: row => row.profileimg,
-      },
-      {
-        name: 'Roadmap Information',
-        selector: row => row.inforoadmap,
+        name: 'Location',
+        selector: row => row.location,
       },
       {
         name: 'Email',
         selector: row => row.email,
       },
       {
-        name: 'Password',
-        selector: row => row.password,
-      },
-      {
-        name: 'Location',
-        selector: row => row.location,
-      },
-      {
-        name: 'About',
-        selector: row => row.infoabout,
-      },
-      {
-        name: 'Status',
-        selector: row => String(row.status),
+        name: 'LinkedIn Link',
+        selector: row => row.linkedinlink,
       },
       {
         cell: (row) => (
           <Fragment>
             <FaIcons.FaInfoCircle
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-              onClick={() => handleEmployeeSeeInfo()}/>
+              onClick={() => handleEmployeeSeeInfo(row.value)}/>
           </Fragment>
         ),
-        width: '50px',
-      },
-      // {
-      //   cell: (row) => (
-      //     <Fragment>
-      //       <FaIcons.FaTrash
-      //           style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-      //           onClick={() => handleEmployeeDelete()}/>
-      //     </Fragment>
-      //   ),
-      //   omit: hideTrashCan,
-      //   width: '50px',
-      // },
-      {
-        cell: (row) => (
-          <Fragment>
-            <FaIcons.FaPlus
-                style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                onClick={() => handleEmployeeAddToProject()}/>
-          </Fragment>
-        ),
-        omit: hidePlusSign,
         width: '50px',
       },
       {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaMinus
-                style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-                onClick={() => handleEmployeeEraseFromProject()}/>
+            <FaIcons.FaTrash
+              style={{color: 'black', fontSize: '18px', cursor: 'pointer'}} 
+              onClick={() => handleEmployeeDelete()}/>
           </Fragment>
         ),
-        omit: hideMinusSign,
-        width: '50px',
+        omit: hideTrashCan,
+        width: '70px',
       },
     ],
     [hideTrashCan, hidePlusSign, hideMinusSign],
@@ -201,9 +156,18 @@ const EmployeeTable = (props: CardProps) => {
       status: employee.status,
     }
   })
-
+  
   let selectedEmployeeID = employeesContext?.currentEmployee;
-  let filteredData = selectedEmployeeID ? data?.filter(employee => employee.value === selectedEmployeeID) : data;
+  let selectedRoleID = rolesContext?.currentRole;
+
+  let filteredEmployeeData = selectedEmployeeID ? data?.filter(employee => employee.value === selectedEmployeeID) : data;
+   filteredEmployeeData = selectedEmployeeID && selectedRoleID ? data?.filter(employee => employee.idposition.toString() === selectedRoleID && employee.value === selectedEmployeeID) :
+                        // @ts-ignore
+                        selectedRoleID ? data?.filter(employee => employee.idposition.toString() === selectedRoleID) :
+                        // @ts-ignore
+                        selectedEmployeeID ? data?.filter(employee => employee.value === selectedEmployeeID) :
+                        // @ts-ignore                        
+                        data;
 
   return (
     <>
@@ -211,7 +175,7 @@ const EmployeeTable = (props: CardProps) => {
         <DataTable
           columns={columns}
           // @ts-ignore
-          data={filteredData}
+          data={filteredEmployeeData}
           customStyles={customStyles}
           highlightOnHover
           //pointerOnHover

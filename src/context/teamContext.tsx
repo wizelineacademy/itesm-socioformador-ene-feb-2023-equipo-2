@@ -1,17 +1,6 @@
 import { createContext, useState } from 'react';
 import React from 'react';
 
-
-
-/*interface teamValueType { 
-  value: string | null;
-  setValue: (newValue: string) => void;
-}*/
-
-/*type teamInterface = {
-  value: string,
-}*/
-
 type currentTeamOptionsTypes = {
   currentTeam: string | null, 
   setCurrentTeam: React.Dispatch<React.SetStateAction<string | null>>
@@ -23,7 +12,7 @@ type currentTeamContextProviderProps = {
 
 export const teamContext = createContext<currentTeamOptionsTypes | null>(null);
 
-//export const teamListContext = createContext<teamOptionsTypes | null>(null);
+//export const TeamContext = createContext<teamOptionsTypes | null>(null);
 export const TeamContext = ({children}: currentTeamContextProviderProps) => {
   //return <departmentContext.Provider value={selectedDepartment}>{children}</departmentContext.Provider>
   const [currentTeam, setCurrentTeam] = useState<string | null>(null);
@@ -34,16 +23,12 @@ export const TeamContext = ({children}: currentTeamContextProviderProps) => {
   )
 }
 
-// you need to import departmentContextProvider in other files to use this
-/*export const teamContext = React.createContext<teamValueType>({
-  value: null,
-  setValue: () => {},
-});*/
+//------------------------------------------------------------------------------------
 
-interface teamSelectionInterface {
-    value: string,
-    label: string,
-  }
+type teamSelectionInterface = {
+  value: string;
+  label: string;
+}
 
 type teamOptionsTypes = {
   selectedTeam: teamSelectionInterface[] | null, 
@@ -56,7 +41,7 @@ type selectedTeamContextProviderProps = {
 
 export const teamListContext = createContext<teamOptionsTypes | null>(null);
 
-//export const teamListContext = createContext<OptionsTypes | null>(null);
+//export const ClientListContext = createContext<clientOptionsTypes | null>(null);
 export const TeamListContext = ({children}: selectedTeamContextProviderProps) => {
   //return <departmentContext.Provider value={selectedDepartment}>{children}</departmentContext.Provider>
   const [selectedTeam, setSelectedTeamList] = useState<teamSelectionInterface[] | null>(null);
@@ -64,5 +49,29 @@ export const TeamListContext = ({children}: selectedTeamContextProviderProps) =>
     <teamListContext.Provider value={{selectedTeam, setSelectedTeamList}}>
       {children}
     </teamListContext.Provider>
+  )
+}
+
+//------------------------------------------------------------------------------------
+
+type teamStatusOptionsTypes = {
+  selectedTeamStatus: string | null, 
+  setSelectedTeamStatus: React.Dispatch<React.SetStateAction<string | null>>
+}
+
+type selectedTeamStatusContextProviderProps = {
+  children: React.ReactNode
+}
+
+export const teamStatusContext = createContext<teamStatusOptionsTypes | null>(null);
+
+//export const TeamContext = createContext<teamOptionsTypes | null>(null);
+export const TeamStatusContext = ({children}: selectedTeamStatusContextProviderProps) => {
+  //return <departmentContext.Provider value={selectedDepartment}>{children}</departmentContext.Provider>
+  const [selectedTeamStatus, setSelectedTeamStatus] = useState<string | null>(null);
+  return (
+    <teamStatusContext.Provider value={{selectedTeamStatus, setSelectedTeamStatus}}>
+      {children}
+    </teamStatusContext.Provider>
   )
 }

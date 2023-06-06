@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Collapse from 'react-bootstrap/Collapse';
 import * as FaIcons from 'react-icons/fa';
 import ClientSearch from "@/components/ClientSearch";
@@ -6,29 +6,48 @@ import ClientCard from "@/components/ClientCard";
 import ClientCreation from "@/components/ClientCreation";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
-
 import { ClientListContext } from "@/context/clientContext";
 import { ClientContext } from "@/context/clientContext";
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const clients = () => {
+  const router = useRouter();
+  const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    // Redirect logic here
+    if (isLoading) {
+      undefined
+    } else {
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, [isLoading]);
+
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
-  const [addEmployee, setAddEmployee] = useState(false); 
+  const [addEmployee, setAddEmployee] = useState(false);
 
   if (!hasMounted) {
     return null;
   }
   return (
-    <>
-      <Menu
-        titulo="Clients"
-        descripcion="Proper project management requires effective client administration. You can administer your existing clients and create new ones to ensure the success of your projects."
-      />
-      <ClientListContext>
-        <ClientContext>
-          <ClientSearch />
-          {/* <div className="container mt-4">
+    user === undefined ? <div>
+      <h1>Loading...</h1>
+    </div>
+      :
+      <>
+        <Menu
+          titulo="Clients"
+          descripcion="Proper project management requires effective client administration. You can administer your existing clients and create new ones to ensure the success of your projects."
+        />
+        <ClientListContext>
+          <ClientContext>
+            <ClientSearch />
+            {/* <div className="container mt-4">
             <div className="row">
               <div className="d-flex flex-row-reverse">
                 <button
@@ -56,10 +75,10 @@ const clients = () => {
               <ClientCreation />
             </div>
           </Collapse> */}
-          <ClientCard />
-        </ClientContext>
-      </ClientListContext>
-    </>
+            <ClientCard />
+          </ClientContext>
+        </ClientListContext>
+      </>
   );
 };
 

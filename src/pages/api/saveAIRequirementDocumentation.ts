@@ -14,7 +14,7 @@ export default async function handler(req: any, res: any) {
   const idclient_int = parseInt(JSON.stringify(idclient));
   const name_string = name;
   const projectID = parseInt(id);
-
+/*
   console.log(aidescription_string)
   console.log(orderstatus_string)
   console.log(orderstartdate_datetime)
@@ -22,13 +22,13 @@ export default async function handler(req: any, res: any) {
   console.log(idteam_int)
   console.log(idclient_int)
   console.log(name_string)
-  console.log(projectID);
+  console.log(projectID);*/
 
   //TODO: ID FIJO PROVISIONAL MIENTRAS IMPLEMENTAMOS AUTH0
   //const id = 1
 
   try {
-    console.log('\n\n\n\n' + typeof(projectID));
+   // console.log('\n\n\n\n' + typeof(projectID));
     const updatedRecord = await prisma.$transaction(async (prisma) => {
         const record = await prisma.orders.findUnique({ where: { id: projectID } });
         if (!record) {

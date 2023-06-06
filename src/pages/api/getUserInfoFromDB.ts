@@ -4,15 +4,17 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function handler(req: any, res: any) {
-    const { id } = req.body;
+    const { userId } = req.body;
+
 
   try {
     const user = await prisma.employees.findUnique({
         where: {
-            id: id,
+            id: userId,
         },
         select:{
-            infoabout: true
+            name: true,
+            idposition: true
         }
     })
    

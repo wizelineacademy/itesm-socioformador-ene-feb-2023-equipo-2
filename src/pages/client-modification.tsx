@@ -43,7 +43,7 @@ const clientModification = () => {
     fetch(link + "/updateCurrentClient", requestOptions)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        //console.log(data);
       });
   };
 
@@ -119,8 +119,8 @@ const clientModification = () => {
           </div>
           {/* Submit button */}
           <button className="btn btn-primary mt-3" onClick={handleSendForm}>
-            <FaIcons.FaBrain className="mb-1" />
-            &nbsp;&nbsp;Update project
+            <FaIcons.FaUserTie className="mb-1" />
+            &nbsp;&nbsp;Update client
           </button>
         </div>
       </div>

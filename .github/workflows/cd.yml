@@ -47,5 +47,3 @@ jobs:
       - name: Install dependencies and build application
         run: |
           cd itesm-socioformador-ene-feb-2023-equipo-2
-          npm install
-          npm run dev
