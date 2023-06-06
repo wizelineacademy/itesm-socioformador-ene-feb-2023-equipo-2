@@ -29,7 +29,8 @@ interface projectTeamMembersInterface {
   employeename: string;
   location: string;
   idposition: string;
-  departmentname: string;
+  email: string;
+  linkedinlink: string;
   idteam: string;
   teamname: string;
   idproject: string;
@@ -199,8 +200,17 @@ const projects = () => {
     },
     {
       cell: (row) => (
-        <Fragment>{row.idposition === "2" ? "admin" : ""}</Fragment>
+        <Fragment>{row.idposition === "1" ? "admin" : ""}</Fragment>
       ),
+      width: "150px",
+    },
+    {
+      name: "Email",
+      selector: (row) => row.email,
+    },
+    {
+      name: "Linkedin",
+      selector: (row) => row.linkedinlink,
     },
     {
       cell: (row) => (
@@ -232,7 +242,8 @@ const projects = () => {
       employeename: 'No team members',
       location: '',
       idposition: '',
-      departmentname: '',
+      email: '',
+      linkedinlink: '',
       idteam: '',
       teamname: '',
       idproject: '',
@@ -255,7 +266,8 @@ const projects = () => {
       employeename: members.employeename,
       location: members.location,
       idposition: members.idposition,
-      departmentname: members.departmentname,
+      email: members.email,
+      linkedinlink: members.linkedinlink,
       idteam: members.idteam,
       teamname: members.teamname,
       idproject: members.idproject,
@@ -348,6 +360,7 @@ const projects = () => {
             customStyles={customStyles}
             highlightOnHover
             pagination
+            noDataComponent={"No team members"}
           />
         </Container>
       </>

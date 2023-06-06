@@ -15,7 +15,8 @@ type teamSelectionInterface = {
   idposition: string;
 }
 
-const TeamTable = () => {
+// @ts-ignore
+const TeamTable = ({ teamChange }) => {
   const teamsContext = useContext(teamContext);
   const teamsListContext = useContext(teamListContext);
   const employeesContext = useContext(employeeContext);
@@ -52,7 +53,8 @@ const TeamTable = () => {
     },
   };
 
-  const columns: TableColumn<teamSelectionInterface>[] = [
+  const columns: TableColumn<teamSelectionInterface>[] =  React.useMemo(
+    () => [
     {
       name: "Member Name",
       selector: (row) => row.employeename,
@@ -85,7 +87,7 @@ const TeamTable = () => {
       ),
       width: "50px",
     },
-  ];
+  ], [teamChange]);
 
   //let clients = clientsListContext?.selectedClient;
   const data = employeesList?.map((team) => {
@@ -124,6 +126,7 @@ const TeamTable = () => {
           highlightOnHover
           //pointerOnHover
           pagination
+          defaultSortFieldId={2}
         />
       </div>
     </>
