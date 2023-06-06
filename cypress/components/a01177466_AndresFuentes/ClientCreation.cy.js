@@ -6,26 +6,15 @@ describe('ClientCreation Component', () => {
     cy.mount(<ClientCreation />);
   });
 
-  it("healthcheck", () => {
-    cy.intercept('GET', '/api/healthcheck', (req) => {
-      req.reply({
-        statusCode: 200,
-        body: {
-          status: "ok"
-        }
-      })
-    })
+  it("renders the ClientCreation component", () => {
+    cy.contains("Please fill out the following fields to create a client:")
+      .should("be.visible");
+
+    cy.get("input#name").should("exist");
+    cy.get("input#email").should("exist");
+    cy.get("input#phone").should("exist");
+    cy.get("button").contains("Add").should("exist");
   });
-
-  // it("renders the ClientCreation component", () => {
-  //   cy.contains("Please fill out the following fields to create a client:")
-  //     .should("be.visible");
-
-  //   cy.get("input#name").should("exist");
-  //   cy.get("input#email").should("exist");
-  //   cy.get("input#phone").should("exist");
-  //   cy.get("button").contains("Add").should("exist");
-  // });
 
   it('should display success message after adding a client', () => {
     let name, email, phone; // Declare variables outside the test
@@ -59,37 +48,36 @@ describe('ClientCreation Component', () => {
           erased: false,
         },
       });
-    });
+    }).as('createClient');
 
-    cy.contains('Client added successfully').should('be.visible');
-    // cy.wait('@createClient', { timeout: 10000 }).then(() => {
-    // cy.contains('Client added successfully').should('be.visible');
-    // });
+    cy.wait('@createClient', { timeout: 10000 }).then((res) => {
+      cy.contains('Client added successfully').should('be.visible');
+    });
   });
 
-  // it("displays missing field message when a field is left empty", () => {
-  //   cy.get('input#name').type('John Doe');
+  it("displays missing field message when a field is left empty", () => {
+    cy.get('input#name').type('John Doe');
 
-  //   cy.get("button").contains("Add").click();
+    cy.get("button").contains("Add").click();
 
-  //   cy.contains("Please fill in all fields").should("be.visible");
-  // });
+    cy.contains("Please fill in all fields").should("be.visible");
+  });
 
-  // it("displays an error message when an error occurs", () => {
-  //   cy.intercept("POST", "/api/create-client", {
-  //     statusCode: 500,
-  //     body: { message: "An error occurred." },
-  //     delayMs: 1000,
-  //   }).as("getError");
+  it("displays an error message when an error occurs", () => {
+    cy.intercept("POST", "/api/create-client", {
+      statusCode: 500,
+      body: { message: "An error occurred." },
+      delayMs: 1000,
+    }).as("getError");
 
-  //   cy.get("#name").type("John Doe");
-  //   cy.get("#email").type("johndoe@example.com");
-  //   cy.get("#phone").type("123456789");
+    cy.get("#name").type("John Doe");
+    cy.get("#email").type("johndoe@example.com");
+    cy.get("#phone").type("123456789");
 
-  //   cy.get("button").contains("Add").click();
+    cy.get("button").contains("Add").click();
 
-  //   cy.wait("@getError", { timeout: 5000 }).then(() => {
-  //     cy.contains("An error occurred.").should("be.visible")
-  //   });
-  // });
+    cy.wait("@getError", { timeout: 5000 }).then(() => {
+      cy.contains("An error occurred.").should("be.visible")
+    });
+  });
 });
