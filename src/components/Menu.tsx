@@ -130,7 +130,7 @@ const Menu = (props: MenuProps) => {
                 <FaIcons.FaUser className="mb-1" />
                 &nbsp;&nbsp;Profile
               </NavDropdown.Item>
-              <NavDropdown.Item href="/settings" className="a-navbar">
+              <NavDropdown.Item href="/generar-perfil" className="a-navbar">
                 <FaIcons.FaCog className="mb-1" />
                 &nbsp;&nbsp;Settings
               </NavDropdown.Item>
