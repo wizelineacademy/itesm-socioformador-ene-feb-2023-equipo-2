@@ -8,7 +8,7 @@ import { AutoprefixerIconConfig } from "@patternfly/react-icons";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from "next/router";
 
-
+const roadmapData = "{\n'tools':[\n{\n'name': 'React',\n'description': 'Biblioteca de JavaScript para construir interfaces de usuario interactivas y reutilizables.',\n'previous_knowledge': 'Conocimientos básicos en HTML, CSS y JavaScript'\n},\n{\n'name': 'Redux',\n'description': 'Librería para manejar el estado de una aplicación de manera predecible.',\n'previous_knowledge': 'Conocimientos en React y en programación con JavaScript'\n},\n{\n'name': 'TypeScript',\n'description': 'Lenguaje de programación que es una superset de JavaScript que añade tipos estáticos y una serie de herramientas para mejorar el proceso de desarrollo.',\n'previous_knowledge': 'Conocimientos en programación con JavaScript y en desarrollo web'\n},\n{\n'name': 'Vue.js',\n'description': 'Framework progresivo de JavaScript para la construcción de interfaces de usuario.',\n'previous_knowledge': 'Conocimientos básicos en HTML, CSS y JavaScript'\n},\n{\n'name': 'Angular',\n'description': 'Framework de JavaScript para la construcción de aplicaciones web SPA con un alto rendimiento y una gran escalabilidad.',\n'previous_knowledge': 'Conocimientos en programación con JavaScript y en desarrollo web'\n}\n]\n}"
 
 interface apiResponse {
   id: number,
@@ -32,6 +32,7 @@ function Roadmap() {
   const router = useRouter();
 
   const { user, error, isLoading } = useUser();
+  console.log(user)
 
   useEffect(() => {
     // Redirect logic here
@@ -54,14 +55,15 @@ function Roadmap() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (roadmap?.tools) {
-      setIsRoadmap(true)
-    }
-    else (
-      router.push("/generar-perfil")
-    )
-  }, roadmap)
+  // useEffect(() => {
+  //   if (roadmap) {
+  //     setIsRoadmap(true)
+  //   }
+  //   else (
+  //     // router.push("/generar-perfil")
+  //     undefined
+  //   )
+  // }, roadmap)
 
   const getParsedJson = (string: string) => {
     //removing breakpoints and "/" characters
@@ -77,22 +79,24 @@ function Roadmap() {
 
     return parsedJson;
 
-
   }
 
   const fetchData = async () => {
     const response = await fetch(
       "http://localhost:3000/api/getRoadMap"
     );
-    const json = await response.json();
+    const json = await response.clone().json()
     const data: any = json as apiResponse[];
-    const obj = data?.userRoadMap?.inforoadmap
+    const obj = data?.userRoadMap.inforoadmap
+    console.log(data.userRoadMap.inforoadmap)
+
 
     //calling function to clean string only if there are a string to parse
     try {
       let jsonString = getParsedJson(obj)
       let finalJson = JSON.parse(jsonString);
-      setRoadmap(finalJson)
+      console.log("finalJson", finalJson.tools)
+      setRoadmap(finalJson.tools)
     } catch (e: any) {
       console.log("JSON not parsed");
     }
@@ -103,7 +107,7 @@ function Roadmap() {
     return null;
   }
 
-  console.log("roadmap => ", roadmap?.tools)
+  console.log("roadmap => ", roadmap)
 
   return (
     user === undefined ? <div>
@@ -119,7 +123,28 @@ function Roadmap() {
         />
 
         <div className="container">
-          {isRoadmap &&
+          {/* {roadmap !== undefined &&
+            roadmap.map((element: any) => {
+              return (
+                <div>
+                  <h2>
+                    {element.name}
+                  </h2>
+                  <p>
+                    {element.description}
+                  </p>
+                  <b>
+                    Previous Knowledge
+                  </b>
+
+                  <p>
+                    {element.previous_knowledge}
+                  </p>
+                </div>
+              )
+            })
+          } */}
+          {roadmap !== undefined &&
             <div className="row">
               <div className="col-3">
                 <div
@@ -128,7 +153,7 @@ function Roadmap() {
                   role="tablist"
                   aria-orientation="vertical"
                 >
-                  {roadmap?.tools.map((element: any) => {
+                  {roadmap.map((element: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <Link
@@ -159,7 +184,7 @@ function Roadmap() {
               </div>
               <div className="col-9">
                 <div className="tab-content" id="v-pills-tabContent">
-                  {roadmap?.tools.map((element: any) => {
+                  {roadmap.map((element: any) => {
                     console.log("selected menu => ", selectedMenu);
                     return (
                       // eslint-disable-next-line react/jsx-key
@@ -189,10 +214,17 @@ function Roadmap() {
               </div>
             </div>
           }
+          {/* <div className="card">
+            <div className="card-body">
+              <p className="card-text">
+                {roadmapData}
+              </p>
+            </div>
+          </div> */}
 
           {
             !isRoadmap && <div>
-              <h1>You will be redirected to Perfil Generation page because you have not your roadmap generated</h1>
+              {/* <h1>You will be redirected to Perfil Generation page because you have not your roadmap generated</h1> */}
             </div>
           }
 

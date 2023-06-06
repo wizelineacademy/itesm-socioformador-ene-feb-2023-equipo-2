@@ -22,7 +22,7 @@ import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeCreation from "@/components/EmployeeCreation";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
-
+import { getAuth0Id } from '../utils/getAuth0Id'
 import { EmployeeListContext } from "@/context/employeeContext";
 import { EmployeeContext } from "@/context/employeeContext";
 import { useRouter } from "next/router";
@@ -33,8 +33,13 @@ const employees = () => {
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
   const hasMounted = useHasMounted();
 
+  const [userInfo, setUserInfo] = useState<any>()
+
   const router = useRouter();
   const { user, error, isLoading } = useUser();
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  console.log("userInfo -> ", userInfo)
 
   useEffect(() => {
     // Redirect logic here
@@ -44,6 +49,19 @@ const employees = () => {
       if (!user) {
         router.push("/");
       }
+      let id: number = getAuth0Id(user?.sub)
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: id
+        }),
+      };
+
+      fetch(link + "/getUserInfoFromDB", requestOptions)
+        .then((response) => response.json())
+        .then((data) => setUserInfo(data))
+        .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
     }
   }, [isLoading]);
 

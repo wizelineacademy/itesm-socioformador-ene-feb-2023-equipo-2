@@ -34,8 +34,10 @@ const generarPerfil: React.FC = () => {
   const router = useRouter();
 
   const { user, error, isLoading } = useUser();
-  const idUser = getAuth0Id(user?.sub)
-  console.log("user id -> ", idUser)
+  const userId = getAuth0Id(user?.sub)
+  console.log(userId)
+
+  console.log(user)
 
   useEffect(() => {
     // Redirect logic here
@@ -82,6 +84,7 @@ const generarPerfil: React.FC = () => {
       body: JSON.stringify({
         inforoadmap: responseRoadmap,
         infoabout: responseCV,
+        userId: userId
       }),
     };
 
@@ -152,6 +155,7 @@ const generarPerfil: React.FC = () => {
       body: JSON.stringify({
         inforoadmap: responseRoadmap,
         infoabout: responseCV,
+        userId: userId
       }),
     };
 
