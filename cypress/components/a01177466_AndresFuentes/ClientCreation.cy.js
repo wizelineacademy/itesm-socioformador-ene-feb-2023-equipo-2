@@ -1,6 +1,6 @@
 import React from 'react';
 import ClientCreation from "@/components/ClientCreation";
-
+//comentario
 describe('ClientCreation Component', () => {
   beforeEach(() => {
     cy.mount(<ClientCreation />);
