@@ -145,9 +145,10 @@ const TeamList = ({ setTeamChange, teamChange }) => {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
-            className={`status-icon-size ${
-              String(row.isactive) === 'true' ? "state-active" : "state-inactive" 
-            }`}
+            className={`status-icon-size ${String(row.isactive) === 'true' ? "state-active" : "state-inactive" }`}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title={String(row.isactive) === 'true' ? 'Team is active' : 'Team is not active' }
           />
         </Fragment>
       ),

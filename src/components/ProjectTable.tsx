@@ -62,6 +62,11 @@ const ProjectTable = (props: CardProps) => {
             className={`status-icon-size ${
               row.orderstatus === "Approved" ? "state-active" : row.orderstatus === "Pending" ? "state-pending" : "state-inactive"
             }`}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title={
+              String(row.orderstatus) === 'Approved' ? 'Project was approved' : row.orderstatus === 'Pending' ? 'Project was rejected' : 'Project is Pending'
+            }
           />
         </Fragment>
       ),
@@ -93,7 +98,12 @@ const ProjectTable = (props: CardProps) => {
       cell: (row) => (
         <Fragment>
           <div onClick={() => {projectTableRouter.push({pathname: '/project-modification',query: { slug: row.value },});}}>
-            <FaIcons.FaPencilAlt style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
+            <FaIcons.FaPencilAlt 
+              style={{ color: "black", fontSize: "18px", cursor: "pointer" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Edit project information"
+            />
           </div>
           {/*
           href="/project-overview"
@@ -109,7 +119,12 @@ const ProjectTable = (props: CardProps) => {
       cell: (row) => (
         <Fragment>
           <div onClick={() => {projectTableRouter.push({pathname: '/project-overview',query: { slug: row.value },});}}>
-            <FaIcons.FaInfoCircle style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
+            <FaIcons.FaInfoCircle 
+              style={{ color: "black", fontSize: "18px", cursor: "pointer" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="View project information"
+            />
           </div>
           {/*
           href="/project-overview"
@@ -121,17 +136,6 @@ const ProjectTable = (props: CardProps) => {
       ),
       width: "50px",
     },
-    // {
-    //   cell: (row) => (
-    //     <Fragment>
-    //       <FaIcons.FaTrash
-    //         style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-    //         onClick={() => handleEraseFromSystem()}
-    //       />
-    //     </Fragment>
-    //   ),
-    //   width: "50px",
-    // },
   ];
 
   let projects = projectsListContext?.selectedProject;

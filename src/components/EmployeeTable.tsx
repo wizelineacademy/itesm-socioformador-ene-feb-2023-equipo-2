@@ -86,6 +86,9 @@ const EmployeeTable = (props: CardProps) => {
               className={`status-icon-size ${
                 String(row.status) === 'true' ? "state-active" : "state-inactive" 
               }`}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title={String(row.status) === 'true' ? 'Employee is active' : 'Employee is not active' }
             />
           </Fragment>
         ),
@@ -121,7 +124,11 @@ const EmployeeTable = (props: CardProps) => {
           <Fragment>
             <FaIcons.FaInfoCircle
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-              onClick={() => handleEmployeeSeeInfo(row.value)}/>
+              onClick={() => handleEmployeeSeeInfo(row.value)}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="View employee information"
+            />
           </Fragment>
         ),
         width: '50px',
@@ -132,6 +139,9 @@ const EmployeeTable = (props: CardProps) => {
             <FaIcons.FaPencilAlt
               style={{color: 'black', fontSize: '18px', cursor: 'pointer'}} 
               onClick={() => router.push({pathname: '/employee-modification', query: { slug: row.value }})}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Edit employee information"
             />
           </Fragment>
         ),

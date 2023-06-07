@@ -38,6 +38,19 @@ const ClientCard = () => {
     {
       cell: (row) => (
         <Fragment>
+          <FaIcons.FaRegDotCircle
+            className={`status-icon-size ${String(row.erased) === 'true' ? "state-active" : "state-inactive" }`}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title={String(row.erased) === 'true' ? 'Client is active' : 'Client is not active' }
+          />
+        </Fragment>
+      ),
+      width: "50px",
+    },
+    {
+      cell: (row) => (
+        <Fragment>
           <FaIcons.FaCircle style={{ color: "black", fontSize: "50px" }} />
         </Fragment>
       ),
@@ -57,15 +70,14 @@ const ClientCard = () => {
       selector: (row) => row.phone,
     },
     {
-      name: "Erased?",
-      selector: (row) => row.erased.toString(), // Convert erased to string
-    },
-    {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaPencilAlt
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => router.push({pathname: '/client-modification', query: { slug: row.value }})}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Edit client information"
           />
         </Fragment>
       ),
@@ -77,6 +89,9 @@ const ClientCard = () => {
           <div onClick={() => { router.push({ pathname: '/projects', query: { slug: row.value } }); }}>
             <FaIcons.FaInfoCircle
               style={{ color: "black", fontSize: "20px", cursor: "pointer" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="View client information"
             />
           </div>
         </Fragment>
