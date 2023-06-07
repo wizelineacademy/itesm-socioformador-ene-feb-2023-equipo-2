@@ -1,3 +1,5 @@
+#scrpt de desarrollo para CD dentro de la aplicación
+
 name: CD
 on:
   push: 
