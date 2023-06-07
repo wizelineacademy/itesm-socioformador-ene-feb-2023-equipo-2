@@ -17,6 +17,7 @@ import { getAuth0Id } from "@/utils/getAuth0Id";
 interface teamSelectionInterface {
   value: string,
   label: string,
+  isactive: string,
 }
 
 //Interface for employee

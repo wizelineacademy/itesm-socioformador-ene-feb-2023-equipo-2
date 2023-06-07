@@ -28,6 +28,7 @@ export const TeamContext = ({children}: currentTeamContextProviderProps) => {
 type teamSelectionInterface = {
   value: string;
   label: string;
+  isactive: string;
 }
 
 type teamOptionsTypes = {

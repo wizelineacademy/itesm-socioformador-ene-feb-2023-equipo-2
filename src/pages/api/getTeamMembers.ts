@@ -12,7 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         teams.name AS label,
         CAST(employees.id AS VARCHAR) AS employeeid, 
         employees.name AS employeename, 
-        employees.location,  
+        employees.location, 
+        teamemployees.isactivemember AS isactivemember,  
         CAST(employees.idposition AS VARCHAR) AS idposition
       FROM employees
       INNER JOIN teamemployees
