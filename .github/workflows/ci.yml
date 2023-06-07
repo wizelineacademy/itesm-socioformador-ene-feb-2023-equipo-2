@@ -96,4 +96,5 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           component: true
-          start: npm run dev
+          build: npm run build
+          start: npm start
