@@ -1,6 +1,7 @@
 // TODO:
 // 1. En "Manual Form", hacer que lea todas las preguntas y genere una respuesta en un textarea
 // 2. Pasar lo del textarea a varios fields
+// 2. Pasar lo del textarea a varios fields
 import React, { useState, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
 import Select from "react-select";
