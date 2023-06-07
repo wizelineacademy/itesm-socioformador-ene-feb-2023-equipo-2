@@ -80,7 +80,7 @@ jobs:
             echo "* Step: * Replace app folders"
             rm -rf ~/itesm-socioformador-ene-feb-2023-equipo-2/app
             mkdir -p ~/itesm-socioformador-ene-feb-2023-equipo-2/app
-            cp -R ~/itesm-socioformador-ene-feb-2023-equipo-2/tmp/. ~/itesm-socioformador-ene-feb-2023-equipo-1/app/
+            cp -R ~/itesm-socioformador-ene-feb-2023-equipo-2/tmp/. ~/itesm-socioformador-ene-feb-2023-equipo-2/app/
             cd ~/itesm-socioformador-ene-feb-2023-equipo-2/app
 
             echo "* Step: * Create .env file"
