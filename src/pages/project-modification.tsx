@@ -408,7 +408,7 @@ const projectModification = () => {
 
               {/* Submit button */}
               <button className="btn btn-primary mt-3" onClick={handleSendForm}>
-                <FaIcons.FaBrain className="mb-1" />
+                <FaIcons.FaClipboardList className="mb-1" />
                 &nbsp;&nbsp;Update project
               </button>
             </div>
