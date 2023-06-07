@@ -11,8 +11,9 @@ export default async function handler(req: any, res: any) {
       employee: {
         connect: {
           id: parseInt(employee),
-        }
-      }
+        },
+      },
+      isactivemember: true,
     }
   });
 
@@ -21,8 +22,10 @@ export default async function handler(req: any, res: any) {
       data: {
         name: teamName,  
         employees: {
-          create: selectedValues
+          create: selectedValues,
         },
+        // @ts-ignore
+        isactive: true,
       },
       include: {
         employees: true,
