@@ -16,7 +16,7 @@ export default async function handler(req: any, res: any) {
       isactivemember: true,
     }
   });
-
+//sdfsd
   try {
     const newTeam = await prisma.teams.create({
       data: {
