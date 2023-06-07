@@ -37,7 +37,7 @@ const EmployeeTable = (props: CardProps) => {
   const handleEmployeeSeeInfo = (id: any) => {
     //alert("se va a redireccionar al perfil del usuario");
     const encodedInfo = encodeURIComponent(id);
-    window.location.href = `/profileInformation?info=${encodedInfo}`;
+    window.location.href = `/profile-information?info=${encodedInfo}`;
     //console.log(id);
   };
 
