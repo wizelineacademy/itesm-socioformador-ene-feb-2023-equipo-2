@@ -75,9 +75,10 @@ const TeamTable = ({ teamChange }) => {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
-            className={`status-icon-size ${
-              String(row.isactivemember) === 'true' ? "state-active" : "state-inactive" 
-            }`}
+            className={`status-icon-size ${String(row.isactivemember) === 'true' ? "state-active" : "state-inactive" }`}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title={String(row.isactivemember) === 'true' ? 'Team is active' : 'Team is not active' }
           />
         </Fragment>
       ),
