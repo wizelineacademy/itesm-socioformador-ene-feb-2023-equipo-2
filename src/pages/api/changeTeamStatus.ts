@@ -16,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
   });*/
-  console.log('newStatus', newStatus)
   try {
     const teamUpdate = await prisma.teams.update({
       where: {

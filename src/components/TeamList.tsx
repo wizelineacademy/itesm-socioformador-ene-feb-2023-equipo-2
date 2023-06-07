@@ -85,8 +85,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
                               //teamMembers: selectedEmployees,
                               newStatus: status }),
     };
-    console.log('teamId', teamId)
-    console.log('status', status)
+
     fetch(link + "/changeTeamStatus", requestOptions)
       .then((response) => response.json())
       .then((editedMovie) => {})
@@ -169,6 +168,9 @@ const TeamList = ({ setTeamChange, teamChange }) => {
                               setCollapse(!collapse); 
                             setChangeTeamId(row.value); 
                             setName(row.label);} }
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Edit team information"
           />
         </Fragment>
       ),
@@ -183,7 +185,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
             onClick={() => handleChangeTeamStatus(false, row.value)}
             data-bs-toggle="tooltip"
             data-bs-placement="top"
-            title="Hooray!"
+            title="Remove from team"
           />
           :
           <FaIcons.FaArrowUp
@@ -191,7 +193,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
             onClick={() => handleChangeTeamStatus(true, row.value) }
             data-bs-toggle="tooltip"
             data-bs-placement="top"
-            title="Hooray!"
+            title="Re-add to team"
           />
           }
         </Fragment>

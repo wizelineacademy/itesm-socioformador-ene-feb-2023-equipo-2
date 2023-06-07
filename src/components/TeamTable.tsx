@@ -4,7 +4,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 
 import { teamContext, teamListContext } from "@/context/teamContext";
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
-import { useRouter } from 'next/router';
+
 
 type teamSelectionInterface = {
   value: string;
@@ -39,6 +39,21 @@ const TeamTable = ({ teamChange }) => {
       })
       .catch(error => console.log("Error ", error))
   }, [])
+
+  const handleChangeTeamMembersStatus = (status : boolean | null, teamId : string | null, memberId : string | null) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({  memberId: memberId,
+                              teamId: teamId,
+                              newStatus: status }),
+    };
+
+    fetch(link + "/changeTeamMembersStatus", requestOptions)
+      .then((response) => response.json())
+      .then((editedMovie) => {})
+      .catch(error => console.log("Error ", error));
+  };
 
   const customStyles = {
     rows: {
@@ -92,10 +107,23 @@ const TeamTable = ({ teamChange }) => {
     {
       cell: (row) => (
         <Fragment>
+          {row.isactivemember ? 
           <FaIcons.FaTrash
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleEraseFromSystem()}
+            onClick={() => handleChangeTeamMembersStatus(false, row.value, row.employeeid)}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Remove from team"
           />
+          :
+          <FaIcons.FaArrowUp
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => handleChangeTeamMembersStatus(true, row.value, row.employeeid) }
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Re-add to team"
+          />
+          }
         </Fragment>
       ),
       width: "50px",
