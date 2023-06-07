@@ -17,25 +17,40 @@ describe('ClientCreation Component', () => {
   });
 
   it('should display success message after adding a client', () => {
-    cy.intercept('POST', '/api/create-client', (req) => {
-      req.reply({
-        statusCode: 201,
-        body: {
-          id: 1, // You can generate a unique ID or use a predefined value
-          name: 'John Doe',
-          email: 'johndoe@example.com',
-          phone: '1234567890',
-          erased: false,
-        },
-      });
-    }).as('createClient');
+    let name, email, phone; // Declare variables outside the test
 
     cy.get('input#name').type('John Doe');
     cy.get('input#email').type('johndoe@example.com');
     cy.get('input#phone').type('1234567890');
     cy.get('button').contains('Add').click();
 
-    cy.wait('@createClient').then(() => {
+    // Extract input field values and store them in variables
+    cy.get('input#name').invoke('val').then(nameValue => {
+      name = nameValue;
+    });
+
+    cy.get('input#email').invoke('val').then(emailValue => {
+      email = emailValue;
+    });
+
+    cy.get('input#phone').invoke('val').then(phoneValue => {
+      phone = phoneValue;
+    });
+
+    cy.intercept('POST', '/api/create-client', (req) => {
+      req.reply({
+        statusCode: 201,
+        body: {
+          id: 1, // You can generate a unique ID or use a predefined value
+          name: name, // Use the stored 'name' value
+          email: email, // Use the stored 'email' value
+          phone: phone, // Use the stored 'phone' value
+          erased: false,
+        },
+      });
+    }).as('createClient');
+
+    cy.wait('@createClient', { timeout: 10000 }).then((res) => {
       cy.contains('Client added successfully').should('be.visible');
     });
   });

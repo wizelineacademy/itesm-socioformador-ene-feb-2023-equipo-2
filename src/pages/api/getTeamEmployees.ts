@@ -12,15 +12,12 @@ export default async function handler(req: any, res: any) {
       employees.name AS employeename, 
       employees.location,  
       CAST(employees.idposition AS VARCHAR) AS idposition, 
-      department.name AS departmentname,
+      employees.email AS email,
+      employees.linkedinlink AS linkedinlink,
       CAST(teams.id AS VARCHAR) AS idteam,
       teams.name AS teamname,
 	    CAST(orders.id AS VARCHAR) AS idproject
     FROM employees
-    INNER JOIN departmentemployees
-        ON employees.id = departmentemployees.idemployee
-    INNER JOIN department
-        ON departmentemployees.iddepartment = department.id
     INNER JOIN teamemployees
         ON employees.id = teamemployees.idemployee
     INNER JOIN teams

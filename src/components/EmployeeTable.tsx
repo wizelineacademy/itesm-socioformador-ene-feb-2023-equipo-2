@@ -6,10 +6,9 @@ import React, { Fragment, useState, useContext } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
-
+import { useRouter } from 'next/router';
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 import { roleContext } from "@/context/roleContext";
-
 
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
@@ -20,6 +19,8 @@ const EmployeeTable = (props: CardProps) => {
   const employeesContext = useContext(employeeContext);
   const employeesListContext = useContext(employeeListContext);
   const rolesContext = useContext(roleContext);
+
+  const router = useRouter();
 
   const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
   const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
@@ -36,7 +37,7 @@ const EmployeeTable = (props: CardProps) => {
   const handleEmployeeSeeInfo = (id: any) => {
     //alert("se va a redireccionar al perfil del usuario");
     const encodedInfo = encodeURIComponent(id);
-    window.location.href = `/profileInformation?info=${encodedInfo}`;
+    window.location.href = `/profile-information?info=${encodedInfo}`;
     //console.log(id);
   };
 
@@ -128,9 +129,10 @@ const EmployeeTable = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaTrash
+            <FaIcons.FaPencilAlt
               style={{color: 'black', fontSize: '18px', cursor: 'pointer'}} 
-              onClick={() => handleEmployeeDelete()}/>
+              onClick={() => router.push({pathname: '/employee-modification', query: { slug: row.value }})}
+            />
           </Fragment>
         ),
         omit: hideTrashCan,

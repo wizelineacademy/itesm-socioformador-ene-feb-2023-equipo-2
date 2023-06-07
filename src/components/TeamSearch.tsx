@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Container, Collapse } from "react-bootstrap";
 import Select from "react-select";
 import * as FaIcons from "react-icons/fa";
@@ -8,11 +8,16 @@ import TeamCreation from "@/components/TeamCreation";
 import { teamContext, teamListContext } from "@/context/teamContext";
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
 
 //Interface for teams
 interface teamSelectionInterface {
   value: string,
   label: string,
+  isactive: string,
 }
 
 //Interface for employee
@@ -53,9 +58,16 @@ const TeamSearch = () => {
   // React Hooks for managing component state for add new client
   const [collapse, setCollapse] = useState(false);
 
-  var isAdmin:Boolean = true;
-  
-  
+  const [userInfo, setUserInfo] = useState<any>()
+
+  const router = useRouter();
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  console.log("userInfo -> ", userInfo)
+
+  var isAdmin: Boolean = true;
+
+
   let link = process.env.NEXT_PUBLIC_API_URL;
 
 
@@ -67,13 +79,27 @@ const TeamSearch = () => {
         teamsListContext?.setSelectedTeamList(data.teams);
       })
       .catch(error => console.log("Error ", error))
-  }, [])
+
+    let id: number = getAuth0Id(user?.sub)
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   useEffect(() => {
   }, [teamsContext?.setCurrentTeam(name)]);
 
   //Use effect hooks for employee deploy on team data
-  
+
   // fetch of employees to later place in react-select.
   useEffect(() => {
     fetch(link + '/get-employees')
@@ -89,7 +115,7 @@ const TeamSearch = () => {
   }, [employeesContext?.setCurrentEmployee(employeeName)]);
 
   //Handle func for table
-  const handleChangeSelect = (e : any | null) => {
+  const handleChangeSelect = (e: any | null) => {
     if (e === null) {
       setName("");
     } else {
@@ -99,7 +125,7 @@ const TeamSearch = () => {
   };
 
   //Handle func for employees
-  const handleChangeSelectEmployeeName = (e : any | null) => {
+  const handleChangeSelectEmployeeName = (e: any | null) => {
     if (e === null) {
       setEmployeeName("");
     } else {
@@ -114,76 +140,77 @@ const TeamSearch = () => {
 
   return (
     <>
-      <div className="container">
-        {/*for searching employees by their name*/}
-        <div className="row">
-          <div className="col-md">
-            <label className="form-label">Name:</label>
-            {teamList ? (
-              <Select
-                onChange={handleChangeSelect}
-                value={teamList.find((obj) => obj.value === name) || ""}
-                options={teamList}
-                isClearable
-              />
-            ) : (
-              <div>Loading...</div>
-            )}
-          </div>
-          <div className="col-md">
-            <label className="form-label">Members</label>
-            {employeesList ? (
-              <Select
-              onChange={handleChangeSelectEmployeeName}
-              value={employeesList.find(
-                (obj) => obj.value === employeeName
+      {userInfo?.idposition === 1 &&
+        <div className="container">
+          {/*for searching employees by their name*/}
+          <div className="row">
+            <div className="col-md">
+              <label className="form-label">Name:</label>
+              {teamList ? (
+                <Select
+                  onChange={handleChangeSelect}
+                  value={teamList.find((obj) => obj.value === name) || ""}
+                  options={teamList}
+                  isClearable
+                />
+              ) : (
+                <div>Loading...</div>
               )}
-              options={employeesList}
-              isClearable
-              />
-            ) : (
-              <div>Loading...</div>
-            )}
-          </div>
-          <div className="col-md-2">
-            <label className="form-label">&nbsp;</label>
-            {isAdmin ? 
-              <Container className="mt">
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={() => setCollapse(!collapse)}
-                  aria-controls="collapseProjectCreation"
-                  aria-expanded={collapse}
-                >
-                  {collapse ? (
-                  <>
-                    <FaIcons.FaTimes className="mb-1" />
-                    &nbsp;&nbsp;Close
-                  </>
-                ) : (
-                  <>
-                    <FaIcons.FaUsers className="mb-1" />
-                    &nbsp;&nbsp;Add Team
-                  </>
-                )}
-                </button>
-              </Container> : <div></div>
-            }
-            {/* Botón anteriormente ejecutado previo al call */}
-            {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
+            </div>
+            <div className="col-md">
+              <label className="form-label">Members</label>
+              {employeesList ? (
+                <Select
+                  onChange={handleChangeSelectEmployeeName}
+                  value={employeesList.find(
+                    (obj) => obj.value === employeeName
+                  )}
+                  options={employeesList}
+                  isClearable
+                />
+              ) : (
+                <div>Loading...</div>
+              )}
+            </div>
+            <div className="col-md-2">
+              <label className="form-label">&nbsp;</label>
+              {isAdmin ?
+                <Container className="mt">
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={() => setCollapse(!collapse)}
+                    aria-controls="collapseProjectCreation"
+                    aria-expanded={collapse}
+                  >
+                    {collapse ? (
+                      <>
+                        <FaIcons.FaTimes className="mb-1" />
+                        &nbsp;&nbsp;Close
+                      </>
+                    ) : (
+                      <>
+                        <FaIcons.FaUsers className="mb-1" />
+                        &nbsp;&nbsp;Add Team
+                      </>
+                    )}
+                  </button>
+                </Container> : <div></div>
+              }
+              {/* Botón anteriormente ejecutado previo al call */}
+              {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
               <FaIcons.FaSearch className="mb-1" />
               &nbsp;&nbsp;Search
             </button> */}
+            </div>
+            {isAdmin ?
+              <Collapse in={collapse}>
+                <div id="collapseProjectCreation" className="my-3">
+                  <TeamCreation setCollapse={setCollapse} />
+                </div>
+              </Collapse> : <div></div>
+            }
           </div>
-          {isAdmin ? 
-            <Collapse in={collapse}>
-              <div id="collapseProjectCreation" className="my-3">
-                <TeamCreation setCollapse={setCollapse}/>
-              </div>
-            </Collapse> : <div></div>
-          }
-        </div>
-      </div>
+        </div>}
     </>
   );
 };

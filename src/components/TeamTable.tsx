@@ -4,7 +4,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 
 import { teamContext, teamListContext } from "@/context/teamContext";
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
-import { useRouter } from 'next/router';
+
 
 type teamSelectionInterface = {
   value: string;
@@ -12,10 +12,12 @@ type teamSelectionInterface = {
   employeeid: string;
   employeename: string;
   location: string;
+  isactivemember: string;
   idposition: string;
 }
 
-const TeamTable = () => {
+// @ts-ignore
+const TeamTable = ({ teamChange }) => {
   const teamsContext = useContext(teamContext);
   const teamsListContext = useContext(teamListContext);
   const employeesContext = useContext(employeeContext);
@@ -38,6 +40,21 @@ const TeamTable = () => {
       .catch(error => console.log("Error ", error))
   }, [])
 
+  const handleChangeTeamMembersStatus = (status : boolean | null, teamId : string | null, memberId : string | null) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({  memberId: memberId,
+                              teamId: teamId,
+                              newStatus: status }),
+    };
+
+    fetch(link + "/changeTeamMembersStatus", requestOptions)
+      .then((response) => response.json())
+      .then((editedMovie) => {})
+      .catch(error => console.log("Error ", error));
+  };
+
   const customStyles = {
     rows: {
       style: {
@@ -52,7 +69,20 @@ const TeamTable = () => {
     },
   };
 
-  const columns: TableColumn<teamSelectionInterface>[] = [
+  const columns: TableColumn<teamSelectionInterface>[] =  React.useMemo(
+    () => [
+    {
+      cell: (row) => (
+        <Fragment>
+          <FaIcons.FaRegDotCircle
+            className={`status-icon-size ${
+              String(row.isactivemember) === 'true' ? "state-active" : "state-inactive" 
+            }`}
+          />
+        </Fragment>
+      ),
+      width: "50px",
+    },
     {
       name: "Member Name",
       selector: (row) => row.employeename,
@@ -77,15 +107,28 @@ const TeamTable = () => {
     {
       cell: (row) => (
         <Fragment>
+          {row.isactivemember ? 
           <FaIcons.FaTrash
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleEraseFromSystem()}
+            onClick={() => handleChangeTeamMembersStatus(false, row.value, row.employeeid)}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Remove from team"
           />
+          :
+          <FaIcons.FaArrowUp
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => handleChangeTeamMembersStatus(true, row.value, row.employeeid) }
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Re-add to team"
+          />
+          }
         </Fragment>
       ),
       width: "50px",
     },
-  ];
+  ], [teamChange]);
 
   //let clients = clientsListContext?.selectedClient;
   const data = employeesList?.map((team) => {
@@ -95,6 +138,7 @@ const TeamTable = () => {
       employeeid: team.employeeid,
       employeename: team.employeename,
       location: team.location,
+      isactivemember: team.isactivemember,
       idposition: team.idposition,
     }
   })
@@ -124,6 +168,7 @@ const TeamTable = () => {
           highlightOnHover
           //pointerOnHover
           pagination
+          defaultSortFieldId={2}
         />
       </div>
     </>

@@ -10,18 +10,6 @@ const ClientCard = () => {
   const clientsListContext = useContext(clientListContext);
   const router = useRouter();
 
-  const handleClientSeeProjects = () => {
-    alert("se va a redireccionar al perfil del usuario");
-  };
-
-  const handleClientEdit = () => {
-    alert("editar");
-  };
-
-  const handleClientEraseFromSystem = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
-  };
-
   const customStyles = {
     rows: {
       style: {
@@ -75,12 +63,10 @@ const ClientCard = () => {
     {
       cell: (row) => (
         <Fragment>
-          <div onClick={() => { router.push({ pathname: '/projects', query: { slug: row.value } }); }}>
-            <FaIcons.FaInfoCircle
-              style={{ color: "black", fontSize: "25px", cursor: "pointer" }}
-              onClick={() => handleClientSeeProjects()}
-            />
-          </div>
+          <FaIcons.FaPencilAlt
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => router.push({pathname: '/client-modification', query: { slug: row.value }})}
+          />
         </Fragment>
       ),
       width: "50px",
@@ -88,10 +74,11 @@ const ClientCard = () => {
     {
       cell: (row) => (
         <Fragment>
-          <FaIcons.FaPencilAlt
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => router.push({pathname: '/client-modification', query: { slug: row.value }})}
-          />
+          <div onClick={() => { router.push({ pathname: '/projects', query: { slug: row.value } }); }}>
+            <FaIcons.FaInfoCircle
+              style={{ color: "black", fontSize: "20px", cursor: "pointer" }}
+            />
+          </div>
         </Fragment>
       ),
       width: "50px",

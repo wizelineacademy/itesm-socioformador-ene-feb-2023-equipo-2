@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  let { selectedTeamID } = req.body;
+  //const newSelectedTeamID = parseInt(selectedTeamID);
   try {
 
     const teamMembers = await prisma.$queryRaw`
@@ -12,14 +14,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         teams.name AS label,
         CAST(employees.id AS VARCHAR) AS employeeid, 
         employees.name AS employeename, 
-        employees.location, 
-        teamemployees.isactivemember AS isactivemember,  
+        employees.location,  
         CAST(employees.idposition AS VARCHAR) AS idposition
       FROM employees
       INNER JOIN teamemployees
         ON employees.id = teamemployees.idemployee
       INNER JOIN teams
         ON teams.id = teamemployees.idteam
+      WHERE teams.id = ${selectedTeamID}
       ORDER BY label ASC;
     `
     const response = {

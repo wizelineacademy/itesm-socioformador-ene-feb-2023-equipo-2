@@ -18,6 +18,15 @@ import { getAuth0Id } from '../utils/getAuth0Id'
 import { useRouter } from "next/router";
 import { useUser } from '@auth0/nextjs-auth0/client';
 
+interface apiResponse {
+  id: number,
+  name: string,
+  linkedinlink: string,
+  cvfile: string,
+  profileimage: string,
+  inforoadmap: string
+}
+
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
   // React Hooks for managing component state
@@ -28,16 +37,19 @@ const generarPerfil: React.FC = () => {
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
   const [resLinkLinkedin, setResLinkLinkedin] = useState("");
   const [responseRoadmap, setResponseRoadmap] = useState<any>("");
-  const [responseCV, setResponseCV] = useState<any>("")
+  const [responseCV, setResponseCV] = useState<any>()
+  const [roadmap, setRoadmap] = useState();
+  const [userInfo, setUserInfo] = useState<any>();
 
   let link = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   const { user, error, isLoading } = useUser();
   const userId = getAuth0Id(user?.sub)
-  console.log(userId)
 
-  console.log(user)
+  console.log(roadmap)
+  console.log("roadmap response => ", responseRoadmap)
+  console.log("info user response => ", responseCV)
 
   useEffect(() => {
     // Redirect logic here
@@ -48,8 +60,33 @@ const generarPerfil: React.FC = () => {
         router.push("/");
       }
     }
+
+    let id: number = getAuth0Id(user?.sub)
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        setUserInfo(data)
+        setResponseCV(data?.infoabout)
+        setResponseRoadmap(data?.inforoadmap)
+        setName(data?.name)
+        setLocation(data?.location)
+      })
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+
+    if (userInfo !== undefined) {
+
+    }
   }, [isLoading]);
 
+  console.log("userInfo", userInfo)
 
   const flaskLinkedin = (linkLinkedin: string) => {
     return new Promise((resolve, reject) => {

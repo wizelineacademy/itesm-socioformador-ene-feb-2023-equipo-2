@@ -7,7 +7,7 @@ export default async function handler(req: any, res: any) {
     try {
         const teams = await prisma.teams.findMany();
         const teamData = teams.map((team) => {
-            return {value: team.id, label: team.name}
+            return {value: team.id, label: team.name, isactive: team.isactive}
         });
 
         const response = {

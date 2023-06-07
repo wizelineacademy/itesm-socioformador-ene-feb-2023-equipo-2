@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import * as FaIcons from "react-icons/fa";
-import { Container, Row, Col, Collapse } from "react-bootstrap";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 import Select from "react-select";
