@@ -17,7 +17,7 @@ jobs:
     environment: dev
     # needs: [lint, typecheck, vitest, cypress]
     # only build/deploy main branch on pushes
-    if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
+    if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development') && github.event_name == 'push' }}
 
     env:
       NODE_ENV: production
