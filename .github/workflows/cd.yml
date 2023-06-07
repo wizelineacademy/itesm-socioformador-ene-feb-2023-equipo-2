@@ -47,7 +47,7 @@ jobs:
           server: ${{ secrets.LIGHTSAIL_IP }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           local_path: "./*"
-          remote_path: "D:/Documentos/Sexto Semestre/Desarrollo e implementacion de software/itesm-socioformador-ene-feb-2023-equipo-2/tmp"
+          remote_path: "/home/admin/itesm-socioformador-ene-feb-2023-equipo-2/tmp"
           args: "-o ConnectTimeout=60"
 
       - name: Configure Server
