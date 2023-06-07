@@ -12,6 +12,7 @@ type teamSelectionInterface = {
   employeeid: string;
   employeename: string;
   location: string;
+  isactivemember: string;
   idposition: string;
 }
 
@@ -56,6 +57,18 @@ const TeamTable = ({ teamChange }) => {
   const columns: TableColumn<teamSelectionInterface>[] =  React.useMemo(
     () => [
     {
+      cell: (row) => (
+        <Fragment>
+          <FaIcons.FaRegDotCircle
+            className={`status-icon-size ${
+              String(row.isactivemember) === 'true' ? "state-active" : "state-inactive" 
+            }`}
+          />
+        </Fragment>
+      ),
+      width: "50px",
+    },
+    {
       name: "Member Name",
       selector: (row) => row.employeename,
       sortable: true,
@@ -97,6 +110,7 @@ const TeamTable = ({ teamChange }) => {
       employeeid: team.employeeid,
       employeename: team.employeename,
       location: team.location,
+      isactivemember: team.isactivemember,
       idposition: team.idposition,
     }
   })

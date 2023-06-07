@@ -7,12 +7,19 @@ import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table
 import { teamContext, teamListContext } from "@/context/teamContext";
 
 
+type teamTableInterface = {
+  value: string;
+  label: string;
+  isactive: string;
+}
+
 type teamSelectionInterface = {
   value: string;
   label: string;
   employeeid: string;
   employeename: string;
   location: string;
+  isactivemember: string;
   idposition: string;
 }
 
@@ -70,6 +77,22 @@ const TeamList = ({ setTeamChange, teamChange }) => {
     setTeamChange(prevTeamChange => !prevTeamChange);
   };
 
+  const handleChangeTeamStatus = (status : boolean | null, teamId : string | null) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({  id: teamId,
+                              //teamMembers: selectedEmployees,
+                              newStatus: status }),
+    };
+    console.log('teamId', teamId)
+    console.log('status', status)
+    fetch(link + "/changeTeamStatus", requestOptions)
+      .then((response) => response.json())
+      .then((editedMovie) => {})
+      .catch(error => console.log("Error ", error));
+  };
+
   const handleChangeSelectEmployeeName = (e : any[] | null) => {
     if (e === null) {
       setSelectedEmployees([]);
@@ -118,7 +141,19 @@ const TeamList = ({ setTeamChange, teamChange }) => {
     },
   };
   //fsdf
-  const columns: TableColumn<teamSelectionInterface>[] = [
+  const columns: TableColumn<teamTableInterface>[] = [
+    {
+      cell: (row) => (
+        <Fragment>
+          <FaIcons.FaRegDotCircle
+            className={`status-icon-size ${
+              String(row.isactive) === 'true' ? "state-active" : "state-inactive" 
+            }`}
+          />
+        </Fragment>
+      ),
+      width: "50px",
+    },
     {
       name: "Team Name",
       selector: (row) => row.label,
@@ -142,13 +177,23 @@ const TeamList = ({ setTeamChange, teamChange }) => {
     {
       cell: (row) => (
         <Fragment>
+          {row.isactive ? 
           <FaIcons.FaTrash
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            //onClick={() => handleEraseFromSystem()}
+            onClick={() => handleChangeTeamStatus(false, row.value)}
             data-bs-toggle="tooltip"
             data-bs-placement="top"
             title="Hooray!"
           />
+          :
+          <FaIcons.FaArrowUp
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => handleChangeTeamStatus(true, row.value) }
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Hooray!"
+          />
+          }
         </Fragment>
       ),
       width: "50px",
@@ -161,6 +206,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
     return {
       value: team.value,
       label: team.label,
+      isactive: team.isactive,
     }
   })
 
