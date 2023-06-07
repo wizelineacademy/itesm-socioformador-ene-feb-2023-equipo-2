@@ -1,8 +1,7 @@
-#scrpt de desarrollo para CD dentro de la aplicación
-
 name: CD
+
 on:
-  push: 
+  push:
     branches:
       - development
 
@@ -30,6 +29,11 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
       - name: Prepare Server For Build
         uses: appleboy/ssh-action@master
         with:
@@ -48,7 +52,6 @@ jobs:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           local_path: "./*"
           remote_path: "/home/admin/itesm-socioformador-ene-feb-2023-equipo-2/tmp"
-
           args: "-o ConnectTimeout=60"
 
       - name: Configure Server
@@ -62,9 +65,9 @@ jobs:
           AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
           NEXT_PUBLIC_API_KEY: ${{ secrets.NEXT_PUBLIC_API_KEY }}
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL}}
-          AUTH0_BASE_URL: ${{ secrets.AUTH0_BASE_URL}}
-          AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL}}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          AUTH0_BASE_URL: ${{ secrets.AUTH0_BASE_URL }}
+          AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
           AUTH0_TOKEN: ${{ secrets.AUTH0_TOKEN }}
 
         with:
@@ -97,11 +100,6 @@ jobs:
             echo AUTH0_BASE_URL="$AUTH0_BASE_URL" >> .env
             echo AUTH0_ISSUER_BASE_URL="$AUTH0_ISSUER_BASE_URL" >> .env
             echo AUTH_TOKEN="$AUTH_TOKEN" >> .env
-
-
-            
-
-            
 
             echo "* Step: * npm ci and build"
             npm ci # install
