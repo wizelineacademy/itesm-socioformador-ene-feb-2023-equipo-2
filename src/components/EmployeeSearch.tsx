@@ -12,6 +12,10 @@ import Collapse from 'react-bootstrap/Collapse';
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 import { roleContext } from "@/context/roleContext";
 
+import { useRouter } from "next/router";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
 const roleOptions = [
   { value: "1", label: "Wizeliner" },
   { value: "2", label: "Administrator" },
@@ -46,6 +50,13 @@ const EmployeeSearch = () => {
   const [employeeName, setEmployeeName] = useState("");
   const [role, setRole] = useState("");
 
+  const [userInfo, setUserInfo] = useState<any>()
+
+  const router = useRouter();
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  console.log("userInfo -> ", userInfo)
+
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   // fetch of employees to later place in react-select.
@@ -57,7 +68,21 @@ const EmployeeSearch = () => {
         employeesListContext?.setSelectedEmployeeList(data.employees);
       })
       .catch(error => console.log("Error", error))
-  }, [])
+
+    let id: number = getAuth0Id(user?.sub)
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   const handleChangeSelectEmployeeName = (e: any | null) => {
     if (e === null) {
@@ -91,7 +116,8 @@ const EmployeeSearch = () => {
   }
 
   return (
-    <>
+    <>{
+      userInfo?.idposition === 1 &&
       <div className="container my-4">
         {/*for searching employees by their name*/}
         <div className="row">
@@ -145,7 +171,7 @@ const EmployeeSearch = () => {
             </div>
           </Collapse>
         </div>
-      </div>
+      </div>}
     </>
   );
 };
