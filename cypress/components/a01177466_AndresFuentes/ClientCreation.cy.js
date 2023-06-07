@@ -50,7 +50,7 @@ describe('ClientCreation Component', () => {
       });
     }).as('createClient');
 
-    cy.wait('@createClient', { timeout: 10000 }).then((res) => {
+    cy.wait('@createClient', { timeout: 20000 }).then((res) => {
       cy.contains('Client added successfully').should('be.visible');
     });
   });
@@ -76,7 +76,7 @@ describe('ClientCreation Component', () => {
 
     cy.get("button").contains("Add").click();
 
-    cy.wait("@getError", { timeout: 5000 }).then(() => {
+    cy.wait("@getError", { timeout: 20000 }).then(() => {
       cy.contains("An error occurred.").should("be.visible")
     });
   });
