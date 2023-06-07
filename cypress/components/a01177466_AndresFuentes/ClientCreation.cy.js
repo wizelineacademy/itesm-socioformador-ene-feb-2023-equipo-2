@@ -37,7 +37,7 @@ describe('ClientCreation Component', () => {
       phone = phoneValue;
     });
 
-    cy.intercept('POST', '/api/create-client', (req) => {
+    cy.intercept('POST', 'http://localhost:8080/api/create-client', (req) => {
       req.reply({
         statusCode: 201,
         body: {
