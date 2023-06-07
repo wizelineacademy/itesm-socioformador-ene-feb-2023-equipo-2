@@ -29,10 +29,13 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
         with:
-          node-version: '19.8.1'
+          node-version: 16
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
 
       - name: Prepare Server For Build
         uses: appleboy/ssh-action@master
