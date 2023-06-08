@@ -109,7 +109,7 @@ const clientModification = () => {
               />
             </div>
             <div className="col-md">
-              <label className="form-label">Email:</label>
+              <label className="form-label">Status:</label>
               <Select
                 onChange={handleChangeSelect}
                 value={options.find((obj) => obj.value === erased) || ""}
