@@ -37,6 +37,8 @@ const perfil = () => {
 
   const { user, error, isLoading } = useUser();
 
+  console.log(userData)
+
   const idUser = getAuth0Id(user?.sub)
   console.log(idUser)
 

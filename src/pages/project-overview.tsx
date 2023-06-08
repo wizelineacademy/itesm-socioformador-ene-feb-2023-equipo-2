@@ -106,7 +106,9 @@ const projects = () => {
       .replace(/\n/g, "<br>")
       .replace(/"Project description":/g, "")
       .replace(/"|{|}|,/g, "")
+      .replace(/"|{|}|\,/g, "")
       .trim();
+
 
     return replacedDescription;
   }
@@ -296,32 +298,70 @@ const projects = () => {
         <Container className="mt-3">
           <Row>
             <div className="container p-4">
-              <div className="card-body d-flex flex-column">
-                <div className="d-flex flex-row justify-content-between">
-                  <h3 className="ml-5">
-                    {filteredProjectOverviewData?.[0]?.ordername}
-                  </h3>
-                  <h6 className="mt-auto">
-                    {filteredProjectOverviewData?.[0]?.orderstartdate} - {" "}
-                    {filteredProjectOverviewData?.[0]?.orderenddate}
-                  </h6>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Name
+                  </h5>
                 </div>
-                <h6 className="ml-5 mt-2">
+                <div className="col-10">
+                  {filteredProjectOverviewData?.[0]?.ordername}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Dates
+                  </h5>
+                </div>
+                <div className="col-10">
+                  {filteredProjectOverviewData?.[0]?.orderstartdate} - {" "}
+                  {filteredProjectOverviewData?.[0]?.orderenddate}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Description
+                  </h5>
+                </div>
+                <div className="col-10">
                   <p
                     dangerouslySetInnerHTML={{
                       __html: extractProjectDescription(descripcion),
                     }}
                   />
-                </h6>
-                <h5 className="ml-5 mt-1">
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Client Name
+                  </h5>
+                </div>
+                <div className="col-10">
                   {filteredProjectOverviewData?.[0]?.clientname}
-                </h5>
-                <h6 className="ml-5">
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Client Email
+                  </h5>
+                </div>
+                <div className="col-10">
                   {filteredProjectOverviewData?.[0]?.email}
-                </h6>
-                <h6 className="ml-5">
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Client Phone
+                  </h5>
+                </div>
+                <div className="col-10">
                   {filteredProjectOverviewData?.[0]?.phone}
-                </h6>
+                </div>
               </div>
             </div>
             <Col className="d-flex flex-row-reverse">
@@ -348,8 +388,14 @@ const projects = () => {
           <Collapse in={collapse}>
             <div id="collapseProjectCreation" className="my-3">
               <p
-                dangerouslySetInnerHTML={{ __html: replaceWithBrFR(descripcion) }}
+
               />
+              <div className="card">
+                <div
+                  className="card-body"
+                  dangerouslySetInnerHTML={{ __html: replaceWithBrFR(descripcion) }}
+                />
+              </div>
             </div>
           </Collapse>
           <DataTable
