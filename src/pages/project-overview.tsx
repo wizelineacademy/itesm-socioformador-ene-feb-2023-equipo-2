@@ -197,10 +197,6 @@ const projects = () => {
       sortable: true,
     },
     {
-      name: "Location",
-      selector: (row) => row.location,
-    },
-    {
       cell: (row) => (
         <Fragment>{row.idposition === "1" ? "admin" : ""}</Fragment>
       ),

@@ -120,10 +120,6 @@ const EmployeeTable = (props: CardProps) => {
         sortable: true,
       },
       {
-        name: 'Location',
-        selector: row => row.location,
-      },
-      {
         name: 'Email',
         selector: row => row.email,
       },
@@ -134,6 +130,12 @@ const EmployeeTable = (props: CardProps) => {
       {
         name: 'LinkedIn Link',
         selector: row => row.linkedinlink,
+      },
+      {
+        cell: (row) => (
+          <Fragment>{row.idposition === 1 ? "admin" : ""}</Fragment>
+        ),
+        width: "150px",
       },
       {
         cell: (row) => (

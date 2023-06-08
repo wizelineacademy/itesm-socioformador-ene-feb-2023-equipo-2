@@ -157,16 +157,6 @@ const EmployeeCreation = () => {
     { value: "3", label: "Cliente" }
   ];
 
-  const departmentOptions = [
-    { value: "monterrey", label: "Monterrey" },
-    { value: "saltillo", label: "Saltillo" },
-    { value: "reynosa", label: "Reynosa" },
-    { value: "victoria", label: "Ciudad Victoria" },
-    { value: "lapaz", label: "La Paz" },
-    { value: "guadalajara", label: "Guadalajara" },
-    { value: "queretaro", label: "Queretaro" },
-  ];
-
   if (!hasMounted) {
     return null;
   }

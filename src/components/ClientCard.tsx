@@ -87,11 +87,11 @@ const ClientCard = () => {
       cell: (row) => (
         <Fragment>
           <div onClick={() => { router.push({ pathname: '/projects', query: { slug: row.value } }); }}>
-            <FaIcons.FaInfoCircle
+            <FaIcons.FaClipboardList
               style={{ color: "black", fontSize: "20px", cursor: "pointer" }}
               data-bs-toggle="tooltip"
               data-bs-placement="top"
-              title="View client information"
+              title="View client projects"
             />
           </div>
         </Fragment>

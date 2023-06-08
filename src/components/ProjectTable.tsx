@@ -23,11 +23,8 @@ interface projectListInterface {
   teamname: string;
 }
 
-interface CardProps {
-  clientID: string;
-}
-
-const ProjectTable = (props: CardProps) => {
+// @ts-ignore
+const ProjectTable = ({ clientID }) => {
   const projectsContext = useContext(projectContext);
   const projectsListContext = useContext(projectListContext);
   const statusesContext = useContext(statusContext);
@@ -35,6 +32,9 @@ const ProjectTable = (props: CardProps) => {
   const clientsListContext = useContext(clientListContext);
 
   const projectTableRouter = useRouter();
+
+  useEffect(() => {
+  }, [clientID]);
 
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
@@ -157,6 +157,7 @@ const ProjectTable = (props: CardProps) => {
 
   let selectedProjectID = projectsContext?.currentProject;
   let selectedClientID = clientsContext?.currentClient;
+  console.log('selectedClientID', selectedClientID)
   let selectedStatus = statusesContext?.selectedStatus;
 
   // @ts-ignore
@@ -165,17 +166,17 @@ const ProjectTable = (props: CardProps) => {
   let selectedClientIDInt = parseInt(clientsContext?.currentClient);
   
   // @ts-ignore
-  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "NaN" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
                         // @ts-ignore
-                        selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
+                        selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "NaN" && selectedProjectID != "0" && selectedClientID != "0" ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
                         // @ts-ignore
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" && selectedStatus ? data?.filter(project => project.value === selectedProjectIDInt && project.orderstatus === selectedStatus) :
                         // @ts-ignore
-                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" && selectedStatus ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        selectedClientID != "" && selectedClientID != "NaN" && selectedClientID != "0" && selectedStatus ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
                         // @ts-ignore
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" ? data?.filter(project => project.value === selectedProjectIDInt) :
                         // @ts-ignore
-                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) :
+                        selectedClientID != "" && selectedClientID != "NaN" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) :
                         // @ts-ignore
                         selectedStatus != "" && selectedStatus != "undefined" && selectedStatus != null ? data?.filter(project => project.orderstatus === selectedStatus) : data;
 
