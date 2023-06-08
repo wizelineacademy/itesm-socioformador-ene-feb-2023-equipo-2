@@ -44,6 +44,8 @@ const clientModification = () => {
       .then((data) => {
         //console.log(data);
       });
+
+    window.location.href = '/clients';
   };
 
   useEffect(() => {
