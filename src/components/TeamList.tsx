@@ -77,7 +77,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
     setTeamChange(prevTeamChange => !prevTeamChange);
   };
 
-  const handleChangeTeamStatus = (status : boolean | null, teamId : string | null) => {
+  const handleChangeTeamStatus = (status : boolean, teamId : string | null) => {
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

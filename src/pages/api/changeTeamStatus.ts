@@ -6,6 +6,9 @@ const prisma = new PrismaClient();
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id, newStatus } = req.body;
   const teamID = parseInt(id);
+  console.log('id', id)
+  console.log('newStatus', newStatus)
+  console.log('teamID', teamID)
   // @ts-ignore
  /* const selectedValues = teamMembers.map((employee) => {
     return {
@@ -24,18 +27,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         // @ts-ignore
         isactive: newStatus,
+        employees: {
+          updateMany: {
+            where: {
+              isactivemember: !newStatus,
+            },
+            data: {
+              isactivemember: newStatus,
+            }
+          },
+        },
       }
     });
-
-    /*const teamMembersUpdate = prisma.teamemployees.updateMany({
-      where: {
-        idteam: teamID,
-      },
-      data: {
-        // @ts-ignore
-        isactivemember: true,
-      },
-    });*/
+    console.log('teamUpdate', teamUpdate)
     
     return res.status(200).json({ message: "Updated team correctly" })
   } catch (error) {
