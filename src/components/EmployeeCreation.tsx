@@ -44,6 +44,8 @@ const EmployeeCreation = () => {
   const [token, setToken] = useState("")
   const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
 
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     // credentials to generate the auth0 token necessary to create new users
     // @ts-ignore
@@ -134,7 +136,7 @@ const EmployeeCreation = () => {
           )
         };
 
-        fetch('http://localhost:3000/api/createUsers', requestOptions)
+        fetch(link + '/createUsers', requestOptions)
           .then(response => response.json())
           .then(data => console.log("Usuario guardado correctamente en BD"))
           .catch(error => {

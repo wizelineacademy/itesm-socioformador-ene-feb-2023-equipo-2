@@ -44,6 +44,7 @@ const ClientCreation = () => {
         console.log(data);
         setClientAdded(true); // Set the flag to indicate client addition
         setMissingField(""); // Clear the missing field message
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error", error);

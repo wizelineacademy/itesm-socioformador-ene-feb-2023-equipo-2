@@ -23,8 +23,8 @@ const clientModification = () => {
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   const options = [
-    { value: false, label: "Disable" },
-    { value: true, label: "Enable" },
+    { value: true, label: "Disable" },
+    { value: false, label: "Enable" },
   ];
 
   const handleSendForm = () => {
@@ -42,7 +42,7 @@ const clientModification = () => {
     fetch(link + "/updateCurrentClient", requestOptions)
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data);
+        router.push('/clients')
       });
   };
 

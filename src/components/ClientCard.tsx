@@ -39,10 +39,10 @@ const ClientCard = () => {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
-            className={`status-icon-size ${String(row.erased) === 'true' ? "state-active" : "state-inactive" }`}
+            className={`status-icon-size ${String(row.erased) === 'false' ? "state-active" : "state-inactive" }`}
             data-bs-toggle="tooltip"
             data-bs-placement="top"
-            title={String(row.erased) === 'true' ? 'Client is active' : 'Client is not active' }
+            title={String(row.erased) === 'false' ? 'Client is active' : 'Client is not active' }
           />
         </Fragment>
       ),
@@ -98,17 +98,6 @@ const ClientCard = () => {
       ),
       width: "50px",
     },
-    // {
-    //   cell: (row) => (
-    //     <Fragment>
-    //       <FaIcons.FaTrash
-    //         style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-    //         onClick={() => handleClientEraseFromSystem()}
-    //       />
-    //     </Fragment>
-    //   ),
-    //   width: "50px",
-    // },
   ];
 
   const data = clients?.map((client) => {

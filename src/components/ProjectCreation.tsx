@@ -22,6 +22,7 @@ const ProjectCreation = () => {
   const [projectName, setProjectName] = useState("");
   const [listOfTeams, setTeamsList] = useState([])
   const [listOfClients, setClientsList] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
 
   const listOfStatus = [
     {value: "Approved", label: "Approved"},
@@ -47,7 +48,8 @@ const ProjectCreation = () => {
     .catch((error) => console.log("Error", error))
   }, [])
 
-  /*const handleSendForm = () => {
+  const handleCallChatGPT = () => {
+    setIsLoading(true); // Set loading state to true
     const messages = [
       {
         role: "user",
@@ -57,83 +59,88 @@ const ProjectCreation = () => {
           'Following the project description above I need you to write a section named “Project description” where you make more descriptive the project’s description I told you, after that I need you to list the functional requirements with its user stories and each of them with their lists of use cases and acceptance criteria; finalize with the non-functional requirements with the same things as the functional ones. I need your response to be a JSON and to be indented properly to improve readability, follow the following example: {"Project description":"Our mission is to design a hospital system that simplifies the process of finding donors for people on the waiting list for transplants. The system will ensure that all necessary information is kept organized and up-to-date in order to reduce wait times and improve success rates.","Functional requirements":[{"ID":"FR001","Name":"Functional requirement name","User stories":[{"ID":"US001","Description":"Functional requirement description"},{"ID":"US002","Description":"Functional requirement description"}],"Use cases":[{"ID":"UC001","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"Acceptance criteria description"},{"ID":"AC002","Description":"Acceptance criteria description"}]},{"ID":"UC002","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"All required fields must be completed"},{"ID":"AC002","Description":"Information must be validated before submission"}]}]}],"Non-functional requirements":[{"ID":"NFR001","Name":"Non-functional requirement name","Use cases":[{"ID":"UC005","Description":"Use case description","Acceptance criteria":[{"ID":"AC007","Description":"Acceptance criteria description"},{"ID":"AC008","Description":"Acceptance criteria description"}]}]},{"ID":"NFR002","Name":"Performance","Use cases":[{"ID":"UC006","Description":"Use case description","Acceptance criteria":[{"ID":"AC009","Description":"Acceptance criteria description"},{"ID":"AC010","Description":"Acceptance criteria description"}]}]}]}',
       },
     ];
+
     getChatResponse(messages).then((res) => {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({aidescription: res, 
-                              orderstatus: orderStatus, 
-                              orderstartdate: startDate.toString(),
-                              orderenddate: endDate.toString(),
-                              idteam: team,
-                              idclient: client,
-                              name: projectName}),
-      };
-
       setResponse(res);
-
-      fetch(
-        //"http://localhost:3000/api/saveAIRequirementDocumentation",
-        "http://localhost:3000/api/createProject",
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((data) =>
-          console.log("Esqueleto de requerimientos guardados exitosamente")
-        )
-        .catch((error) =>
-          console.error("Error al guardar esqueleto de requerimientos")
-        );
-    });
-  };*/
-
-  const handleSendForm = async (event: any) => {
-    event.preventDefault();
-
-    const messages = [
-      {
-        role: "user",
-        content:
-          "In my company we are about to do a project. Its description is the following:" +
-          projectDescription +
-          'Following the project description above I need you to write a section named “Project description” where you make more descriptive the project’s description I told you, after that I need you to list the functional requirements with its user stories and each of them with their lists of use cases and acceptance criteria; finalize with the non-functional requirements with the same things as the functional ones. I need your response to be a JSON and to be indented properly to improve readability, follow the following example: {"Project description":"Our mission is to design a hospital system that simplifies the process of finding donors for people on the waiting list for transplants. The system will ensure that all necessary information is kept organized and up-to-date in order to reduce wait times and improve success rates.","Functional requirements":[{"ID":"FR001","Name":"Functional requirement name","User stories":[{"ID":"US001","Description":"Functional requirement description"},{"ID":"US002","Description":"Functional requirement description"}],"Use cases":[{"ID":"UC001","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"Acceptance criteria description"},{"ID":"AC002","Description":"Acceptance criteria description"}]},{"ID":"UC002","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"All required fields must be completed"},{"ID":"AC002","Description":"Information must be validated before submission"}]}]}],"Non-functional requirements":[{"ID":"NFR001","Name":"Non-functional requirement name","Use cases":[{"ID":"UC005","Description":"Use case description","Acceptance criteria":[{"ID":"AC007","Description":"Acceptance criteria description"},{"ID":"AC008","Description":"Acceptance criteria description"}]}]},{"ID":"NFR002","Name":"Performance","Use cases":[{"ID":"UC006","Description":"Use case description","Acceptance criteria":[{"ID":"AC009","Description":"Acceptance criteria description"},{"ID":"AC010","Description":"Acceptance criteria description"}]}]}]}',
-      },
-    ];
-    getChatResponse(messages).then((res) => {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({aidescription: res, 
-                              orderstatus: orderStatus, 
-                              orderstartdate: startDate.toString(),
-                              orderenddate: endDate.toString(),
-                              idteam: team,
-                              idclient: client,
-                              name: projectName}),
-      };
-
-      setResponse(res);
-
-      fetch(
-        //"http://localhost:3000/api/saveAIRequirementDocumentation",
-        //"http://localhost:3000/api/createProject",
-        link + "/createProject", requestOptions,
-      )
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok.");
-        })
-        .then((data) =>{
-          alert("Exito");
-          console.log("Esqueleto de requerimientos guardados exitosamente");
-          //console.log(data);
-        })
-        .catch((error) => console.error("Error", error)
-        );
+      setIsLoading(false);
     });
   };
+
+  const handleSaveData = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        aidescription: response,
+        orderstatus: orderStatus,
+        orderstartdate: startDate.toString(),
+        orderenddate: endDate.toString(),
+        idteam: team,
+        idclient: client,
+        name: projectName,
+      }),
+    };
+
+    fetch(link + "/createProject", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        alert("Exito");
+        console.log("Esqueleto de requerimientos guardados exitosamente");
+      })
+      .catch((error) => console.error("Error", error))
+      .finally(() => {
+        window.location.reload();
+      });
+  };
+
+  // const handleSendForm = async (event: any) => {
+  //   event.preventDefault();
+
+  //   const messages = [
+  //     {
+  //       role: "user",
+  //       content:
+  //         "In my company we are about to do a project. Its description is the following:" +
+  //         projectDescription +
+  //         'Following the project description above I need you to write a section named “Project description” where you make more descriptive the project’s description I told you, after that I need you to list the functional requirements with its user stories and each of them with their lists of use cases and acceptance criteria; finalize with the non-functional requirements with the same things as the functional ones. I need your response to be a JSON and to be indented properly to improve readability, follow the following example: {"Project description":"Our mission is to design a hospital system that simplifies the process of finding donors for people on the waiting list for transplants. The system will ensure that all necessary information is kept organized and up-to-date in order to reduce wait times and improve success rates.","Functional requirements":[{"ID":"FR001","Name":"Functional requirement name","User stories":[{"ID":"US001","Description":"Functional requirement description"},{"ID":"US002","Description":"Functional requirement description"}],"Use cases":[{"ID":"UC001","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"Acceptance criteria description"},{"ID":"AC002","Description":"Acceptance criteria description"}]},{"ID":"UC002","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"All required fields must be completed"},{"ID":"AC002","Description":"Information must be validated before submission"}]}]}],"Non-functional requirements":[{"ID":"NFR001","Name":"Non-functional requirement name","Use cases":[{"ID":"UC005","Description":"Use case description","Acceptance criteria":[{"ID":"AC007","Description":"Acceptance criteria description"},{"ID":"AC008","Description":"Acceptance criteria description"}]}]},{"ID":"NFR002","Name":"Performance","Use cases":[{"ID":"UC006","Description":"Use case description","Acceptance criteria":[{"ID":"AC009","Description":"Acceptance criteria description"},{"ID":"AC010","Description":"Acceptance criteria description"}]}]}]}',
+  //     },
+  //   ];
+  //   getChatResponse(messages).then((res) => {
+  //     const requestOptions = {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({aidescription: res, 
+  //                             orderstatus: orderStatus, 
+  //                             orderstartdate: startDate.toString(),
+  //                             orderenddate: endDate.toString(),
+  //                             idteam: team,
+  //                             idclient: client,
+  //                             name: projectName}),
+  //     };
+
+      
+
+  //     fetch(
+  //       link + "/createProject", requestOptions,
+  //     )
+  //       .then((response) => {
+  //         if (response.ok) {
+  //           return response.json();
+  //         }
+  //         throw new Error("Network response was not ok.");
+  //       })
+  //       .then((data) =>{
+  //         alert("Exito");
+  //         console.log("Esqueleto de requerimientos guardados exitosamente");
+  //         //console.log(data);
+  //       })
+  //       .catch((error) => console.error("Error", error)
+  //       ).finally(() => {
+  //         setIsLoading(false); // Set loading state to false after the API request completes
+  //         window.location.reload()
+  //       });
+  //   });
+  // };
 
   const handleFetchTeams = (e: any | null) => {
     e === null ? setTeam(0) : setTeam(parseInt(e.value))
@@ -210,6 +217,7 @@ const ProjectCreation = () => {
                 <label className="form-label">Order Start Date</label>
 
                 <DatePicker
+                  className="form-control"
                   selected={startDate}
                   onChange={(date: Date) => setStartDate(date)}
                 />
@@ -220,6 +228,7 @@ const ProjectCreation = () => {
                 <label className="form-label">Order End Date</label>
 
                 <DatePicker
+                  className="form-control"
                   selected={endDate}
                   onChange={(date: Date) => setEndDate(date)}
                 />
@@ -269,12 +278,31 @@ const ProjectCreation = () => {
           />
 
           {/* Submit button */}
-          <button className="btn btn-primary mt-3" onClick={handleSendForm}>
+          {/* <button className="btn btn-primary mt-3" onClick={handleSendForm}>
             <FaIcons.FaBrain className="mb-1" />
             &nbsp;&nbsp;Generate description and save project
+          </button> */}
+
+          {/* Call ChatGPT button */}
+          <button className="btn btn-primary mt-3" onClick={handleCallChatGPT}>
+            <FaIcons.FaBrain className="mb-1" />
+            &nbsp;&nbsp;Generate description
           </button>
           
           <br></br>
+          {/* Loading state */}
+          {isLoading && (
+            <div className="spinner-border text-danger" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          )}
+
+          {/* Alert message */}
+          {response && !isLoading && (
+            <div className="alert alert-success mt-3" role="alert">
+              Description generated succesfully. If you want to save your project, click save.
+            </div>
+          )}
           <br></br>
           
           {/* Descripition of the project generated by AI */}
@@ -290,6 +318,10 @@ const ProjectCreation = () => {
             value={response}
             placeholder="AI's response will generate after clicking the Generate button..."
           />
+          {/* Save data button */}
+          <button className="btn btn-primary mt-3" onClick={handleSaveData}>
+            Save project
+          </button>
           </div>
         </div>
       </div>
