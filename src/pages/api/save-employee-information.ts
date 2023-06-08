@@ -13,15 +13,10 @@ export default async function handler(req: any, res: any) {
   console.log("userId => ", userId)
 
   try {
-    const deletedRecord = await prisma.employees.update({ 
-      where: {
-        id: userId
-      },
-      data: {
-        inforoadmap: '',
-        infoabout: ''
-      }
-     });
+    const updatedRecordToEmpty = await prisma.employees.update({
+      where: { id: userId },
+      data: { inforoadmap: '', infoabout: '' },
+    });
 
     const record = await prisma.employees.findUnique({ where: { id: userId } });
     if (!record) {

@@ -17,6 +17,14 @@ import { propTypes } from "react-bootstrap/esm/Image";
 import { getAuth0Id } from '../utils/getAuth0Id'
 import { useRouter } from "next/router";
 import { useUser } from '@auth0/nextjs-auth0/client';
+import {
+  Navbar,
+  Nav,
+  Button,
+  Modal,
+  Container,
+  NavDropdown,
+} from "react-bootstrap";
 
 interface apiResponse {
   id: number,
@@ -40,6 +48,8 @@ const generarPerfil: React.FC = () => {
   const [responseCV, setResponseCV] = useState<any>()
   const [roadmap, setRoadmap] = useState();
   const [userInfo, setUserInfo] = useState<any>();
+  const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
+
 
   let link = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
@@ -127,7 +137,10 @@ const generarPerfil: React.FC = () => {
 
     fetch(link + "/save-employee-information", requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
+      .then((data) => {
+        console.log("Ruta de aprendizaje guardada exitosamente")
+
+      })
       .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
 
     let text = "";
@@ -200,6 +213,8 @@ const generarPerfil: React.FC = () => {
       .then((response) => response.json())
       .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
       .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+
+    setUserRegistrationErrorModal(true)
   };
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -374,6 +389,37 @@ const generarPerfil: React.FC = () => {
             </button>
           </div>
         </div>
+        <Modal
+          show={
+            userRegistrationErrorModal ? true : false
+          }
+          backdrop="static"
+        >
+          <Modal.Header>
+            <Modal.Title>User Profile & Roadmap Generated Succesfully!</Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={(e) => setUserRegistrationErrorModal(false)}>
+              Acept
+            </Button>
+            <Button variant="primary" onClick={
+              (e) => {
+                setUserRegistrationErrorModal(false)
+                router.push("/profile")
+              }
+            }>
+              Go to profile menu
+            </Button>
+            <Button variant="primary" onClick={
+              (e) => {
+                setUserRegistrationErrorModal(false)
+                router.push("/roadmap")
+              }
+            }>
+              Go to roadmap menu
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
   );
 };
