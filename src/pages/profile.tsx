@@ -34,10 +34,13 @@ const perfil = () => {
   const hasMounted = useHasMounted();
   const [userData, setUserData] = useState<perfilInterface>();
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [imgURL, setImgURL] = useState<any>()
+
+
 
   const { user, error, isLoading } = useUser();
 
-  console.log(userData)
+  console.log("user", user?.picture)
 
   const idUser = getAuth0Id(user?.sub)
   console.log(idUser)
@@ -55,32 +58,55 @@ const perfil = () => {
     }
   }, [isLoading]);
 
+  const getParsedJson = (string: string) => {
+    //removing breakpoints and "/" characters
+    let cleanString = string.replace(/\\n|\\r|\//gm, "");
+    //removing non printable characters
+    let printableStr = cleanString.replace(/[^\x20-\x7E]/g, '');
+    //removing non ASCII characters
+    let finalString = printableStr.replace(/[^\x00-\x7F]/g, '');
+
+    finalString = finalString.replace(/ /g, "");
+
+
+    let parsedJson = JSON.parse(finalString)
+
+    return parsedJson;
+
+  }
+
   useEffect(() => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: 29518,
-      }),
-    };
+    if (!isLoading) {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: idUser,
+        }),
+      };
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/get-userInfoProfile", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Información de usuario obtneida correcatmente");
-        console.log("Data received:", data);
-        const parsedData = parseJsonStringProfile(data.infoabout);
-        console.log("Info parseada", parsedData);
-        setUserData(parsedData);
-        setIsLoadingData(false);
+      fetch(process.env.NEXT_PUBLIC_API_URL + "/get-userInfoProfile", requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Información de usuario obtneida correcatmente");
+          console.log("Data received:", data);
+          const parsedData = getParsedJson(data.infoabout);
+          console.log("Info parseada", parsedData);
 
-      })
-      .catch((error) => {
-        console.error("Error al obtener informacion de usuario", error);
-        setIsLoadingData(false);
-      });
+          setUserData(JSON.parse(parsedData));
+          setIsLoadingData(false);
 
-  }, [])
+        })
+        .catch((error) => {
+          console.error("Error al obtener informacion de usuario", error);
+          setIsLoadingData(false);
+        });
+
+      setImgURL(user?.picture)
+
+    }
+
+  }, [isLoading])
 
 
   if (userData !== undefined) {
@@ -113,7 +139,7 @@ const perfil = () => {
             <div className="container bg-light border p-4">
               <div className="d-flex flex-row">
                 <div className="col-3">
-                  <Image src={imgExample}
+                  <Image src={imgURL === undefined ? imgExample : imgURL}
                     alt="Wizeline Background"
                     loading="eager"
                     width={200}
