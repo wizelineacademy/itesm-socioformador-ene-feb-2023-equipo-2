@@ -147,6 +147,8 @@ const projectModification = () => {
 
   useEffect(() => { }, [clientsContext?.setCurrentClient(clientName)]);
 
+  const routerChangeWebsite = useRouter();
+
   const handleSendForm = () => {
     let requestOptions;
 
@@ -191,8 +193,8 @@ const projectModification = () => {
         body: JSON.stringify({
           aidescription: response,
           orderstatus: statusStrValue,
-          orderstartdate: startDate.toString(),
-          orderenddate: endDate.toString(),
+          orderstartdate: startDateProjectOverview.toString(),
+          orderenddate: endDateProjectOverview.toString(),
           idteam: teamInt,
           idclient: clientInt,
           name: projectName,
@@ -206,8 +208,8 @@ const projectModification = () => {
         body: JSON.stringify({
           aidescription: response,
           orderstatus: orderStatus,
-          orderstartdate: startDate.toString(),
-          orderenddate: endDate.toString(),
+          orderstartdate: startDateProjectOverview.toString(),
+          orderenddate: endDateProjectOverview.toString(),
           idteam: team,
           idclient: client,
           name: projectName,
@@ -219,12 +221,13 @@ const projectModification = () => {
     setResponse(response);
 
     fetch(
-      "http://localhost:3000/api/saveAIRequirementDocumentation",
+      link + "/saveAIRequirementDocumentation",
       requestOptions
     )
       .then((response) => response.json())
       .then((data) =>
-        console.log("Esqueleto de requerimientos guardados exitosamente")
+        // console.log("Esqueleto de requerimientos guardados exitosamente");
+        routerChangeWebsite.push('/projects')
       )
       .catch((error) =>
         console.error("Error al guardar esqueleto de requerimientos")
@@ -319,6 +322,7 @@ const projectModification = () => {
                     //selected={new Date(JSON.stringify(selectedProjectOverview?.orderstartdate))}
                     selected={startDateProjectOverview}
                     onChange={(date: Date) => setStartDateProjectOverview(date)}
+                    className="form-control"
                   />
                 </div>
 
@@ -330,6 +334,7 @@ const projectModification = () => {
                     //selected={new Date(JSON.stringify(selectedProjectOverview?.orderenddate))}
                     selected={endDateProjectOverview}
                     onChange={(date: Date) => setEndDateProjectOverview(date)}
+                    className="form-control"
                   />
                 </div>
 

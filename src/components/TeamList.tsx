@@ -88,7 +88,9 @@ const TeamList = ({ setTeamChange, teamChange }) => {
 
     fetch(link + "/changeTeamStatus", requestOptions)
       .then((response) => response.json())
-      .then((editedMovie) => {})
+      .then((editedMovie) => {
+        window.location.reload();
+      })
       .catch(error => console.log("Error ", error));
   };
 
