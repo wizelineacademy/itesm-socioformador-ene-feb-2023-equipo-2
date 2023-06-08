@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getChatResponse } from "@/openai/openai";
 import { Dropdown, DropdownButton } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,33 +21,33 @@ const ProjectCreation = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [orderStatus, setOrderStatus] = useState("");
   const [projectName, setProjectName] = useState("");
-  const [listOfTeams, setTeamsList] = useState([])
-  const [listOfClients, setClientsList] = useState([])
+  const [listOfTeams, setTeamsList] = useState([]);
+  const [listOfClients, setClientsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const listOfStatus = [
-    {value: "Approved", label: "Approved"},
-    {value: "Pending", label: "Pending"},
-    {value: "Rejected", label: "Rejected"}
+    { value: "Approved", label: "Approved" },
+    { value: "Pending", label: "Pending" },
+    { value: "Rejected", label: "Rejected" },
   ];
 
   useEffect(() => {
-    fetch(link + '/get-teams')
-    .then((res) => res.json())
-    .then((data) => {
-      setTeamsList(data.teams) 
-    })
-    .catch((error) => console.log("Error", error))
-  }, [])
+    fetch(link + "/get-teams")
+      .then((res) => res.json())
+      .then((data) => {
+        setTeamsList(data.teams);
+      })
+      .catch((error) => console.log("Error", error));
+  }, []);
 
   useEffect(() => {
-    fetch(link + '/get-clients')
-    .then((res) => res.json())
-    .then((data) => {
-      setClientsList(data.client) 
-    })
-    .catch((error) => console.log("Error", error))
-  }, [])
+    fetch(link + "/get-clients")
+      .then((res) => res.json())
+      .then((data) => {
+        setClientsList(data.client);
+      })
+      .catch((error) => console.log("Error", error));
+  }, []);
 
   const handleCallChatGPT = () => {
     setIsLoading(true); // Set loading state to true
@@ -109,16 +110,14 @@ const ProjectCreation = () => {
   //     const requestOptions = {
   //       method: "POST",
   //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({aidescription: res, 
-  //                             orderstatus: orderStatus, 
+  //       body: JSON.stringify({aidescription: res,
+  //                             orderstatus: orderStatus,
   //                             orderstartdate: startDate.toString(),
   //                             orderenddate: endDate.toString(),
   //                             idteam: team,
   //                             idclient: client,
   //                             name: projectName}),
   //     };
-
-      
 
   //     fetch(
   //       link + "/createProject", requestOptions,
@@ -143,16 +142,16 @@ const ProjectCreation = () => {
   // };
 
   const handleFetchTeams = (e: any | null) => {
-    e === null ? setTeam(0) : setTeam(parseInt(e.value))
-  }
+    e === null ? setTeam(0) : setTeam(parseInt(e.value));
+  };
 
   const handleFetchClients = (e: any | null) => {
-    e === null ? setClient(0) : setClient(e.value)
-  }
+    e === null ? setClient(0) : setClient(e.value);
+  };
 
   const handleDropdownSelect = (e: any | null) => {
-    e === null ? setOrderStatus("") : setOrderStatus(e.value)
-  }
+    e === null ? setOrderStatus("") : setOrderStatus(e.value);
+  };
 
   // const handleChangeTechnology = (selectedOptions: ValueType<OptionTypeBase>) works as well but with the error.
   // The above commented out code can be used as an alternative, but it may result in an error.
@@ -198,7 +197,7 @@ const ProjectCreation = () => {
           />
 
           <br></br>
-          
+
           <Select
             onChange={handleFetchTeams} // sets the callback function to handle changes in selected option(s)
             // @ts-ignore
@@ -236,92 +235,103 @@ const ProjectCreation = () => {
 
               {/* Order status buttons */}
               <div className="col-sm">
-              <label className="form-label">Order Status</label>
+                <label className="form-label">Order Status</label>
                 <Select
                   //onSelect={(eventKey: any, e) => handleDropdownSelect}
                   onChange={handleDropdownSelect} // sets the callback function to handle changes in selected option(s)
-                  value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)} // sets the currently selected option(s). Use when isMulti is specified.
+                  value={listOfStatus.find(
+                    (obj) => obj.valueOf() === orderStatus
+                  )} // sets the currently selected option(s). Use when isMulti is specified.
                   options={listOfStatus} // sets the available options for the Select component
                   placeholder="Select..."
-                  isClearable/>
+                  isClearable
+                />
               </div>
             </div>
-
             <br></br>
-
-              {/* Project description input field */}
-          <label className="form-label">Project name...</label>
-          <textarea
-            className="form-control"
-            id="projectDescription"
-            autoComplete="off"
-            onChange={(e) => setProjectName(e.target.value)}
-            value={projectName}
-            placeholder="Name of the project..."
-            rows={1}
-            required
-          />
-
-          <br></br>
-
             {/* Project description input field */}
-          <label className="form-label">Project description...</label>
-          <textarea
-            className="form-control"
-            id="projectDescription"
-            autoComplete="off"
-            onChange={(e) => setProjectDescription(e.target.value)}
-            value={projectDescription}
-            placeholder="General description of the project..."
-            rows={6}
-            required
-          />
-
-          {/* Submit button */}
-          {/* <button className="btn btn-primary mt-3" onClick={handleSendForm}>
+            <label className="form-label">Project name...</label>
+            <textarea
+              className="form-control"
+              id="projectDescription"
+              autoComplete="off"
+              onChange={(e) => setProjectName(e.target.value)}
+              value={projectName}
+              placeholder="Name of the project..."
+              rows={1}
+              required
+            />
+            <br></br>
+            {/* Project description input field */}
+            <label className="form-label">Project description...</label>
+            <textarea
+              className="form-control"
+              id="projectDescription"
+              autoComplete="off"
+              onChange={(e) => setProjectDescription(e.target.value)}
+              value={projectDescription}
+              placeholder="General description of the project..."
+              rows={6}
+              required
+            />
+            {/* Submit button */}
+            {/* <button className="btn btn-primary mt-3" onClick={handleSendForm}>
             <FaIcons.FaBrain className="mb-1" />
             &nbsp;&nbsp;Generate description and save project
           </button> */}
+            {/* Call ChatGPT button */}
+            <button
+              className="btn btn-primary mt-3"
+              onClick={handleCallChatGPT}
+            >
+              <FaIcons.FaBrain className="mb-1" />
+              &nbsp;&nbsp;Generate description
+            </button>
+            <br></br>
 
-          {/* Call ChatGPT button */}
-          <button className="btn btn-primary mt-3" onClick={handleCallChatGPT}>
-            <FaIcons.FaBrain className="mb-1" />
-            &nbsp;&nbsp;Generate description
-          </button>
-          
-          <br></br>
-          {/* Loading state */}
-          {isLoading && (
-            <div className="spinner-border text-danger" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          )}
+            {/* Loading state */}
+            {/* {isLoading && (
+              <div className="spinner-border text-danger" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )} */}
 
-          {/* Alert message */}
-          {response && !isLoading && (
-            <div className="alert alert-success mt-3" role="alert">
-              Description generated succesfully. If you want to save your project, click save.
-            </div>
-          )}
-          <br></br>
-          
-          {/* Descripition of the project generated by AI */}
-          <label className="form-label">
-            AI-generated project description...
-          </label>
+            {/* Alert message */}
+            {response && !isLoading && (
+              <div className="alert alert-success mt-3" role="alert">
+                Description generated succesfully. If you want to save your
+                project, click save.
+              </div>
+            )}
+            <br></br>
+            {/* Descripition of the project generated by AI */}
+            <label className="form-label">
+              AI-generated project description...
+            </label>
+            <textarea
+              rows={15}
+              className="form-control"
+              id="projectDescription"
+              autoComplete="off"
+              value={response}
+              placeholder="AI's response will generate after clicking the Generate button..."
+            />
+            {/* Save data button */}
+            <button className="btn btn-primary mt-3" onClick={handleSaveData}>
+              <FaIcons.FaSave className="mb-1" />
+              &nbsp;&nbsp;Save project
+            </button>
 
-          <textarea
-            rows={15}
-            className="form-control"
-            id="projectDescription"
-            autoComplete="off"
-            value={response}
-            placeholder="AI's response will generate after clicking the Generate button..."
-          />
-          {/* Save data button */}
-          <button className="btn btn-primary mt-3" onClick={handleSaveData}>
-            Save project
-          </button>
+            <Modal show={isLoading} centered>
+            <Modal.Header>
+              <Modal.Title>Generating project requirements...</Modal.Title>
+            </Modal.Header>
+              <Modal.Body>
+                <p>This can take some time, sorry :D</p>
+                <div className="spinner-border text-danger" role="status">
+                </div>
+              </Modal.Body>
+            </Modal>
           </div>
         </div>
       </div>

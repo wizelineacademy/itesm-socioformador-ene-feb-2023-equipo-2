@@ -51,7 +51,9 @@ const TeamTable = ({ teamChange }) => {
 
     fetch(link + "/changeTeamMembersStatus", requestOptions)
       .then((response) => response.json())
-      .then((editedMovie) => {})
+      .then((editedMovie) => {
+        window.location.reload();
+      })
       .catch(error => console.log("Error ", error));
   };
 
