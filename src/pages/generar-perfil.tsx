@@ -390,7 +390,7 @@ const generarPerfil: React.FC = () => {
               id="buttonManual"
             >
               <FaIcons.FaSave className="mb-1" />
-              &nbsp;&nbsp;Guardar
+              &nbsp;&nbsp;Save
             </button>
           </div>
         </div>
@@ -405,7 +405,7 @@ const generarPerfil: React.FC = () => {
           </Modal.Header>
           <Modal.Footer>
             <Button variant="secondary" onClick={(e) => setUserRegistrationErrorModal(false)}>
-              Acept
+              Accept
             </Button>
             <Button variant="primary" onClick={
               (e) => {
@@ -436,7 +436,7 @@ const generarPerfil: React.FC = () => {
             <Modal.Title>Generating roadmap and profile...</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            This can take some time, srry =D
+            This can take some time, sorry :D
           </Modal.Body>
         </Modal>
       </>

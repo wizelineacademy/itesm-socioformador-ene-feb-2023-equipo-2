@@ -25,7 +25,7 @@ def index_cv():
     link_linkedin = request.json["link_linkedin"]
     profile_linkedin = ""
     #--------------------------------------------------------
-    driver = webdriver.Chrome("C:\ChromeDriver\chromedriver.exe")
+    driver = webdriver.Chrome()
     driver.get("https://linkedin.com/uas/login")
     time.sleep(5)
 
