@@ -53,7 +53,7 @@ const EmployeeSearch = () => {
   const [userInfo, setUserInfo] = useState<any>()
 
   const router = useRouter();
-  const { user, error: errorAuth0, isLoading } = useUser();
+  const { user, isLoading } = useUser();
 
   console.log("userInfo -> ", userInfo)
 

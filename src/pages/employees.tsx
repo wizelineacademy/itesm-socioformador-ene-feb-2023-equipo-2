@@ -18,10 +18,8 @@ const employees = () => {
   const [userInfo, setUserInfo] = useState<any>()
 
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+  const { user, isLoading } = useUser();
   let link = process.env.NEXT_PUBLIC_API_URL;
-
-  console.log("userInfo -> ", userInfo)
 
   useEffect(() => {
     // Redirect logic here
