@@ -56,8 +56,9 @@ const perfil = () => {
         id: idProfile,
       }),
     };
-
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/get-userInfoProfile", requestOptions)
+    let link = process.env.NEXT_PUBLIC_API_URL;
+    
+    fetch(link + "/get-userInfoProfile", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         console.log("Información de usuario obtneida correcatmente");

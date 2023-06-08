@@ -77,9 +77,10 @@ function Roadmap() {
     return parsedJson;
 
   }
+  let link = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchData = async (_userId: number) => {
-    const response = await fetch("http://localhost:3000/api/getRoadMap", {
+    const response = await fetch(link + "/getRoadMap", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

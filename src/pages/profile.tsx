@@ -75,6 +75,8 @@ const perfil = () => {
 
   }
 
+  let link = process.env.NEXT_PUBLIC_API_URL;
+  
   useEffect(() => {
     if (!isLoading) {
       const requestOptions = {
@@ -85,7 +87,7 @@ const perfil = () => {
         }),
       };
 
-      fetch(process.env.NEXT_PUBLIC_API_URL + "/get-userInfoProfile", requestOptions)
+      fetch(link + "/get-userInfoProfile", requestOptions)
         .then((response) => response.json())
         .then((data) => {
           console.log("Información de usuario obtneida correcatmente");

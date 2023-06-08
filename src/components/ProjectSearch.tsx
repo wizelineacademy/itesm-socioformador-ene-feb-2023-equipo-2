@@ -122,7 +122,7 @@ const ProjectSearch = ({ clientID }) => {
   };
 
   useEffect(() => {
-    fetch(`${link}/get-clients`)
+    fetch(link + '/get-clients')
       .then(res => res.json())
       .then(data => {
         setClientsList(data.client);

@@ -100,7 +100,7 @@ const projectModification = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: projectID }),
     };
-
+//sdgfhjj
     fetch(link + "/getCurrentProject?", requestOptions)
       .then((res) => res.json())
       .then((data) => {
