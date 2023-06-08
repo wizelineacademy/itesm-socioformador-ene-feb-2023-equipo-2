@@ -10,6 +10,12 @@ import { useRouter } from 'next/router';
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 import { roleContext } from "@/context/roleContext";
 
+const roleOptions = [
+  { value: "1", label: "Wizeliner" },
+  { value: "2", label: "Administrator" },
+];
+
+
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
   pageType: 'listForAdmin' | 'listForEmployee' | 'addToOrder' | 'OrderSummary' | 'showAll';
@@ -44,6 +50,12 @@ const EmployeeTable = (props: CardProps) => {
   const handleEmployeeDelete = () => {
     alert("se va a eliminar el usuario del sistema");
   };
+
+  const getPositionName = (positionId: any) => {
+    const position = roleOptions.find(option => Number(option.value) === positionId);
+    return position ? position.label : "";
+  };
+  
 
 
   const customStyles = {
@@ -114,6 +126,10 @@ const EmployeeTable = (props: CardProps) => {
       {
         name: 'Email',
         selector: row => row.email,
+      },
+      {
+        name: 'Rol',
+        selector: row => getPositionName(row.idposition),
       },
       {
         name: 'LinkedIn Link',
