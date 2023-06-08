@@ -49,6 +49,7 @@ const generarPerfil: React.FC = () => {
   const [roadmap, setRoadmap] = useState();
   const [userInfo, setUserInfo] = useState<any>();
   const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
+  const [fetchingGPTinfo, setFetchingGPTinfo] = useState(false)
 
 
   let link = process.env.NEXT_PUBLIC_API_URL;
@@ -125,6 +126,8 @@ const generarPerfil: React.FC = () => {
   const handleOpenAIResponse = async (e: any) => {
     console.log(e.target.id);
 
+    setFetchingGPTinfo(true)
+
     const requestOptions = {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -195,10 +198,12 @@ const generarPerfil: React.FC = () => {
 
     getChatResponse(messageRoadmap).then((res) => {
       setResponseRoadmap(res);
+      setFetchingGPTinfo(false)
     });
   };
 
   const handleSubmit = () => {
+
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -419,6 +424,20 @@ const generarPerfil: React.FC = () => {
               Go to roadmap menu
             </Button>
           </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={
+            fetchingGPTinfo ? true : false
+          }
+          backdrop="static"
+        >
+          <Modal.Header>
+            <Modal.Title>Generating roadmap and profile...</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            This can take some time, srry =D
+          </Modal.Body>
         </Modal>
       </>
   );
