@@ -157,7 +157,6 @@ const ProjectTable = ({ clientID }) => {
 
   let selectedProjectID = projectsContext?.currentProject;
   let selectedClientID = clientsContext?.currentClient;
-  console.log('selectedClientID', selectedClientID)
   let selectedStatus = statusesContext?.selectedStatus;
 
   // @ts-ignore
