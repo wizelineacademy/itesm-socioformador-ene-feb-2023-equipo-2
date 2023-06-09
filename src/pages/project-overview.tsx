@@ -58,6 +58,8 @@ const projects = () => {
   const [projectDescription, setProjectDescription] = useState("");
 
   let projectID = router.query.slug;
+  console.log('router.query.slug', router.query.slug)
+  console.log('projectID', projectID)
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -273,10 +275,6 @@ const projects = () => {
   });
 
   let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter((members) => members.idproject === projectID) : projectTeamMembersData;
-
-  if (!filteredProjectTeamMembersData) {
-    filteredProjectTeamMembersData = missingEmployees;
-  }
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.

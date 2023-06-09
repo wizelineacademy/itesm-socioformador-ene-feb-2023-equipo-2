@@ -44,7 +44,6 @@ interface projectListInterface {
 // @ts-ignore
 const ProjectSearch = ({ clientID }) => {
   let clientIDInt = parseInt(clientID);
-  console.log('clientIDInt', clientIDInt)
 
   const hasMounted = useHasMounted();
 
