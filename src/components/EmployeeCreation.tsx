@@ -111,7 +111,7 @@ const EmployeeCreation = () => {
           email: email,
           user_id: userId.toString(),
           connection: "Username-Password-Authentication",
-          password: generateRandomPassword(),
+          password: "wizeline000",
           email_verified: true,
           name: name
         }
@@ -132,7 +132,7 @@ const EmployeeCreation = () => {
               email: email,
               userId: userId,
               position: role,
-              name: name
+              name: name,
             }
           )
         };
@@ -263,7 +263,7 @@ const EmployeeCreation = () => {
           <Modal.Title>Usuario creado correctamente</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>El usuario registrado ya puede acceder a la plataforma usando su correo electronico y la contraseña default "wizeline000". Se recomienda cambiar la contraseña por una propia dentro de la plataforma</p>
+          <p>El usuario registrado ya puede acceder a la plataforma usando su correo electronico y la contraseña default <b>wizeline000</b>. Se recomienda cambiar la contraseña por una propia dentro de la plataforma</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={(e) => setUserRegistration(false)}>
