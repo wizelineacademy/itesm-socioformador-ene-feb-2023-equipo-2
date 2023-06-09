@@ -43,6 +43,7 @@ const EmployeeCreation = () => {
   const [department, setDepartment] = useState("");
   const [token, setToken] = useState("")
   const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
+  const [userRegistration, setUserRegistration] = useState(false)
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -135,10 +136,13 @@ const EmployeeCreation = () => {
             }
           )
         };
-//sdfgh
+        //sdfgh
         fetch(link + '/createUsers', requestOptions)
           .then(response => response.json())
-          .then(data => console.log("Usuario guardado correctamente en BD"))
+          .then(data => {
+            console.log("Usuario guardado correctamente en BD")
+            setUserRegistration(true)
+          })
           .catch(error => {
             console.error(error, "Error al guardar usuario en BD")
             setUserRegistrationErrorModal(true)
@@ -224,6 +228,8 @@ const EmployeeCreation = () => {
           </div>
         </div>
       </div>
+
+      {/* user register error modal */}
       <Modal
         show={
           userRegistrationErrorModal ? true : false
@@ -241,6 +247,26 @@ const EmployeeCreation = () => {
             Cancel
           </Button>
           <Button variant="primary" onClick={(e) => setUserRegistrationErrorModal(false)}>
+            Continue
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* user register succesfully modal */}
+      <Modal
+        show={
+          userRegistration ? true : false
+        }
+        backdrop="static"
+      >
+        <Modal.Header>
+          <Modal.Title>Usuario creado correctamente</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>El usuario registrado ya puede acceder a la plataforma usando su correo electronico y la contraseña default "wizeline000". Se recomienda cambiar la contraseña por una propia dentro de la plataforma</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={(e) => setUserRegistration(false)}>
             Continue
           </Button>
         </Modal.Footer>
