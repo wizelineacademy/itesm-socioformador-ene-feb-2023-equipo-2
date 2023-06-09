@@ -78,7 +78,7 @@ const employeeModification = () => {
     fetch(link + "/updateCurrentEmployee", requestOptions)
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data);
+        router.push('/employees')
       });
   };
   

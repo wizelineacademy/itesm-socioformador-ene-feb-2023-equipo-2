@@ -399,6 +399,7 @@ const generarPerfil: React.FC = () => {
             userRegistrationErrorModal ? true : false
           }
           backdrop="static"
+          centered
         >
           <Modal.Header>
             <Modal.Title>User Profile & Roadmap Generated Succesfully!</Modal.Title>
@@ -431,12 +432,14 @@ const generarPerfil: React.FC = () => {
             fetchingGPTinfo ? true : false
           }
           backdrop="static"
+          centered
         >
           <Modal.Header>
             <Modal.Title>Generating roadmap and profile...</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            This can take some time, sorry :D
+            <p>This can take some time, sorry :D</p>
+            <div className="spinner-border text-danger" role="status"></div>
           </Modal.Body>
         </Modal>
       </>
