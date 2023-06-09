@@ -111,7 +111,7 @@ const EmployeeCreation = () => {
           email: email,
           user_id: userId.toString(),
           connection: "Username-Password-Authentication",
-          password: generateRandomPassword(),
+          password: "wizeline000",
           email_verified: true,
           name: name
         }
@@ -132,7 +132,7 @@ const EmployeeCreation = () => {
               email: email,
               userId: userId,
               position: role,
-              name: name
+              name: name,
             }
           )
         };
