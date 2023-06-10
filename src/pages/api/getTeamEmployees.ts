@@ -25,37 +25,8 @@ export default async function handler(req: any, res: any) {
       INNER JOIN orders
           ON teams.id = orders.idteam
     `
-/*
-    const teamEmployees = await prisma.employees.findMany({
-      select: {
-        id: true,
-        name: true,
-        location: true,
-        idposition: true,
-        email: true,
-        linkedinlink: true,
-        teams: {
-          select: {
-            team: {
-              select: {
-                id: true,
-                name: true,
-                orders: {
-                  select: {
-                    id: true,
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      orderBy: {
-        id: 'asc',
-      },
-    });
 
-    const teamEmployees44 = await prisma.teamemployees.findMany({
+    /*const teamEmployees44 = await prisma.teamemployees.findMany({
       select: {
         idteam: true,
         idemployee: true,
@@ -78,11 +49,13 @@ export default async function handler(req: any, res: any) {
       },
       where: {
         team: {
-          orders: {
-            some: {
-              id: projectID,
-            }
-          },
+          some: {
+            orders: {
+              some: {
+                id: projectID,
+              }
+            },
+          }
         }
       },
       orderBy: {
