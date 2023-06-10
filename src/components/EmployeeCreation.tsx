@@ -158,9 +158,8 @@ const EmployeeCreation = () => {
   };
 
   const roleOptions = [
-    { value: "1", label: "Administrador" },
-    { value: "2", label: "Empleado General" },
-    { value: "3", label: "Cliente" }
+    { value: "1", label: "Wizeliner" },
+    { value: "2", label: "Administrator" },
   ];
 
   if (!hasMounted) {
@@ -210,7 +209,7 @@ const EmployeeCreation = () => {
             </label>
             <Select
               isClearable
-              value={role}
+              value={roleOptions.find((obj) => obj.value === role)}
               onChange={handleRoleSelect}
               // @ts-ignore
               options={roleOptions}

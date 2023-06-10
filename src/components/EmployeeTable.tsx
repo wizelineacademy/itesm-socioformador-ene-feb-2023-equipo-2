@@ -133,7 +133,7 @@ const EmployeeTable = (props: CardProps) => {
       },
       {
         cell: (row) => (
-          <Fragment>{row.idposition === 1 ? "admin" : ""}</Fragment>
+          <Fragment>{row.idposition === 2 ? "admin" : ""}</Fragment>
         ),
         width: "150px",
       },
