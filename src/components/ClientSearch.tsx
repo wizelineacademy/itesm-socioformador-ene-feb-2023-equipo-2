@@ -34,9 +34,6 @@ const ClientSearch = () => {
   const router = useRouter();
   const { user, error: errorAuth0, isLoading } = useUser();
 
-  console.log("userInfo -> ", userInfo)
-
-
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -71,10 +68,12 @@ const ClientSearch = () => {
   const handleChangeSelect = (e: ClientSelectionInterface | null) => {
     if (e === null) {
       setName("");
+      clientsContext?.setCurrentClient("");
     } else {
       setName(e.value);
       clientsContext?.setCurrentClient(e.value);
     }
+    console.log('eeee', e?.value)
   };
 
   if (!hasMounted) {

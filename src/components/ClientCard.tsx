@@ -111,7 +111,7 @@ const ClientCard = () => {
   });
 
   let selectedClientID = clientsContext?.currentClient;
-  let filteredData = selectedClientID ? data?.filter(client => client.value === selectedClientID) : data;
+  let filteredData = selectedClientID != "" && selectedClientID != null && selectedClientID != undefined && selectedClientID != "0"  ? data?.filter(client => client.value === selectedClientID) : data;
 
   return (
     <>
