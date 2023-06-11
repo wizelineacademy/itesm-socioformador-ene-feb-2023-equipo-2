@@ -148,6 +148,7 @@ const TeamSearch = () => {
               <label className="form-label">Name:</label>
               {teamList ? (
                 <Select
+                  id="team-names-select"
                   onChange={handleChangeSelect}
                   value={teamList.find((obj) => obj.value === name) || ""}
                   options={teamList}
@@ -161,6 +162,7 @@ const TeamSearch = () => {
               <label className="form-label">Members</label>
               {employeesList ? (
                 <Select
+                  id="members-names-select"
                   onChange={handleChangeSelectEmployeeName}
                   value={employeesList.find(
                     (obj) => obj.value === employeeName
@@ -177,6 +179,7 @@ const TeamSearch = () => {
               {isAdmin ?
                 <Container className="mt">
                   <button
+                    id="team-creation-button"
                     className="btn btn-primary w-100"
                     onClick={() => setCollapse(!collapse)}
                     aria-controls="collapseProjectCreation"

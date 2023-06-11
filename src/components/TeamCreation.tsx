@@ -29,6 +29,7 @@ const TeamCreation = ({ setCollapse }) => {
 
   const [employeesList, setEmployeesList] = useState<employeeSelectionInterface[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [missingField, setMissingField] = useState("");
   //const [teamMembersList, setTeamMembersList] = useState<employeeName[]>([]);
 
   const [name, setName] = useState("");
@@ -46,6 +47,12 @@ const TeamCreation = ({ setCollapse }) => {
   }, [])
 
   const handleTeamCreation = (e : any | null) => {
+
+    if (!name || !selectedEmployees) {
+      setMissingField("Please fill in all fields");
+      return;
+    }
+
     const requestOptionsList = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -95,7 +102,7 @@ const TeamCreation = ({ setCollapse }) => {
             <input
               className="form-control"
               type="name"
-              id="name"
+              id="new-team-name"
               onChange={(e) => setName(e.target.value)}
               value={name}
               required
@@ -106,14 +113,15 @@ const TeamCreation = ({ setCollapse }) => {
               <label className="form-label">Members</label>
               {employeesList ? (
                 <Select
-                // @ts-ignore
-                onChange={handleChangeSelectEmployeeName}
-                value={employeesList.filter((obj) =>
-                  selectedEmployees.includes(obj.value)
-                )}
-                options={employeesList}
-                isClearable
-                isMulti
+                  id="new-team-members"
+                  // @ts-ignore
+                  onChange={handleChangeSelectEmployeeName}
+                  value={employeesList.filter((obj) =>
+                    selectedEmployees.includes(obj.value)
+                  )}
+                  options={employeesList}
+                  isClearable
+                  isMulti
                 />
               ) : (
                 <div>Loading...</div>
@@ -124,11 +132,18 @@ const TeamCreation = ({ setCollapse }) => {
             <label className="form-label">
               &nbsp;
             </label>
-            <button className="btn btn-primary w-100" onClick={handleTeamCreation}>
+            <button id="create-team-button" className="btn btn-primary w-100" onClick={handleTeamCreation}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>
           </Col>
+        </Row>
+        <Row>
+          {missingField && (
+            <div className="row mt-3">
+              <p className="text-danger">{missingField}</p>
+            </div>
+          )}
         </Row>
       </Container>
     </>
