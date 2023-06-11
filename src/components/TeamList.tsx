@@ -239,6 +239,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
                 <label className="form-label">Members</label>
                 {employeesChangeList ? (
                   <Select
+                  id="member-select"
                   // @ts-ignore
                   onChange={handleChangeSelectEmployeeName}
                   value={employeesChangeList.filter((obj) =>
@@ -252,7 +253,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
                   <div>Loading...</div>
                 )}
               </div>
-              <button className="btn btn-primary w-100 mt-2" onClick={handleChangeTeam}>
+              <button id="update-button" className="btn btn-primary w-100 mt-2" onClick={handleChangeTeam}>
                 <FaIcons.FaPlus className="mb-1" />
                 &nbsp;&nbsp;Change
               </button>
