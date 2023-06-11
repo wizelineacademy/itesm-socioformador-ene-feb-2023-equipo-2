@@ -75,6 +75,7 @@ const ClientCard = () => {
           <FaIcons.FaPencilAlt
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => router.push({pathname: '/client-modification', query: { slug: row.value }})}
+            data-testid="edit-pencil"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
             title="Edit client information"

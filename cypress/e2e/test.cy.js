@@ -1,5 +1,5 @@
-describe('My First Test', () => {
-  it('Visits the Kitchen Sink', () => {
-    cy.visit('https://example.cypress.io')
+describe('Add a client and edit it', () => {
+  it('Add a client and edit it', () => {
+    cy.visit('http://localhost:3000')
   })
 })

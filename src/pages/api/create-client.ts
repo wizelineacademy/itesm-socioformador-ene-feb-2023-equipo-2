@@ -12,7 +12,7 @@ export default async function handler(req: any, res: any) {
         name: name,
         email: email,
         phone: phone,
-        erased: true
+        erased: false
       }
     });
     res.status(201).json(newClient);
