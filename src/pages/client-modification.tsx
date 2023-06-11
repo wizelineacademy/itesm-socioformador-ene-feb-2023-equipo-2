@@ -86,6 +86,7 @@ const clientModification = () => {
               <label className="form-label">Client Name:</label>
               <input
                 className="form-control"
+                id="#client-modification-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -114,6 +115,7 @@ const clientModification = () => {
                 onChange={handleChangeSelect}
                 value={options.find((obj) => obj.value === erased) || ""}
                 options={options}
+                id="client-status-change"
                 isClearable
               />
             </div>
