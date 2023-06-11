@@ -158,8 +158,8 @@ const EmployeeCreation = () => {
   };
 
   const roleOptions = [
-    { value: "1", label: "Administrador" },
-    { value: "2", label: "Empleado General" },
+    { value: "1", label: "Wizeliner" },
+    { value: "2", label: "Administrador" },
     { value: "3", label: "Cliente" }
   ];
 
@@ -169,7 +169,7 @@ const EmployeeCreation = () => {
 
   const handleRoleSelect = (e: any | null) => {
     if (e === null) {
-      setName("");
+      setRole("");
     } else {
       setRole(e.value);
     }
@@ -210,7 +210,7 @@ const EmployeeCreation = () => {
             </label>
             <Select
               isClearable
-              value={role}
+              value={roleOptions.find((obj) => obj.value === role) || ""}
               onChange={handleRoleSelect}
               // @ts-ignore
               options={roleOptions}
