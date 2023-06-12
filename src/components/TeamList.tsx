@@ -55,7 +55,6 @@ const TeamList = ({ setTeamChange, teamChange }) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
   const [userInfo, setUserInfo] = useState<any>()
-  const [hasAdminPermission] = useState<boolean>(userInfo?.idposition === 1 ? false : true); // como es para el omit debe ser opuesto, isAdmin NO va a ser omitido
   const { user, error: errorAuth0, isLoading } = useUser();
 
   let link = process.env.NEXT_PUBLIC_API_URL;
@@ -163,7 +162,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
       },
     },
   };
-  //fsdf
+
   const columns: TableColumn<teamTableInterface>[] = React.useMemo(
     () => [
     {
@@ -179,7 +178,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
         </Fragment>
       ),
       width: "50px",
-      omit: hasAdminPermission,
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       name: "Team Name",
@@ -204,7 +203,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
         </Fragment>
       ),
       width: "50px",
-      omit: hasAdminPermission,
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
@@ -231,10 +230,10 @@ const TeamList = ({ setTeamChange, teamChange }) => {
         </Fragment>
       ),
       width: "50px",
-      omit: hasAdminPermission,
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     // @ts-ignore
-  ], [hasAdminPermission],
+  ], [userInfo],
   );
 
   //let clients = clientsListContext?.selectedClient;
