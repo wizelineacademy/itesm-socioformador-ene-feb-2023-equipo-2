@@ -26,6 +26,8 @@ import {
   NavDropdown,
 } from "react-bootstrap";
 
+var AuthenticationClient = require('auth0').AuthenticationClient;
+
 interface apiResponse {
   id: number,
   name: string,
@@ -40,6 +42,7 @@ const generarPerfil: React.FC = () => {
   // React Hooks for managing component state
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const [password, setPassword] = useState("")
   const [jobExperience, setJobExperience] = useState("");
   const [skills, setSkills] = useState("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
@@ -50,17 +53,18 @@ const generarPerfil: React.FC = () => {
   const [userInfo, setUserInfo] = useState<any>();
   const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
   const [fetchingGPTinfo, setFetchingGPTinfo] = useState(false)
+  const [token, setToken] = useState("")
+  const [position, setPosition] = useState<number>()
+  const [isUserDataUpdate, setIsUserDataUpdate] = useState(false)
+  const [stringPosition, setStringPosition] = useState("")
 
+  console.log("token", token)
 
   let link = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   const { user, error, isLoading } = useUser();
   const userId = getAuth0Id(user?.sub)
-
-  console.log(roadmap)
-  console.log("roadmap response => ", responseRoadmap)
-  console.log("info user response => ", responseCV)
 
   useEffect(() => {
     // Redirect logic here
@@ -71,6 +75,31 @@ const generarPerfil: React.FC = () => {
         router.push("/");
       }
     }
+
+    // credentials to generate the auth0 token necessary to create new users
+    // @ts-ignore
+    var auth0 = new AuthenticationClient({
+      domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
+      clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
+      clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
+    });
+
+    // method to geerate the auth0 token necessary to create new users
+    auth0.clientCredentialsGrant(
+      {
+        audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
+        scope: 'create:users read:users update:users read:roles update:users_app_metadata',
+      },
+      function (err: any, response: any) {
+        if (err) {
+          console.error(err, "error al generar token de auth0")
+          console.error(response)
+        } else {
+          setToken(response?.access_token)
+        }
+
+      }
+    );
 
     let id: number = getAuth0Id(user?.sub)
     const requestOptions = {
@@ -89,11 +118,31 @@ const generarPerfil: React.FC = () => {
         setResponseRoadmap(data?.inforoadmap)
         setName(data?.name)
         setLocation(data?.location)
+        setPosition(data?.idposition)
       })
-      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+      .catch((error) => console.error("Error obtener informacion de usuario"));
 
     if (userInfo !== undefined) {
 
+    }
+
+    switch (position) {
+      case 1: {
+        setStringPosition("Administrador");
+        break;
+      }
+      case 2: {
+        setStringPosition("Colaborador");
+        break;
+      }
+      case 3: {
+        setStringPosition("Cliente");
+        break;
+      }
+      default: {
+        setStringPosition("Administrador");;
+        break;
+      }
     }
   }, [isLoading]);
 
@@ -122,6 +171,66 @@ const generarPerfil: React.FC = () => {
         });
     });
   };
+
+  const handleUserInfoModification = async (event: any) => {
+    //method to create new users in the auth0 app
+    const requestOptionsAuth0NewUser = {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      mode: 'no-cors' as RequestMode,
+      body: JSON.stringify(
+        {
+          password: password,
+          name: name,
+          connection: "Username-Password-Authentication"
+        }
+      )
+    };
+
+    console.log("url => ", `https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users/${userId}`)
+    console.log(user?.sub)
+
+    fetch(`https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users/${userId}`, requestOptionsAuth0NewUser)
+      .then(response => response.json())
+      .then(data => {
+        console.log("Usuario actualizado correctamente en Auth0")
+
+        //method to create users in db (only executed if auth0 registration is correct)
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(
+            {
+              id: userId,
+              position: position,
+              name: name,
+            }
+          )
+        };
+        //sdfgh
+        fetch(link + '/update-userInfo', requestOptions)
+          .then(response => response.json())
+          .then(data => {
+            console.log("Usuario actualizado correctamente en BD")
+            setIsUserDataUpdate(true)
+          })
+          .catch(error => {
+            console.error(error, "Error al actualizar usuario en BD")
+            setUserRegistrationErrorModal(true)
+          });
+
+
+        event.preventDefault();
+      })
+      .catch(error => {
+        console.error("Error al guardar usuario en Auth0")
+        setUserRegistrationErrorModal(true)
+      });
+
+  }
 
   const handleOpenAIResponse = async (e: any) => {
     console.log(e.target.id);
@@ -252,16 +361,6 @@ const generarPerfil: React.FC = () => {
               />
             </div>
             <div className="col-md">
-              <label className="form-label">Position:</label>
-              <input
-                className="form-control"
-                type="text"
-                onChange={(e: any) => setName(e.target.value)}
-                value={name}
-                disabled
-              />
-            </div>
-            <div className="col-md">
               <label className="form-label">Location:</label>
               <input
                 className="form-control"
@@ -270,6 +369,26 @@ const generarPerfil: React.FC = () => {
                 value={location}
               />
             </div>
+            <div className="col-md">
+              <label className="form-label">Password:</label>
+              <input
+                className="form-control"
+                type="text"
+                onChange={(e: any) => setPassword(e.target.value)}
+                value={password}
+              />
+            </div>
+            <div className="col-md">
+              <label className="form-label">Position:</label>
+              <input
+                className="form-control"
+                type="text"
+                onChange={(e: any) => setPosition(e.target.value)}
+                value={stringPosition}
+                disabled
+              />
+            </div>
+
           </div>
 
           <div className="mt-4 mb-4">
