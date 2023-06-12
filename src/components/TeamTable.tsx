@@ -5,6 +5,9 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { teamContext, teamListContext } from "@/context/teamContext";
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
 
 type teamSelectionInterface = {
   value: string;
@@ -25,11 +28,28 @@ const TeamTable = ({ teamChange }) => {
 
   const [employeesList, setEmployeesList] = useState<teamSelectionInterface[] | null>(null);
 
-  const handleEraseFromSystem = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
-  };
+  const [userInfo, setUserInfo] = useState<any>()
+  const [hasAdminPermission] = useState<boolean>(userInfo?.idposition === 1 ? false : true); // como es para el omit debe ser opuesto, isAdmin NO va a ser omitido
+  const { user, error: errorAuth0, isLoading } = useUser();
 
   let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   useEffect(() => {
     fetch(link + '/getTeamMembers')
@@ -85,6 +105,7 @@ const TeamTable = ({ teamChange }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: hasAdminPermission,
     },
     {
       name: "Member Name",
@@ -106,6 +127,7 @@ const TeamTable = ({ teamChange }) => {
         <Fragment>{row.idposition === '2' ? "admin" : ""}</Fragment>
       ),
       width: "150px",
+      omit: hasAdminPermission,
     },
     {
       cell: (row) => (
@@ -130,6 +152,7 @@ const TeamTable = ({ teamChange }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: hasAdminPermission,
     },
   ], [teamChange]);
 
@@ -150,11 +173,11 @@ const TeamTable = ({ teamChange }) => {
   let selectedEmployeeID = employeesContext?.currentEmployee;
   
   // @ts-ignore
-  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedTeamID != "undefined" && selectedEmployeeID != "undefined" && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID.toString() && team.employeeid === selectedEmployeeID.toString()) :
+  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedTeamID != undefined && selectedEmployeeID != undefined && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID.toString() && team.employeeid === selectedEmployeeID.toString()) :
                         // @ts-ignore
-                        selectedTeamID != "" && selectedTeamID != "undefined" && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID.toString()) :
+                        selectedTeamID != "" && selectedTeamID != undefined && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID.toString()) :
                         // @ts-ignore
-                        selectedEmployeeID != "" && selectedEmployeeID != "undefined" && selectedEmployeeID != "0" ? data?.filter(team => team.employeeid === selectedEmployeeID.toString()) :
+                        selectedEmployeeID != "" && selectedEmployeeID != undefined && selectedEmployeeID != "0" ? data?.filter(team => team.employeeid === selectedEmployeeID.toString()) :
                         // @ts-ignore                        
                         data;
 
