@@ -123,10 +123,10 @@ const EmployeeTable = (props: CardProps) => {
         name: 'Email',
         selector: row => row.email,
       },
-      {
+      /*{
         name: 'Rol',
         selector: row => getPositionName(row.idposition),
-      },
+      },*/
       {
         name: 'LinkedIn Link',
         selector: row => row.linkedinlink,

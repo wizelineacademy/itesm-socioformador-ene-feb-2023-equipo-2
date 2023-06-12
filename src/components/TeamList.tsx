@@ -6,6 +6,9 @@ import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table
 
 import { teamContext, teamListContext } from "@/context/teamContext";
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
 
 type teamTableInterface = {
   value: string;
@@ -41,9 +44,6 @@ type employeeSelectionInterface = {
 
 // @ts-ignore
 const TeamList = ({ setTeamChange, teamChange }) => {
-
-  var isAdmin:Boolean = true;
-
   const teamsContext = useContext(teamContext);
   const teamsListContext = useContext(teamListContext);
   const [collapse, setCollapse] = useState(false);
@@ -54,7 +54,28 @@ const TeamList = ({ setTeamChange, teamChange }) => {
   const [employeesChangeList, setEmployeesChangeList] = useState<employeeSelectionInterface[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
+  const [userInfo, setUserInfo] = useState<any>()
+  const [hasAdminPermission] = useState<boolean>(userInfo?.idposition === 1 ? false : true); // como es para el omit debe ser opuesto, isAdmin NO va a ser omitido
+  const { user, error: errorAuth0, isLoading } = useUser();
+
   let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   const handleChangeTeam = () => {
     const requestOptions = {
@@ -75,6 +96,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
     setName('');
     // @ts-ignore
     setTeamChange(prevTeamChange => !prevTeamChange);
+    window.location.reload();
   };
 
   const handleChangeTeamStatus = (status : boolean, teamId : string | null) => {
@@ -142,11 +164,13 @@ const TeamList = ({ setTeamChange, teamChange }) => {
     },
   };
   //fsdf
-  const columns: TableColumn<teamTableInterface>[] = [
+  const columns: TableColumn<teamTableInterface>[] = React.useMemo(
+    () => [
     {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
+            data-testid={'team-list-status-' + String(row.value) + '-' + String(row.isactive)}
             className={`status-icon-size ${String(row.isactive) === 'true' ? "state-active" : "state-inactive" }`}
             data-bs-toggle="tooltip"
             data-bs-placement="top"
@@ -155,6 +179,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: hasAdminPermission,
     },
     {
       name: "Team Name",
@@ -165,6 +190,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaPencilAlt
+            data-testid={'edit-team-information-' + String(row.value)}
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => {collapse && changeTeamId === row.value ? setCollapse(!collapse) : 
                               collapse && changeTeamId !== row.value ? setCollapse(collapse) : 
@@ -178,12 +204,14 @@ const TeamList = ({ setTeamChange, teamChange }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: hasAdminPermission,
     },
     {
       cell: (row) => (
         <Fragment>
           {row.isactive ? 
           <FaIcons.FaTrash
+            data-testid={'erase-full-team-' + String(row.value)}
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleChangeTeamStatus(false, row.value)}
             data-bs-toggle="tooltip"
@@ -192,6 +220,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
           />
           :
           <FaIcons.FaArrowUp
+            data-testid={'reactivate-full-team-' + String(row.value)}
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleChangeTeamStatus(true, row.value) }
             data-bs-toggle="tooltip"
@@ -202,9 +231,11 @@ const TeamList = ({ setTeamChange, teamChange }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: hasAdminPermission,
     },
     // @ts-ignore
-  ];
+  ], [hasAdminPermission],
+  );
 
   //let clients = clientsListContext?.selectedClient;
   const data = teamsListContext?.selectedTeam?.map((team) => {
@@ -231,7 +262,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
               <input
                 className="form-control"
                 type="name"
-                id="name"
+                id="newTeamName"
                 onChange={(e) => setName(e.target.value)}
                 value={name}
                 required />
@@ -239,7 +270,7 @@ const TeamList = ({ setTeamChange, teamChange }) => {
                 <label className="form-label">Members</label>
                 {employeesChangeList ? (
                   <Select
-                  id="member-select"
+                  id="new-members-select"
                   // @ts-ignore
                   onChange={handleChangeSelectEmployeeName}
                   value={employeesChangeList.filter((obj) =>
