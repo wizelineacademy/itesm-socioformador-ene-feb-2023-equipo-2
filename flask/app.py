@@ -81,7 +81,7 @@ def index_cv():
     # Extracting the Location
     location = location_loc.get_text().strip()
     
-    profile_linkedin = ("Name -->", name, "Position --> (", works_at, ")", "Location -->", location, "--------------------------------")
+    profile_linkedin = ("Name: " + name, "Position: (" + works_at + ")", "Location: " + location + ", ")
 
     #--------------------------------
     experience_url =  profile_url + "/details/experience/" 
@@ -117,7 +117,7 @@ def index_cv():
         for job in li_tags:
 
             try:
-                job_title = job.find("span", {'class': 'mr1 t-bold'})
+                job_title = job.find("div", {'class': 'display-flex align-items-center mr1 t-bold'})
                 job_title = job_title.find("span", {'class': 'visually-hidden'}).get_text().strip()
 
                 job_company = job.find("span", {'class': 't-14 t-normal'})
@@ -132,23 +132,21 @@ def index_cv():
                     job_location = job_location[1].find("span", {'class': 'visually-hidden'}).get_text().strip()
 
                     profile_linkedin = profile_linkedin + ("Experience #" + str(job_counter),
-                    "Job Title -->", job_title,
-                    "Company Name -->", job_company,
-                    "Location -->", job_location,
-                    "Start Date, End Date and Total Duration -->", job_time,
-                    "----------------------------------------")
+                    "Job Title: " + job_title,
+                    "Company Name: " + job_company,
+                    "Location: " + job_location,
+                    "Start Date, End Date and Total Duration: " + job_time + ", ")
                 else:
-                    profile_linkedin = profile_linkedin + ("\nExperience #" + str(job_counter),
-                    "Job Title -->", job_title,
-                    "Company Name -->", job_company,
-                    "Start Date, End Date and Total Duration -->", job_time,
-                    "----------------------------------------")
+                    profile_linkedin = profile_linkedin + ("Experience #" + str(job_counter),
+                    "Job Title: " + job_title,
+                    "Company Name: " +  job_company,
+                    "Start Date, End Date and Total Duration: "+ job_time + ', ')
             
                 job_counter += 1
 
             except AttributeError:
 
-                job_company = job.find("span", {'class': 'mr1 hoverable-link-text t-bold'})
+                job_company = job.find("div", {'class': 'display-flex align-items-center mr1 hoverable-link-text t-bold'})
                 job_company = job_company.find("span", {'class': 'visually-hidden'}).get_text().strip()
                 
                 job_location = job.find("span", {'class': 't-14 t-normal t-black--light'})
@@ -162,23 +160,22 @@ def index_cv():
                 
 
                 for job2 in li_tags_in_job:
-                    job_title = job2.find("span", {'class': 'mr1 hoverable-link-text t-bold'})
+                    job_title = job2.find("div", {'class': 'display-flex align-items-center mr1 hoverable-link-text t-bold'})
                     job_title = job_title.find("span", {'class': 'visually-hidden'}).get_text().strip()
 
                     job_time = job2.find("span", {'class': 't-14 t-normal t-black--light'})
                     job_time = job_time.find("span", {'class': 'visually-hidden'}).get_text().strip()
 
                     profile_linkedin = profile_linkedin + ("Experience #" + str(job_counter),
-                    "Job Title -->", job_title,
-                    "Company Name -->", job_company,
-                    "Location -->", job_location,
-                    "Start Date, End Date and Total Duration -->", job_time,
-                    "----------------------------------------")
+                    "Job Title: " + job_title,
+                    "Company Name: " + job_company,
+                    "Location: " + job_location,
+                    "Start Date, End Date and Total Duration: " + job_time + ', ')
             
                     job_counter += 1
     except AttributeError:
         profile_linkedin = profile_linkedin + ("No Experience Found", 
-              "--------------------------------")
+              "\n")
 
     #-------------------------------------
     # HTML of the skills section in the profile
@@ -215,18 +212,17 @@ def index_cv():
     try:
 
         for skill in li_tags:
-            skill_name = skill.find("span", {'class': 'mr1 hoverable-link-text t-bold'})
+            skill_name = skill.find("div", {'class': 'display-flex align-items-center mr1 hoverable-link-text t-bold'})
             skill_name = skill_name.find("span", {'class': 'visually-hidden'}).get_text().strip()
 
             profile_linkedin = profile_linkedin + ("Skill #" + str(skills_counter),
-                "Skills -->", skill_name,
-                "----------------------------------------")
+                "Skills: " + skill_name + ', ')
             
             skills_counter += 1
 
     except AttributeError:
         profile_linkedin = profile_linkedin + ("No skills found",
-              "----------------------------------------")
+              "\n")
 
     #--------------------------------------------------------
 
