@@ -96,6 +96,7 @@ const TeamTable = ({ teamChange }) => {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
+            data-testid={'member-in-team-status-' + String(row.value) + '-' + String(row.employeeid)}
             className={`status-icon-size ${String(row.isactivemember) === 'true' ? "state-active" : "state-inactive" }`}
             data-bs-toggle="tooltip"
             data-bs-placement="top"
@@ -133,6 +134,7 @@ const TeamTable = ({ teamChange }) => {
         <Fragment>
           {row.isactivemember ? 
           <FaIcons.FaTrash
+            data-testid={'erase-member-in-team-' + String(row.value) + '-' + String(row.employeeid)}
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleChangeTeamMembersStatus(false, row.value, row.employeeid)}
             data-bs-toggle="tooltip"
@@ -141,6 +143,7 @@ const TeamTable = ({ teamChange }) => {
           />
           :
           <FaIcons.FaArrowUp
+            data-testid={'reactivate-member-in-team-' + String(row.value) + '-' + String(row.employeeid)}
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleChangeTeamMembersStatus(true, row.value, row.employeeid) }
             data-bs-toggle="tooltip"
@@ -170,13 +173,17 @@ const TeamTable = ({ teamChange }) => {
 
   let selectedTeamID = teamsContext?.currentTeam;
   let selectedEmployeeID = employeesContext?.currentEmployee;
+
+  console.log('data', data)
+  console.log('selectedTeamID', selectedTeamID)
+  console.log('selectedEmployeeID', selectedEmployeeID)
   
   // @ts-ignore
-  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedTeamID != undefined && selectedEmployeeID != undefined && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID.toString() && team.employeeid === selectedEmployeeID.toString()) :
+  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedEmployeeID != null && selectedTeamID != null && selectedTeamID != undefined && selectedEmployeeID != undefined && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID && team.employeeid === selectedEmployeeID) :
                         // @ts-ignore
-                        selectedTeamID != "" && selectedTeamID != undefined && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID.toString()) :
+                        selectedTeamID != "" && selectedTeamID != null && selectedTeamID != undefined && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID) :
                         // @ts-ignore
-                        selectedEmployeeID != "" && selectedEmployeeID != undefined && selectedEmployeeID != "0" ? data?.filter(team => team.employeeid === selectedEmployeeID.toString()) :
+                        selectedEmployeeID != "" && selectedEmployeeID != null && selectedEmployeeID != undefined && selectedEmployeeID != "0" ? data?.filter(team => team.employeeid === selectedEmployeeID) :
                         // @ts-ignore                        
                         data;
 

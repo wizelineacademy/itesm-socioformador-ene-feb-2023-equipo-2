@@ -23,8 +23,8 @@ describe('TeamList Component', () => {
   let employeeUsername = 'mario.cypress@test.mx';
   let employeePassword = 'wizeline000';
 
-  it('Prueba 1 - Componente se muestra correctamente para administrador', () => {
-    cy.log('Inicia prueba 1 - Componente se muestra correctamente para administrador');
+  it('Prueba 4 - Componente se muestra correctamente para administrador', () => {
+    cy.log('Inicia prueba 4 - Componente se muestra correctamente para administrador');
 
     loginViaAuth0Ui(adminUsername, adminPassword);
 
@@ -33,15 +33,26 @@ describe('TeamList Component', () => {
     cy.get('[data-testid="team-list-status-25-true"]').should('exist');
     cy.get('[data-testid="edit-team-information-25"]').should('exist');
 
-    cy.log('Prueba 1 terminada');
+    cy.log('Prueba 4 terminada');
   })
 
+  it('Prueba 5 - Componente se muestra correctamente para empleados', () => {
+    cy.log('Inicia prueba 5 - Componente se muestra correctamente para empleados');
 
+    loginViaAuth0Ui(employeeUsername, employeePassword);
 
-  it('Prueba 3 - Se cambia de nombre el equipo', () => {
+    cy.get('.container').contains('Teams').should('exist');
+    cy.get('.container').contains('Team Name').should('exist');
+    cy.get('[data-testid="team-list-status-25-true"]').should('not.exist');
+    cy.get('[data-testid="edit-team-information-25"]').should('not.exist');
+
+    cy.log('Prueba 5 terminada');
+  })
+
+  it('Prueba 6 - Se cambia de nombre el equipo', () => {
     let testUser = 'CY Test Team 1';
     let newTestUser = 'CY Test Team 111';
-    cy.log('Inicia prueba 3 - Componente se muestra correctamente para administrador');
+    cy.log('Inicia prueba 6 - Componente se muestra correctamente para administrador');
 
     loginViaAuth0Ui(adminUsername, adminPassword);
 
@@ -58,12 +69,12 @@ describe('TeamList Component', () => {
     //cy.get('.container').contains('Team Name').should('exist');
     //cy.get('[data-testid="team-list-status"]').should('exist');
     
-    cy.log('Prueba 3 terminada');
+    cy.log('Prueba 6 terminada');
   })
 
-  it('Prueba 4 - Se borra el equipo', () => {
+  it('Prueba 7 - Se borra el equipo', () => {
     let testUser = 'CY Test Team 1';
-    cy.log('Inicia prueba 4 - Se borra el equipo');
+    cy.log('Inicia prueba 7 - Se borra el equipo');
 
     loginViaAuth0Ui(adminUsername, adminPassword);
 
@@ -76,7 +87,7 @@ describe('TeamList Component', () => {
     cy.get('[data-testid="erase-full-team-25"]').should('exist');
     cy.get('[data-testid="team-list-status-25-true"]').should('exist');
     
-    cy.log('Prueba 4 terminada');
+    cy.log('Prueba 7 terminada');
   })
 
   /*it('Prueba 2 - collapse renders correctly', () => {
