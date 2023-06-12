@@ -209,6 +209,7 @@ const EmployeeCreation = () => {
               Role:
             </label>
             <Select
+              id = "selectRoleBtn"
               isClearable
               value={role}
               onChange={handleRoleSelect}
@@ -221,7 +222,7 @@ const EmployeeCreation = () => {
           <div className="col-md"></div>
           <div className="col-md"></div>
           <div className="col-md">
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+            <button id = "employeeCreationBtn" className="btn btn-primary w-100" onClick={handleSubmit}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>

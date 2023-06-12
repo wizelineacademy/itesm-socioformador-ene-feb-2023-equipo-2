@@ -135,6 +135,7 @@ const EmployeeSearch = () => {
           <div className="col-md">
             <label className="form-label">Role:</label>
             <Select
+              id="selectRole"
               onChange={handleChangeSelectRole}
               value={roleOptions.find((obj) => obj.value === role)}
               options={roleOptions}
@@ -144,6 +145,7 @@ const EmployeeSearch = () => {
           <div className="col-md">
             <label className="form-label">&nbsp;</label>
             <button
+              id="showEmployeecreation"
               className="btn btn-primary w-100"
               onClick={() => setAddEmployee(!addEmployee)}
               aria-controls="employeeCreation"
