@@ -199,7 +199,7 @@ const generarPerfil: React.FC = () => {
         console.log("Usuario actualizado correctamente en Auth0")
 
         //method to create users in db (only executed if auth0 registration is correct)
-        const requestOptions = { 
+        const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(
@@ -389,15 +389,6 @@ const generarPerfil: React.FC = () => {
               />
             </div>
 
-          //button to save modified user info
-            <button
-              className="btn btn-primary mt-3"
-              onClick={handleUserInfoModification}
-              id="buttonLinkedin"
-            >
-              <FaIcons.FaLinkedin className="mb-1" />
-              &nbsp;&nbsp;Save
-            </button>
           </div>
 
           <div className="mt-4 mb-4">
