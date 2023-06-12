@@ -11,6 +11,9 @@ import { projectContext, projectListContext, statusContext } from '@/context/pro
 import { clientContext, clientListContext } from "@/context/clientContext";
 import { useRouter } from 'next/router';
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
 interface projectListInterface {
   value: string;
   label: string;
@@ -33,6 +36,28 @@ const ProjectTable = ({ clientID }) => {
 
   const projectTableRouter = useRouter();
 
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
+
   useEffect(() => {
   }, [clientID]);
 
@@ -54,7 +79,8 @@ const ProjectTable = ({ clientID }) => {
     },
   };
 
-  const columns: TableColumn<projectListInterface>[] = [
+  const columns: TableColumn<projectListInterface>[] = React.useMemo(
+    () => [
     {
       cell: (row) => (
         <Fragment>
@@ -71,6 +97,7 @@ const ProjectTable = ({ clientID }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       name: "Project",
@@ -105,15 +132,10 @@ const ProjectTable = ({ clientID }) => {
               title="Edit project information"
             />
           </div>
-          {/*
-          href="/project-overview"
-          <FaIcons.FaInfoCircle
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleSeeProjects()}
-      />*/}
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
@@ -126,17 +148,11 @@ const ProjectTable = ({ clientID }) => {
               title="View project information"
             />
           </div>
-          {/*
-          href="/project-overview"
-          <FaIcons.FaInfoCircle
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleSeeProjects()}
-      />*/}
         </Fragment>
       ),
       width: "50px",
     },
-  ];
+  ], [userInfo]);
 
   let projects = projectsListContext?.selectedProject;
   //let clients = clientsListContext?.selectedClient;

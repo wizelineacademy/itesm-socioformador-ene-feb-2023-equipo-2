@@ -157,7 +157,7 @@ const ProjectSearch = ({ clientID }) => {
   }
 
   return (
-    <>{userInfo?.idposition === 1 &&
+    <>
       <Container>
         <Row>
           <Col>
@@ -202,35 +202,41 @@ const ProjectSearch = ({ clientID }) => {
               id="order-status-select"
             />
           </Col>
-          <Col>
-            <label className="form-label">&nbsp;</label>
-            <button
-              className="btn btn-primary w-100"
-              onClick={() => setCollapse(!collapse)}
-              aria-controls="collapseProjectCreation"
-              aria-expanded={collapse}
-              data-test="add-project-button"
-            >
-              {collapse ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaClipboardList className="mb-1" />
-                  &nbsp;&nbsp;Add Project
-                </>
-              )}
-            </button>
-          </Col>
-          <Collapse in={collapse}>
-            <div id="collapseProjectCreation" className="my-3">
-              <ProjectCreation />
-            </div>
-          </Collapse>
+          {userInfo?.idposition === 1 ? (
+            <Col>
+              <label className="form-label">&nbsp;</label>
+              <button
+                className="btn btn-primary w-100"
+                onClick={() => setCollapse(!collapse)}
+                aria-controls="collapseProjectCreation"
+                aria-expanded={collapse}
+                data-test="add-project-button"
+              >
+                {collapse ? (
+                  <>
+                    <FaIcons.FaTimes className="mb-1" />
+                    &nbsp;&nbsp;Close
+                  </>
+                ) : (
+                  <>
+                    <FaIcons.FaClipboardList className="mb-1" />
+                    &nbsp;&nbsp;Add Project
+                  </>
+                )}
+              </button>
+            </Col>
+            ) : <div></div>
+          }
+          {userInfo?.idposition === 1 ? (
+            <Collapse in={collapse}>
+              <div id="collapseProjectCreation" className="my-3">
+                <ProjectCreation />
+              </div>
+            </Collapse>
+            ) : <div></div>
+          }
         </Row>
-      </Container>}
+      </Container>
     </>
   );
 };
