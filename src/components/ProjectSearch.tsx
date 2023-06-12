@@ -192,16 +192,19 @@ const ProjectSearch = ({ clientID }) => {
               <div>Loading...</div>
             )}
           </Col>
-          <Col>
-            <label className="form-label">Order Status:</label>
-            <Select
-              onChange={handleDropdownSelect}
-              value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)}
-              options={listOfStatus}
-              isClearable
-              id="order-status-select"
-            />
-          </Col>
+          {userInfo?.idposition === 1 ? (
+            <Col>
+              <label className="form-label">Order Status:</label>
+              <Select
+                onChange={handleDropdownSelect}
+                value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)}
+                options={listOfStatus}
+                isClearable
+                id="order-status-select"
+              />
+            </Col>
+            ) : <div></div>
+          }
           {userInfo?.idposition === 1 ? (
             <Col>
               <label className="form-label">&nbsp;</label>

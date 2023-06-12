@@ -55,8 +55,6 @@ const EmployeeSearch = () => {
   const router = useRouter();
   const { user, isLoading } = useUser();
 
-  console.log("userInfo -> ", userInfo)
-
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   // fetch of employees to later place in react-select.
@@ -116,8 +114,7 @@ const EmployeeSearch = () => {
   }
 
   return (
-    <>{
-      userInfo?.idposition === 1 &&
+    <>
       <div className="container my-4">
         {/*for searching employees by their name*/}
         <div className="row">
@@ -141,37 +138,39 @@ const EmployeeSearch = () => {
               isClearable
             />
           </div>
-          <div className="col-md">
-            <label className="form-label">&nbsp;</label>
-            <button
-              className="btn btn-primary w-100"
-              onClick={() => setAddEmployee(!addEmployee)}
-              aria-controls="employeeCreation"
-              aria-expanded={addEmployee}>
-              {addEmployee ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaUserCog className="mb-1" />
-                  &nbsp;&nbsp;Add Employee
-                </>
-              )}
-            </button>
-            {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
-              <FaIcons.FaSearch className="mb-1" />
-              &nbsp;&nbsp;Search
-            </button> */}
-          </div>
-          <Collapse in={addEmployee}>
-            <div id="employeeCreation" className="my-3">
-              <EmployeeCreation />
+          {userInfo?.idposition === 1 ? (
+            <div className="col-md">
+              <label className="form-label">&nbsp;</label>
+              <button
+                className="btn btn-primary w-100"
+                onClick={() => setAddEmployee(!addEmployee)}
+                aria-controls="employeeCreation"
+                aria-expanded={addEmployee}>
+                {addEmployee ? (
+                  <>
+                    <FaIcons.FaTimes className="mb-1" />
+                    &nbsp;&nbsp;Close
+                  </>
+                ) : (
+                  <>
+                    <FaIcons.FaUserCog className="mb-1" />
+                    &nbsp;&nbsp;Add Employee
+                  </>
+                )}
+              </button>
             </div>
-          </Collapse>
+            ) : <div></div>
+          }
+          {userInfo?.idposition === 1 ? (
+            <Collapse in={addEmployee}>
+              <div id="employeeCreation" className="my-3">
+                <EmployeeCreation />
+              </div>
+            </Collapse>
+            ) : <div></div>
+          }
         </div>
-      </div>}
+      </div>
     </>
   );
 };
