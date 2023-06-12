@@ -13,6 +13,7 @@ import { roleContext } from "@/context/roleContext";
 const roleOptions = [
   { value: "1", label: "Administrator" },
   { value: "2", label: "Wizeliner" },
+  { value: "3", label: "Cliente" },
 ];
 
 
