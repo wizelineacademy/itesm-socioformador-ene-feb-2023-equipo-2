@@ -29,7 +29,6 @@ const TeamTable = ({ teamChange }) => {
   const [employeesList, setEmployeesList] = useState<teamSelectionInterface[] | null>(null);
 
   const [userInfo, setUserInfo] = useState<any>()
-  const [hasAdminPermission] = useState<boolean>(userInfo?.idposition === 1 ? false : true); // como es para el omit debe ser opuesto, isAdmin NO va a ser omitido
   const { user, error: errorAuth0, isLoading } = useUser();
 
   let link = process.env.NEXT_PUBLIC_API_URL;
@@ -105,7 +104,7 @@ const TeamTable = ({ teamChange }) => {
         </Fragment>
       ),
       width: "50px",
-      omit: hasAdminPermission,
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       name: "Member Name",
@@ -127,7 +126,7 @@ const TeamTable = ({ teamChange }) => {
         <Fragment>{row.idposition === '2' ? "admin" : ""}</Fragment>
       ),
       width: "150px",
-      omit: hasAdminPermission,
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
@@ -152,9 +151,9 @@ const TeamTable = ({ teamChange }) => {
         </Fragment>
       ),
       width: "50px",
-      omit: hasAdminPermission,
+      omit: userInfo?.idposition === 1 ? false : true,
     },
-  ], [teamChange]);
+  ], [userInfo]);
 
   //let clients = clientsListContext?.selectedClient;
   const data = employeesList?.map((team) => {
