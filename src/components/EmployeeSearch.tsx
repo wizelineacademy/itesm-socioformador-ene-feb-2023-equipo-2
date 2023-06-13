@@ -17,9 +17,11 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { getAuth0Id } from "@/utils/getAuth0Id";
 
 const roleOptions = [
-  { value: "1", label: "Wizeliner" },
-  { value: "2", label: "Administrator" },
+  { value: "1", label: "Administrator" },
+  { value: "2", label: "Wizeliner" },
+  { value: "3", label: "Cliente" },
 ];
+
 
 type employeeSelectionInterface = {
   value: string,
