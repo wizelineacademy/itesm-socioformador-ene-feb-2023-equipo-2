@@ -180,8 +180,9 @@ const projects = () => {
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
 
-  const handleEmployeeSeeInfo = () => {
-    alert("se va a redireccionar al perfil del usuario");
+  const handleEmployeeSeeInfo = (id: any) => {
+    const encodedInfo = encodeURIComponent(id);
+    window.location.href = `/profile-information?info=${encodedInfo}`;
   };
 
   const handleEmployeeDelete = () => {
@@ -237,7 +238,7 @@ const projects = () => {
         <Fragment>
           <FaIcons.FaInfoCircle
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleEmployeeSeeInfo()}
+            onClick={() => handleEmployeeSeeInfo(row.id)}
           />
         </Fragment>
       ),
