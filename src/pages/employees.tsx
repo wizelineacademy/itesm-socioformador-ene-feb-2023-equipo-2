@@ -57,7 +57,7 @@ const employees = () => {
     </div>
       :
       <>
-        <Menu titulo={"Employees"} descripcion={" "} />
+        <Menu titulo={"Users"} descripcion={" "} />
         <RoleContext>
           <EmployeeContext>
             <EmployeeListContext>

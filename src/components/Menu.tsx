@@ -57,9 +57,9 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/clients" className="a-navbar">
-                  <FaIcons.FaUserTie className="mb-1" />
-                  &nbsp;&nbsp;Clients
+                <Link href="/projects" className="a-navbar">
+                  <FaIcons.FaClipboardList className="mb-1" />
+                  &nbsp;&nbsp;Projects
                 </Link>
               </Nav.Link>
               <Nav.Link
@@ -70,9 +70,9 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/projects" className="a-navbar">
-                  <FaIcons.FaClipboardList className="mb-1" />
-                  &nbsp;&nbsp;Projects
+                <Link href="/clients" className="a-navbar">
+                  <FaIcons.FaUserTie className="mb-1" />
+                  &nbsp;&nbsp;Clients
                 </Link>
               </Nav.Link>
               <Nav.Link
@@ -98,7 +98,7 @@ const Menu = (props: MenuProps) => {
               >
                 <Link href="/employees" className="a-navbar">
                   <FaIcons.FaUserCog className="mb-1" />
-                  &nbsp;&nbsp;Employees
+                  &nbsp;&nbsp;Users
                 </Link>
               </Nav.Link>
               <Nav.Link
@@ -109,10 +109,6 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                {/* <Link href="/department" className="a-navbar">
-                  <FaIcons.FaBriefcase className="mb-1" />
-                  &nbsp;&nbsp;Department
-                </Link> */}
               </Nav.Link>
             </Nav>
             {/* Dropdown component */}
