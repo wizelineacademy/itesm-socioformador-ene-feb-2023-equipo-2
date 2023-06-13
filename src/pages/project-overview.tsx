@@ -9,6 +9,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import TextBox from "@/components/TextBox";
 import { useRouter } from "next/router";
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
 
 
 interface projectOverviewInterface {
@@ -40,7 +41,17 @@ const projects = () => {
   const hasMounted = useHasMounted();
 
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+
+  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[]>();
+  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[]>();
+  const [projectDescription, setProjectDescription] = useState("");
+
+  let projectID = router.query.slug;
+
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     // Redirect logic here
@@ -53,15 +64,22 @@ const projects = () => {
     }
   }, [isLoading]);
 
-  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[]>();
-  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[]>();
-  const [projectDescription, setProjectDescription] = useState("");
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
 
-  let projectID = router.query.slug;
-  console.log('router.query.slug', router.query.slug)
-  console.log('projectID', projectID)
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
 
-  let link = process.env.NEXT_PUBLIC_API_URL;
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   useEffect(() => {
     fetch(link + "/getProjectOverview")
@@ -185,7 +203,8 @@ const projects = () => {
     },
   };
 
-  const columns: TableColumn<projectTeamMembersInterface>[] = [
+  const columns: TableColumn<projectTeamMembersInterface>[] = React.useMemo(
+    () => [
     {
       cell: (row) => (
         <Fragment>
@@ -204,6 +223,7 @@ const projects = () => {
         <Fragment>{row.idposition === "1" ? "admin" : ""}</Fragment>
       ),
       width: "150px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       name: "Email",
@@ -224,7 +244,7 @@ const projects = () => {
       ),
       width: "50px",
     },
-  ];
+  ], [userInfo]);
 
   const missingEmployees = [
     {

@@ -158,8 +158,8 @@ const EmployeeCreation = () => {
   };
 
   const roleOptions = [
-    { value: "1", label: "Administrador" },
-    { value: "2", label: "Empleado General" },
+    { value: "1", label: "Wizeliner" },
+    { value: "2", label: "Administrador" },
     { value: "3", label: "Cliente" }
   ];
 
@@ -169,7 +169,7 @@ const EmployeeCreation = () => {
 
   const handleRoleSelect = (e: any | null) => {
     if (e === null) {
-      setName("");
+      setRole("");
     } else {
       setRole(e.value);
     }
@@ -209,8 +209,9 @@ const EmployeeCreation = () => {
               Role:
             </label>
             <Select
+              id = "selectRoleBtn"
               isClearable
-              value={role}
+              value={roleOptions.find((obj) => obj.value === role) || ""}
               onChange={handleRoleSelect}
               // @ts-ignore
               options={roleOptions}
@@ -221,7 +222,7 @@ const EmployeeCreation = () => {
           <div className="col-md"></div>
           <div className="col-md"></div>
           <div className="col-md">
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+            <button id = "employeeCreationBtn"  className="btn btn-primary w-100" onClick={handleSubmit}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>

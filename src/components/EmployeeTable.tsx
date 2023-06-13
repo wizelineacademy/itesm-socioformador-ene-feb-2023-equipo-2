@@ -2,7 +2,7 @@
 // Poner una imagen de placeholden en caso de que no haya foto de perfil
 // Arreglar para la vista tipo telefono
 
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState, useContext, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
@@ -10,11 +10,15 @@ import { useRouter } from 'next/router';
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 import { roleContext } from "@/context/roleContext";
 
-const roleOptions = [
-  { value: "1", label: "Wizeliner" },
-  { value: "2", label: "Administrator" },
-];
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
 
+
+const roleOptions = [
+  { value: "1", label: "Administrator" },
+  { value: "2", label: "Wizeliner" },
+  { value: "3", label: "Cliente" },
+];
 
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
@@ -28,17 +32,27 @@ const EmployeeTable = (props: CardProps) => {
 
   const router = useRouter();
 
-  const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
-  const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
-  const [hidePlusSign] = useState<boolean>(props.pageType === 'addToOrder' ? false : true);
-  const [hideMinusSign] = useState<boolean>(props.pageType === 'OrderSummary' ? false : true);
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
 
-  // BORRAR ESTAS 4 AL FINAL Y PONER LAS 4 DE ARRIBA, SON PARA MOSTRAR TODAS
-  // const [hideStatusIcon] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  // const [hideTrashCan] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  // const [hidePlusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  // const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
+  let link = process.env.NEXT_PUBLIC_API_URL;
 
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   const handleEmployeeSeeInfo = (id: any) => {
     //alert("se va a redireccionar al perfil del usuario");
@@ -105,6 +119,7 @@ const EmployeeTable = (props: CardProps) => {
           </Fragment>
         ),
         width: "50px",
+        omit: userInfo?.idposition === 1 ? false : true,
       },
       {
         cell: (row) => (
@@ -123,10 +138,10 @@ const EmployeeTable = (props: CardProps) => {
         name: 'Email',
         selector: row => row.email,
       },
-      {
+      /*{
         name: 'Rol',
         selector: row => getPositionName(row.idposition),
-      },
+      },*/
       {
         name: 'LinkedIn Link',
         selector: row => row.linkedinlink,
@@ -136,6 +151,7 @@ const EmployeeTable = (props: CardProps) => {
           <Fragment>{row.idposition === 1 ? "admin" : ""}</Fragment>
         ),
         width: "150px",
+        omit: userInfo?.idposition === 1 ? false : true,
       },
       {
         cell: (row) => (
@@ -163,11 +179,11 @@ const EmployeeTable = (props: CardProps) => {
             />
           </Fragment>
         ),
-        omit: hideTrashCan,
         width: '70px',
+        omit: userInfo?.idposition === 1 ? false : true,
       },
     ],
-    [hideTrashCan, hidePlusSign, hideMinusSign],
+    [userInfo],
   );
 
   const data = employees?.map((employee) => {

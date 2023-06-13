@@ -1,14 +1,40 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useContext } from 'react';
 import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
 import { useRouter } from 'next/router';
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
+
 const ClientCard = () => {
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
   const router = useRouter();
+
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   const customStyles = {
     rows: {
@@ -34,7 +60,8 @@ const ClientCard = () => {
 
   let clients = clientsListContext?.selectedClient;
 
-  let columns: TableColumn<clientSelectionInterface>[] = [
+  let columns: TableColumn<clientSelectionInterface>[] = React.useMemo(
+    () => [
     {
       cell: (row) => (
         <Fragment>
@@ -47,6 +74,7 @@ const ClientCard = () => {
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
@@ -83,6 +111,7 @@ const ClientCard = () => {
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
@@ -99,7 +128,7 @@ const ClientCard = () => {
       ),
       width: "50px",
     },
-  ];
+  ], [userInfo]);
 
   const data = clients?.map((client) => {
     return {

@@ -3,10 +3,10 @@
 
 describe('TeamSearch Component', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000')
     let username = 'adminadmin@tec.mx';
     let password = 'adminadmin';
 
+    cy.visit('http://localhost:3000')
     cy.origin(
       'https://dev-xo3qm08sbje0ntri.us.auth0.com',
       { args: { username, password } },
@@ -16,17 +16,12 @@ describe('TeamSearch Component', () => {
         cy.get('button[data-action-button-primary=true]').contains('Continue').click()
       }
     )
-    // Ensure Auth0 has redirected us back to the RWA.
     cy.url().should('equal', 'http://localhost:3000/generar-perfil')
     cy.visit('http://localhost:3000/teams')
-
     cy.get('button#team-creation-button').click();
-    cy.get('.container').contains('Please fill out the following fields to create a team:').should('exist');
   });
 
   it('Prueba 1 - Crear team', () => {
-    let testName = 'CY Test Team';
-    let testMember = 'testWize1';
     cy.log('Inicia prueba 1 - Employees list se carga correctamente');
 
     cy.intercept('GET', '/api/get-employees', (req) => {
@@ -51,13 +46,13 @@ describe('TeamSearch Component', () => {
   })
 
   it('Prueba 3 - Crear team', () => {
-    let testName = 'CY Test Team';
+    let testName = 'CY Test Team 2';
     let testMember = 'testWize1';
     cy.log('Inicia prueba 3 - Crear team');
 
     cy.get('input#new-team-name').type(testName);
     cy.get('#new-team-members').type(testMember);
-    cy.get('button').contains('Add').click();
+    cy.get('button#create-team-button').contains('Add').click();
 
     cy.intercept('POST', '/api/createTeam', (req) => {
       req.reply((res) => {

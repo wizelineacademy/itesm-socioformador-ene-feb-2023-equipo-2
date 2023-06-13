@@ -5,6 +5,9 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { teamContext, teamListContext } from "@/context/teamContext";
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
 
 type teamSelectionInterface = {
   value: string;
@@ -25,11 +28,27 @@ const TeamTable = ({ teamChange }) => {
 
   const [employeesList, setEmployeesList] = useState<teamSelectionInterface[] | null>(null);
 
-  const handleEraseFromSystem = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
-  };
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
 
   let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   useEffect(() => {
     fetch(link + '/getTeamMembers')
@@ -77,6 +96,7 @@ const TeamTable = ({ teamChange }) => {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaRegDotCircle
+            data-testid={'member-in-team-status-' + String(row.value) + '-' + String(row.employeeid)}
             className={`status-icon-size ${String(row.isactivemember) === 'true' ? "state-active" : "state-inactive" }`}
             data-bs-toggle="tooltip"
             data-bs-placement="top"
@@ -85,6 +105,7 @@ const TeamTable = ({ teamChange }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       name: "Member Name",
@@ -106,12 +127,14 @@ const TeamTable = ({ teamChange }) => {
         <Fragment>{row.idposition === '2' ? "admin" : ""}</Fragment>
       ),
       width: "150px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
         <Fragment>
           {row.isactivemember ? 
           <FaIcons.FaTrash
+            data-testid={'erase-member-in-team-' + String(row.value) + '-' + String(row.employeeid)}
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleChangeTeamMembersStatus(false, row.value, row.employeeid)}
             data-bs-toggle="tooltip"
@@ -120,6 +143,7 @@ const TeamTable = ({ teamChange }) => {
           />
           :
           <FaIcons.FaArrowUp
+            data-testid={'reactivate-member-in-team-' + String(row.value) + '-' + String(row.employeeid)}
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
             onClick={() => handleChangeTeamMembersStatus(true, row.value, row.employeeid) }
             data-bs-toggle="tooltip"
@@ -130,8 +154,9 @@ const TeamTable = ({ teamChange }) => {
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
-  ], [teamChange]);
+  ], [userInfo]);
 
   //let clients = clientsListContext?.selectedClient;
   const data = employeesList?.map((team) => {
@@ -148,13 +173,17 @@ const TeamTable = ({ teamChange }) => {
 
   let selectedTeamID = teamsContext?.currentTeam;
   let selectedEmployeeID = employeesContext?.currentEmployee;
+
+  console.log('data', data)
+  console.log('selectedTeamID', selectedTeamID)
+  console.log('selectedEmployeeID', selectedEmployeeID)
   
   // @ts-ignore
-  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedTeamID != "undefined" && selectedEmployeeID != "undefined" && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID.toString() && team.employeeid === selectedEmployeeID.toString()) :
+  let filteredTeamData = (selectedTeamID != "" && selectedEmployeeID != "" && selectedEmployeeID != null && selectedTeamID != null && selectedTeamID != undefined && selectedEmployeeID != undefined && selectedTeamID != "0" && selectedEmployeeID != "0") ? data?.filter(team => team.value === selectedTeamID && team.employeeid === selectedEmployeeID) :
                         // @ts-ignore
-                        selectedTeamID != "" && selectedTeamID != "undefined" && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID.toString()) :
+                        selectedTeamID != "" && selectedTeamID != null && selectedTeamID != undefined && selectedTeamID != "0" ? data?.filter(team => team.value === selectedTeamID) :
                         // @ts-ignore
-                        selectedEmployeeID != "" && selectedEmployeeID != "undefined" && selectedEmployeeID != "0" ? data?.filter(team => team.employeeid === selectedEmployeeID.toString()) :
+                        selectedEmployeeID != "" && selectedEmployeeID != null && selectedEmployeeID != undefined && selectedEmployeeID != "0" ? data?.filter(team => team.employeeid === selectedEmployeeID) :
                         // @ts-ignore                        
                         data;
 

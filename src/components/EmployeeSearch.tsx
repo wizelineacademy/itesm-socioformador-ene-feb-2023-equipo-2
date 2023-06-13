@@ -17,9 +17,11 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { getAuth0Id } from "@/utils/getAuth0Id";
 
 const roleOptions = [
-  { value: "1", label: "Wizeliner" },
-  { value: "2", label: "Administrator" },
+  { value: "1", label: "Administrator" },
+  { value: "2", label: "Wizeliner" },
+  { value: "3", label: "Cliente" },
 ];
+
 
 type employeeSelectionInterface = {
   value: string,
@@ -54,8 +56,6 @@ const EmployeeSearch = () => {
 
   const router = useRouter();
   const { user, isLoading } = useUser();
-
-  console.log("userInfo -> ", userInfo)
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -116,8 +116,7 @@ const EmployeeSearch = () => {
   }
 
   return (
-    <>{
-      userInfo?.idposition === 1 &&
+    <>
       <div className="container my-4">
         {/*for searching employees by their name*/}
         <div className="row">
@@ -135,43 +134,47 @@ const EmployeeSearch = () => {
           <div className="col-md">
             <label className="form-label">Role:</label>
             <Select
+              id="selectRole"
               onChange={handleChangeSelectRole}
               value={roleOptions.find((obj) => obj.value === role)}
               options={roleOptions}
               isClearable
             />
           </div>
-          <div className="col-md">
-            <label className="form-label">&nbsp;</label>
-            <button
-              className="btn btn-primary w-100"
-              onClick={() => setAddEmployee(!addEmployee)}
-              aria-controls="employeeCreation"
-              aria-expanded={addEmployee}>
-              {addEmployee ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaUserCog className="mb-1" />
-                  &nbsp;&nbsp;Add Employee
-                </>
-              )}
-            </button>
-            {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
-              <FaIcons.FaSearch className="mb-1" />
-              &nbsp;&nbsp;Search
-            </button> */}
-          </div>
-          <Collapse in={addEmployee}>
-            <div id="employeeCreation" className="my-3">
-              <EmployeeCreation />
+          {userInfo?.idposition === 1 ? (
+            <div className="col-md">
+              <label className="form-label">&nbsp;</label>
+              <button
+                id="showEmployeecreation"
+                className="btn btn-primary w-100"
+                onClick={() => setAddEmployee(!addEmployee)}
+                aria-controls="employeeCreation"
+                aria-expanded={addEmployee}>
+                {addEmployee ? (
+                  <>
+                    <FaIcons.FaTimes className="mb-1" />
+                    &nbsp;&nbsp;Close
+                  </>
+                ) : (
+                  <>
+                    <FaIcons.FaUserCog className="mb-1" />
+                    &nbsp;&nbsp;Add Employee
+                  </>
+                )}
+              </button>
             </div>
-          </Collapse>
+            ) : <div></div>
+          }
+          {userInfo?.idposition === 1 ? (
+            <Collapse in={addEmployee}>
+              <div id="employeeCreation" className="my-3">
+                <EmployeeCreation />
+              </div>
+            </Collapse>
+            ) : <div></div>
+          }
         </div>
-      </div>}
+      </div>
     </>
   );
 };
