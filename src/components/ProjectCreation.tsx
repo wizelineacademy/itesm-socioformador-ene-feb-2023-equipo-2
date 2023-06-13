@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getChatResponse } from "@/openai/openai";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { Modal } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 
 let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,6 +24,7 @@ const ProjectCreation = () => {
   const [listOfTeams, setTeamsList] = useState([]);
   const [listOfClients, setClientsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [sucess, setSucess] = useState(false);
 
   const listOfStatus = [
     { value: "Approved", label: "Approved" },
@@ -85,61 +86,15 @@ const ProjectCreation = () => {
     fetch(link + "/createProject", requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        alert("Exito");
+        setSucess(true);
         console.log("Esqueleto de requerimientos guardados exitosamente");
       })
       .catch((error) => console.error("Error", error))
-      .finally(() => {
-        window.location.reload();
-      });
   };
 
-  // const handleSendForm = async (event: any) => {
-  //   event.preventDefault();
-
-  //   const messages = [
-  //     {
-  //       role: "user",
-  //       content:
-  //         "In my company we are about to do a project. Its description is the following:" +
-  //         projectDescription +
-  //         'Following the project description above I need you to write a section named “Project description” where you make more descriptive the project’s description I told you, after that I need you to list the functional requirements with its user stories and each of them with their lists of use cases and acceptance criteria; finalize with the non-functional requirements with the same things as the functional ones. I need your response to be a JSON and to be indented properly to improve readability, follow the following example: {"Project description":"Our mission is to design a hospital system that simplifies the process of finding donors for people on the waiting list for transplants. The system will ensure that all necessary information is kept organized and up-to-date in order to reduce wait times and improve success rates.","Functional requirements":[{"ID":"FR001","Name":"Functional requirement name","User stories":[{"ID":"US001","Description":"Functional requirement description"},{"ID":"US002","Description":"Functional requirement description"}],"Use cases":[{"ID":"UC001","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"Acceptance criteria description"},{"ID":"AC002","Description":"Acceptance criteria description"}]},{"ID":"UC002","Description":"Use case description","Acceptance criteria":[{"ID":"AC001","Description":"All required fields must be completed"},{"ID":"AC002","Description":"Information must be validated before submission"}]}]}],"Non-functional requirements":[{"ID":"NFR001","Name":"Non-functional requirement name","Use cases":[{"ID":"UC005","Description":"Use case description","Acceptance criteria":[{"ID":"AC007","Description":"Acceptance criteria description"},{"ID":"AC008","Description":"Acceptance criteria description"}]}]},{"ID":"NFR002","Name":"Performance","Use cases":[{"ID":"UC006","Description":"Use case description","Acceptance criteria":[{"ID":"AC009","Description":"Acceptance criteria description"},{"ID":"AC010","Description":"Acceptance criteria description"}]}]}]}',
-  //     },
-  //   ];
-  //   getChatResponse(messages).then((res) => {
-  //     const requestOptions = {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({aidescription: res,
-  //                             orderstatus: orderStatus,
-  //                             orderstartdate: startDate.toString(),
-  //                             orderenddate: endDate.toString(),
-  //                             idteam: team,
-  //                             idclient: client,
-  //                             name: projectName}),
-  //     };
-
-  //     fetch(
-  //       link + "/createProject", requestOptions,
-  //     )
-  //       .then((response) => {
-  //         if (response.ok) {
-  //           return response.json();
-  //         }
-  //         throw new Error("Network response was not ok.");
-  //       })
-  //       .then((data) =>{
-  //         alert("Exito");
-  //         console.log("Esqueleto de requerimientos guardados exitosamente");
-  //         //console.log(data);
-  //       })
-  //       .catch((error) => console.error("Error", error)
-  //       ).finally(() => {
-  //         setIsLoading(false); // Set loading state to false after the API request completes
-  //         window.location.reload()
-  //       });
-  //   });
-  // };
+  const handleOK = () => {
+    window.location.reload();
+  }
 
   const handleFetchTeams = (e: any | null) => {
     e === null ? setTeam(0) : setTeam(parseInt(e.value));
@@ -159,23 +114,6 @@ const ProjectCreation = () => {
   const handleChangeClient = (e: any) => {
     setClient(e.value);
   };
-
-  /*function handleDropdownSelect(eventKey: string, event: React.SyntheticEvent<{}>) {
-    switch (eventKey) {
-      case "Approved":
-        setOrderStatus("Approved");
-        break;
-      case "Pending":
-        setOrderStatus("Pending");
-        break;
-      case "Rejected":
-        setOrderStatus("Rejected");
-        break;
-      default:
-        setOrderStatus("");
-        break;
-    }
-  };*/
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -289,13 +227,6 @@ const ProjectCreation = () => {
             </button>
             <br></br>
 
-            {/* Loading state */}
-            {/* {isLoading && (
-              <div className="spinner-border text-danger" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            )} */}
-
             {/* Alert message */}
             {response && !isLoading && (
               <div className="alert alert-success mt-3" role="alert">
@@ -331,6 +262,18 @@ const ProjectCreation = () => {
                 <div className="spinner-border text-danger" role="status">
                 </div>
               </Modal.Body>
+            </Modal>
+
+            <Modal show={sucess} centered>
+            <Modal.Header>
+              <Modal.Title>¡Project Saved! :D</Modal.Title>
+            </Modal.Header>
+              <Modal.Body>
+                <p>Click OK to continue.</p>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="primary" onClick={handleOK}>OK</Button>
+              </Modal.Footer>
             </Modal>
           </div>
         </div>
