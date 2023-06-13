@@ -121,7 +121,7 @@ const EmployeeSearch = () => {
         {/*for searching employees by their name*/}
         <div className="row">
           <div className="col-md">
-            <label className="form-label">Employee Name:</label>
+            <label className="form-label">User's Name:</label>
             <Select
               onChange={handleChangeSelectEmployeeName}
               value={employeesList.find(
@@ -158,7 +158,7 @@ const EmployeeSearch = () => {
                 ) : (
                   <>
                     <FaIcons.FaUserCog className="mb-1" />
-                    &nbsp;&nbsp;Add Employee
+                    &nbsp;&nbsp;Add Users
                   </>
                 )}
               </button>
