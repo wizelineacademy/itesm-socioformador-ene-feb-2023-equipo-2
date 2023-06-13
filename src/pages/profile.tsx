@@ -61,12 +61,31 @@ const perfil = () => {
   const getParsedJson = (string: string) => {
     //removing breakpoints and "/" characters
     let cleanString = string.replace(/\\n|\\r|\//gm, "");
+
+    const replacements = {
+      'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a', 'å': 'a',
+      'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+      'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+      'ñ': 'n',
+      'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o',
+      'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u', 'ý': 'y', 'ÿ': 'y'
+    };
+  
+    const replaceAccentedCharacters = (text: string): string => {
+        const pattern = /[àáâãäåèéêëìíîïñòóôõöùúûüýÿ]/g;
+        // @ts-ignore
+        return text.replace(pattern, (match) => replacements[match] || match);
+    };
+
+    cleanString = replaceAccentedCharacters(cleanString);
+
     //removing non printable characters
     let printableStr = cleanString.replace(/[^\x20-\x7E]/g, '');
+
     //removing non ASCII characters
     let finalString = printableStr.replace(/[^\x00-\x7F]/g, '');
 
-    finalString = finalString.replace(/ /g, "");
+    finalString = finalString.replace(/ /g, " ");
 
 
     let parsedJson = JSON.parse(finalString)
@@ -163,13 +182,14 @@ const perfil = () => {
               </div>
             </div>
           </div>
+          
           {/* Section of showing the Experience*/}
           {userData?.Experience.map((experience, index) => (
             <div key={index} className="row">
               <div className="container bg-light border p-4">
                 <div className="d-flex flex-row">
                   <div className="col-3">
-                    <h4>Past Work</h4>
+                    {index === 0 ? <h4>Past Work</h4> : " "}
                   </div>
                   <div className="col-5">
                     <h5>Experience #{index + 1}:</h5>
@@ -178,11 +198,11 @@ const perfil = () => {
                     <p>Duration: {experience.job_duration}</p>
                     <p>Location: {experience.job_location}</p>
                   </div>
-
                 </div>
               </div>
             </div>
           ))}
+
 
           {/* Display skills */}
           <div className="row">
