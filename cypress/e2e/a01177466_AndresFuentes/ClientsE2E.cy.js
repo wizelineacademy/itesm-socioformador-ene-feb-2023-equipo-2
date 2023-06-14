@@ -41,10 +41,12 @@ describe('Client Page', () => {
     cy.get('[data-testid="edit-pencil"]').click();
     cy.wait(5000);
     cy.get('#client-status-change').click();
-    cy.get('#client-status-change input').type('D{enter}{enter}'); 
+    cy.wait(2000);
+    cy.get('#client-status-change input').type('D{enter}'); 
     cy.wait(5000);
+    cy.get('#client-status-change input').click()
     cy.contains('Update client').click();
-    cy.wait(5000);
+    cy.wait(2000);
     cy.get('#client-search-select').click();
     cy.get('#client-search-select input').type('Mar{enter}'); 
     cy.get('[data-testid="edit-pencil"]').click();
