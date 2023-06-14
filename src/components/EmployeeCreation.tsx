@@ -267,7 +267,7 @@ const EmployeeCreation = () => {
           <p>El usuario registrado ya puede acceder a la plataforma usando su correo electronico y la contraseña default <b>wizeline000</b>. Se recomienda cambiar la contraseña por una propia dentro de la plataforma</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button id = "btnContinue" variant="primary" onClick={(e) => setUserRegistration(false)}>
+          <Button variant="primary" onClick={(e) => setUserRegistration(false)}>
             Continue
           </Button>
         </Modal.Footer>

@@ -157,7 +157,6 @@ const EmployeeTable = (props: CardProps) => {
         cell: (row) => (
           <Fragment>
             <FaIcons.FaInfoCircle
-              data-testid = {"info_Option" + String(row.value)}
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
               onClick={() => handleEmployeeSeeInfo(row.value)}
               data-bs-toggle="tooltip"
@@ -172,7 +171,6 @@ const EmployeeTable = (props: CardProps) => {
         cell: (row) => (
           <Fragment>
             <FaIcons.FaPencilAlt
-              data-testid = {"editOption" + String(row.value)}
               style={{color: 'black', fontSize: '18px', cursor: 'pointer'}} 
               onClick={() => router.push({pathname: '/employee-modification', query: { slug: row.value }})}
               data-bs-toggle="tooltip"
@@ -221,7 +219,6 @@ const EmployeeTable = (props: CardProps) => {
     <>
       <div className='container my-4'>
         <DataTable
-          data-testid = "tableUsersInfo"
           columns={columns}
           // @ts-ignore
           data={filteredEmployeeData}
