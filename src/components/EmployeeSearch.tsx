@@ -123,6 +123,7 @@ const EmployeeSearch = () => {
           <div className="col-md">
             <label className="form-label">User's Name:</label>
             <Select
+              id = "selectUser"
               onChange={handleChangeSelectEmployeeName}
               value={employeesList.find(
                 (obj) => obj.value === employeeName
