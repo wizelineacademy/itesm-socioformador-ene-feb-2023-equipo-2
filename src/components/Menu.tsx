@@ -96,7 +96,7 @@ const Menu = (props: MenuProps) => {
                   marginRight: "20px",
                 }}
               >
-                <Link href="/employees" className="a-navbar">
+                <Link id = "goUsers" href="/employees" className="a-navbar">
                   <FaIcons.FaUserCog className="mb-1" />
                   &nbsp;&nbsp;Users
                 </Link>
@@ -130,7 +130,7 @@ const Menu = (props: MenuProps) => {
                 <FaIcons.FaCog className="mb-1" />
                 &nbsp;&nbsp;Settings
               </NavDropdown.Item>
-              <NavDropdown.Item href="/roadmap" className="a-navbar">
+              <NavDropdown.Item href="/roadmap" className="a-navbar" id ="roadmapSend">
                 <FaIcons.FaSitemap className="mb-1" />
                 &nbsp;&nbsp;Roadmap
               </NavDropdown.Item>
@@ -138,6 +138,7 @@ const Menu = (props: MenuProps) => {
               <NavDropdown.Item
                 href=""
                 className="a-logout"
+                id = "logoutComp"
                 onClick={handleLogout}
               >
                 <FaIcons.FaDoorOpen className="mb-1" />
@@ -161,7 +162,7 @@ const Menu = (props: MenuProps) => {
                   <Button variant="secondary" onClick={handleCancelLogout}>
                     Cancel
                   </Button>
-                  <Button variant="primary" onClick={handleConfirmLogout}>
+                  <Button id ="logoutConfirmation" variant="primary" onClick={handleConfirmLogout}>
                     Yes
                   </Button>
                 </Modal.Footer>
