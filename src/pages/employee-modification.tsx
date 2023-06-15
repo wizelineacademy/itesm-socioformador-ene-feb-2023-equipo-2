@@ -95,6 +95,7 @@ const employeeModification = () => {
             <div className="col-md">
               <label className="form-label">Client Name:</label>
               <input
+                id = "setNewName"
                 className="form-control"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -103,6 +104,7 @@ const employeeModification = () => {
             <div className="col-md">
               <label className="form-label">Email:</label>
               <input
+                id = "setNewEmail"
                 className="form-control"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -139,7 +141,7 @@ const employeeModification = () => {
             </div>
           </div>
           {/* Submit button */}
-          <button className="btn btn-primary mt-3" onClick={handleSendForm}>
+          <button id = "updateUserBtn" className="btn btn-primary mt-3" onClick={handleSendForm}>
             <FaIcons.FaUserCog className="mb-1" />
             &nbsp;&nbsp;Update employee
           </button>
