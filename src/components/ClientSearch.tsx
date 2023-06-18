@@ -8,6 +8,8 @@ import ClientCreation from "@/components/ClientCreation";
 import { useRouter } from "next/router";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { getAuth0Id } from "@/utils/getAuth0Id";
+
+
 interface ClientSelectionInterface {
   value: string;
   label: string;
@@ -33,9 +35,6 @@ const ClientSearch = () => {
 
   const router = useRouter();
   const { user, error: errorAuth0, isLoading } = useUser();
-
-  console.log("userInfo -> ", userInfo)
-
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -71,10 +70,12 @@ const ClientSearch = () => {
   const handleChangeSelect = (e: ClientSelectionInterface | null) => {
     if (e === null) {
       setName("");
+      clientsContext?.setCurrentClient("");
     } else {
       setName(e.value);
       clientsContext?.setCurrentClient(e.value);
     }
+    console.log('eeee', e?.value)
   };
 
   if (!hasMounted) {
@@ -83,12 +84,10 @@ const ClientSearch = () => {
 
   return (
     <>
-      {userInfo?.idposition === 1 &&
         <div className="container">
           <div className="row">
             <div className="col-md-10">
               <label className="form-label">Name:</label>
-
               {clientList ? (
                 <Select
                   // @ts-ignore
@@ -104,35 +103,41 @@ const ClientSearch = () => {
 
               {error && <div>{error}</div>} {/* Display the error message if present */}
             </div>
-            <div className="col-md-2">
-              <label className="form-label">&nbsp;</label>
-              <button
-                className="btn btn-primary w-100"
-                data-test="add-client-button"
-                onClick={() => setAddEmployee(!addEmployee)}
-                aria-controls="employeeCreation"
-                aria-expanded={addEmployee}
-              >
-                {addEmployee ? (
-                  <>
-                    <FaIcons.FaTimes className="mb-1" />
-                    &nbsp;&nbsp;Close
-                  </>
-                ) : (
-                  <>
-                    <FaIcons.FaUserTie className="mb-1" />
-                    &nbsp;&nbsp;Add Clients
-                  </>
-                )}
-              </button>
-            </div>
+            {userInfo?.idposition === 1 ? (
+              <div className="col-md-2">
+                <label className="form-label">&nbsp;</label>
+                <button
+                  className="btn btn-primary w-100"
+                  data-test="add-client-button"
+                  onClick={() => setAddEmployee(!addEmployee)}
+                  aria-controls="employeeCreation"
+                  aria-expanded={addEmployee}
+                >
+                  {addEmployee ? (
+                    <>
+                      <FaIcons.FaTimes className="mb-1" />
+                      &nbsp;&nbsp;Close
+                    </>
+                  ) : (
+                    <>
+                      <FaIcons.FaUserTie className="mb-1" />
+                      &nbsp;&nbsp;Add Clients
+                    </>
+                  )}
+                </button>
+              </div>
+            ) : <div></div>
+          }
+          {userInfo?.idposition === 1 ? (
             <Collapse in={addEmployee}>
               <div id="employeeCreation" className="my-3">
                 <ClientCreation />
               </div>
             </Collapse>
+            ) : <div></div>
+          }
           </div>
-        </div>}
+        </div>
     </>
   );
 };

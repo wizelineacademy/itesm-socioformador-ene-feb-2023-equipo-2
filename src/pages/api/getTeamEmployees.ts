@@ -7,27 +7,87 @@ export default async function handler(req: any, res: any) {
   try {
 
     const teamEmployees = await prisma.$queryRaw`
-    SELECT 
-      CAST(employees.id AS VARCHAR) AS id, 
-      employees.name AS employeename, 
-      employees.location,  
-      CAST(employees.idposition AS VARCHAR) AS idposition, 
-      department.name AS departmentname,
-      CAST(teams.id AS VARCHAR) AS idteam,
-      teams.name AS teamname,
-	    CAST(orders.id AS VARCHAR) AS idproject
-    FROM employees
-    INNER JOIN departmentemployees
-        ON employees.id = departmentemployees.idemployee
-    INNER JOIN department
-        ON departmentemployees.iddepartment = department.id
-    INNER JOIN teamemployees
-        ON employees.id = teamemployees.idemployee
-    INNER JOIN teams
-        ON teamemployees.idteam = teams.id
-    INNER JOIN orders
-        ON teams.id = orders.idteam
+      SELECT 
+        CAST(employees.id AS VARCHAR) AS id, 
+        employees.name AS employeename, 
+        employees.location,  
+        CAST(employees.idposition AS VARCHAR) AS idposition, 
+        employees.email AS email,
+        employees.linkedinlink AS linkedinlink,
+        CAST(teams.id AS VARCHAR) AS idteam,
+        teams.name AS teamname,
+        CAST(orders.id AS VARCHAR) AS idproject
+      FROM employees
+      INNER JOIN teamemployees
+          ON employees.id = teamemployees.idemployee
+      INNER JOIN teams
+          ON teamemployees.idteam = teams.id
+      INNER JOIN orders
+          ON teams.id = orders.idteam
     `
+
+    /*const teamEmployees44 = await prisma.teamemployees.findMany({
+      select: {
+        idteam: true,
+        idemployee: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+            location: true,
+            idposition: true,
+            email: true,
+            linkedinlink: true,
+          }
+        },
+        team: {
+          select: {
+            id: true,
+            name: true,
+          }
+        },
+      },
+      where: {
+        team: {
+          some: {
+            orders: {
+              some: {
+                id: projectID,
+              }
+            },
+          }
+        }
+      },
+      orderBy: {
+        idemployee: 'asc',
+      },
+    });
+
+    const teamEmployees2 = teamEmployees.map((project) => {
+      return { 
+        id: String(project.id), 
+        ordername: project.name, 
+        location: project.location, 
+        idposition: project.idposition,
+        email: project.email,
+        linkedinlink: project.linkedinlink,
+      }
+    });
+
+    const teamEmployees222 = teamEmployees44.map((projectH) => {
+      return { 
+        id: projectH.employee.id, 
+        employeename: projectH.employee.name, 
+        location: projectH.employee.location,  
+        idposition: projectH.employee.idposition, 
+        email: projectH.employee.email,
+        linkedinlink: projectH.employee.linkedinlink,
+        idteam: projectH.team.id,
+        teamname: projectH.team.name,
+        idproject: projectID
+      }
+    });*/
+
     const response = {
       teamEmployees: teamEmployees,
     };

@@ -1,26 +1,40 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useContext } from 'react';
 import { clientContext, ClientListContext, clientListContext } from "@/context/clientContext";
 import { useRouter } from 'next/router';
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
+
 const ClientCard = () => {
   const clientsContext = useContext(clientContext);
   const clientsListContext = useContext(clientListContext);
   const router = useRouter();
 
-  const handleClientSeeProjects = () => {
-    alert("se va a redireccionar al perfil del usuario");
-  };
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
 
-  const handleClientEdit = () => {
-    alert("editar");
-  };
+  let link = process.env.NEXT_PUBLIC_API_URL;
 
-  const handleClientEraseFromSystem = () => {
-    alert("se va a eliminar el usuario de la lista de la orden");
-  };
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   const customStyles = {
     rows: {
@@ -46,7 +60,22 @@ const ClientCard = () => {
 
   let clients = clientsListContext?.selectedClient;
 
-  let columns: TableColumn<clientSelectionInterface>[] = [
+  let columns: TableColumn<clientSelectionInterface>[] = React.useMemo(
+    () => [
+    {
+      cell: (row) => (
+        <Fragment>
+          <FaIcons.FaRegDotCircle
+            className={`status-icon-size ${String(row.erased) === 'false' ? "state-active" : "state-inactive" }`}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title={String(row.erased) === 'false' ? 'Client is active' : 'Client is not active' }
+          />
+        </Fragment>
+      ),
+      width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
+    },
     {
       cell: (row) => (
         <Fragment>
@@ -69,45 +98,37 @@ const ClientCard = () => {
       selector: (row) => row.phone,
     },
     {
-      name: "Erased?",
-      selector: (row) => row.erased.toString(), // Convert erased to string
+      cell: (row) => (
+        <Fragment>
+          <FaIcons.FaPencilAlt
+            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
+            onClick={() => router.push({pathname: '/client-modification', query: { slug: row.value }})}
+            data-testid="edit-pencil"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Edit client information"
+          />
+        </Fragment>
+      ),
+      width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
         <Fragment>
           <div onClick={() => { router.push({ pathname: '/projects', query: { slug: row.value } }); }}>
-            <FaIcons.FaInfoCircle
-              style={{ color: "black", fontSize: "25px", cursor: "pointer" }}
-              onClick={() => handleClientSeeProjects()}
+            <FaIcons.FaClipboardList
+              style={{ color: "black", fontSize: "20px", cursor: "pointer" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="View client projects"
             />
           </div>
         </Fragment>
       ),
       width: "50px",
     },
-    {
-      cell: (row) => (
-        <Fragment>
-          <FaIcons.FaPencilAlt
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => router.push({pathname: '/client-modification', query: { slug: row.value }})}
-          />
-        </Fragment>
-      ),
-      width: "50px",
-    },
-    // {
-    //   cell: (row) => (
-    //     <Fragment>
-    //       <FaIcons.FaTrash
-    //         style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-    //         onClick={() => handleClientEraseFromSystem()}
-    //       />
-    //     </Fragment>
-    //   ),
-    //   width: "50px",
-    // },
-  ];
+  ], [userInfo]);
 
   const data = clients?.map((client) => {
     return {
@@ -120,7 +141,7 @@ const ClientCard = () => {
   });
 
   let selectedClientID = clientsContext?.currentClient;
-  let filteredData = selectedClientID ? data?.filter(client => client.value === selectedClientID) : data;
+  let filteredData = selectedClientID != "" && selectedClientID != null && selectedClientID != undefined && selectedClientID != "0"  ? data?.filter(client => client.value === selectedClientID) : data;
 
   return (
     <>

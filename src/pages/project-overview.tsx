@@ -9,6 +9,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import TextBox from "@/components/TextBox";
 import { useRouter } from "next/router";
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
 
 
 interface projectOverviewInterface {
@@ -29,7 +30,8 @@ interface projectTeamMembersInterface {
   employeename: string;
   location: string;
   idposition: string;
-  departmentname: string;
+  email: string;
+  linkedinlink: string;
   idteam: string;
   teamname: string;
   idproject: string;
@@ -39,7 +41,17 @@ const projects = () => {
   const hasMounted = useHasMounted();
 
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+
+  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[]>();
+  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[]>();
+  const [projectDescription, setProjectDescription] = useState("");
+
+  let projectID = router.query.slug;
+
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     // Redirect logic here
@@ -52,13 +64,22 @@ const projects = () => {
     }
   }, [isLoading]);
 
-  const [selectedProjectOverview, setSelectedProjectOverview] = useState<projectOverviewInterface[]>();
-  const [projectTeamMembers, setProjectTeamMembers] = useState<projectTeamMembersInterface[]>();
-  const [projectDescription, setProjectDescription] = useState("");
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
 
-  let projectID = router.query.slug;
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
 
-  let link = process.env.NEXT_PUBLIC_API_URL;
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   useEffect(() => {
     fetch(link + "/getProjectOverview")
@@ -105,7 +126,9 @@ const projects = () => {
       .replace(/\n/g, "<br>")
       .replace(/"Project description":/g, "")
       .replace(/"|{|}|,/g, "")
+      .replace(/"|{|}|\,/g, "")
       .trim();
+
 
     return replacedDescription;
   }
@@ -157,8 +180,9 @@ const projects = () => {
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
 
-  const handleEmployeeSeeInfo = () => {
-    alert("se va a redireccionar al perfil del usuario");
+  const handleEmployeeSeeInfo = (id: any) => {
+    const encodedInfo = encodeURIComponent(id);
+    window.location.href = `/profile-information?info=${encodedInfo}`;
   };
 
   const handleEmployeeDelete = () => {
@@ -179,7 +203,8 @@ const projects = () => {
     },
   };
 
-  const columns: TableColumn<projectTeamMembersInterface>[] = [
+  const columns: TableColumn<projectTeamMembersInterface>[] = React.useMemo(
+    () => [
     {
       cell: (row) => (
         <Fragment>
@@ -194,37 +219,32 @@ const projects = () => {
       sortable: true,
     },
     {
-      name: "Location",
-      selector: (row) => row.location,
+      cell: (row) => (
+        <Fragment>{row.idposition === "1" ? "admin" : ""}</Fragment>
+      ),
+      width: "150px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
-      cell: (row) => (
-        <Fragment>{row.idposition === "2" ? "admin" : ""}</Fragment>
-      ),
+      name: "Email",
+      selector: (row) => row.email,
+    },
+    {
+      name: "Linkedin",
+      selector: (row) => row.linkedinlink,
     },
     {
       cell: (row) => (
         <Fragment>
           <FaIcons.FaInfoCircle
             style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleEmployeeSeeInfo()}
+            onClick={() => handleEmployeeSeeInfo(row.id)}
           />
         </Fragment>
       ),
       width: "50px",
     },
-    {
-      cell: (row) => (
-        <Fragment>
-          <FaIcons.FaTrash
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleEmployeeDelete()}
-          />
-        </Fragment>
-      ),
-      width: "50px",
-    },
-  ];
+  ], [userInfo]);
 
   const missingEmployees = [
     {
@@ -232,7 +252,8 @@ const projects = () => {
       employeename: 'No team members',
       location: '',
       idposition: '',
-      departmentname: '',
+      email: '',
+      linkedinlink: '',
       idteam: '',
       teamname: '',
       idproject: '',
@@ -255,7 +276,8 @@ const projects = () => {
       employeename: members.employeename,
       location: members.location,
       idposition: members.idposition,
-      departmentname: members.departmentname,
+      email: members.email,
+      linkedinlink: members.linkedinlink,
       idteam: members.idteam,
       teamname: members.teamname,
       idproject: members.idproject,
@@ -263,10 +285,6 @@ const projects = () => {
   });
 
   let filteredProjectTeamMembersData = projectID ? projectTeamMembersData?.filter((members) => members.idproject === projectID) : projectTeamMembersData;
-
-  if (!filteredProjectTeamMembersData) {
-    filteredProjectTeamMembersData = missingEmployees;
-  }
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
   // For more information, refer to the file inside src/components/useHasMounted.tsx.
@@ -284,32 +302,70 @@ const projects = () => {
         <Container className="mt-3">
           <Row>
             <div className="container p-4">
-              <div className="card-body d-flex flex-column">
-                <div className="d-flex flex-row justify-content-between">
-                  <h3 className="ml-5">
-                    {filteredProjectOverviewData?.[0]?.ordername}
-                  </h3>
-                  <h6 className="mt-auto">
-                    {filteredProjectOverviewData?.[0]?.orderstartdate} - {" "}
-                    {filteredProjectOverviewData?.[0]?.orderenddate}
-                  </h6>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Name
+                  </h5>
                 </div>
-                <h6 className="ml-5 mt-2">
+                <div className="col-10">
+                  {filteredProjectOverviewData?.[0]?.ordername}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Dates
+                  </h5>
+                </div>
+                <div className="col-10">
+                  {filteredProjectOverviewData?.[0]?.orderstartdate} - {" "}
+                  {filteredProjectOverviewData?.[0]?.orderenddate}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Description
+                  </h5>
+                </div>
+                <div className="col-10">
                   <p
                     dangerouslySetInnerHTML={{
                       __html: extractProjectDescription(descripcion),
                     }}
                   />
-                </h6>
-                <h5 className="ml-5 mt-1">
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Client Name
+                  </h5>
+                </div>
+                <div className="col-10">
                   {filteredProjectOverviewData?.[0]?.clientname}
-                </h5>
-                <h6 className="ml-5">
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Client Email
+                  </h5>
+                </div>
+                <div className="col-10">
                   {filteredProjectOverviewData?.[0]?.email}
-                </h6>
-                <h6 className="ml-5">
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-2">
+                  <h5>
+                    Client Phone
+                  </h5>
+                </div>
+                <div className="col-10">
                   {filteredProjectOverviewData?.[0]?.phone}
-                </h6>
+                </div>
               </div>
             </div>
             <Col className="d-flex flex-row-reverse">
@@ -336,8 +392,14 @@ const projects = () => {
           <Collapse in={collapse}>
             <div id="collapseProjectCreation" className="my-3">
               <p
-                dangerouslySetInnerHTML={{ __html: replaceWithBrFR(descripcion) }}
+
               />
+              <div className="card">
+                <div
+                  className="card-body"
+                  dangerouslySetInnerHTML={{ __html: replaceWithBrFR(descripcion) }}
+                />
+              </div>
             </div>
           </Collapse>
           <DataTable
@@ -348,6 +410,7 @@ const projects = () => {
             customStyles={customStyles}
             highlightOnHover
             pagination
+            noDataComponent={"No team members"}
           />
         </Container>
       </>

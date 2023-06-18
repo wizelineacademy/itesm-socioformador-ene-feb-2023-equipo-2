@@ -12,7 +12,6 @@ import Menu from "@/components/Menu";
 import ProjectCreation from "@/components/ProjectCreation";
 import ProjectTable from "@/components/ProjectTable";
 
-import { useRouter } from "next/router";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { getAuth0Id } from "@/utils/getAuth0Id";
 
@@ -42,11 +41,9 @@ interface projectListInterface {
   teamname: string;
 }
 
-const ProjectSearch = (clientID: string | string[] | undefined) => {
-  // @ts-ignore
-  let clientIDStr = stringify(clientID);
-  clientIDStr = clientIDStr.replace('clientID=', '');
-  let clientIDInt = parseInt(clientIDStr);
+// @ts-ignore
+const ProjectSearch = ({ clientID }) => {
+  let clientIDInt = parseInt(clientID);
 
   const hasMounted = useHasMounted();
 
@@ -66,10 +63,9 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   const [listOfClients, setClientsList] = useState([]);
   const [userInfo, setUserInfo] = useState<any>()
 
-  const router = useRouter();
   const { user, error: errorAuth0, isLoading } = useUser();
 
-  console.log("userInfo -> ", userInfo)
+  //console.log("userInfo -> ", userInfo)
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -100,9 +96,8 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   useEffect(() => {
   }, [projectsContext?.setCurrentProject(name)]);
 
-  useEffect(() => {
-    clientsContext?.setCurrentClient(String(client));
-  }, [client]);
+  /*useEffect(() => {
+  }, [clientsContext?.setCurrentClient(String(clientIDInt))]);*/
 
   useEffect(() => {
   }, [statusesContext?.setSelectedStatus(orderStatus)]);
@@ -124,9 +119,9 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
       projectsContext?.setCurrentProject(e.value);
     }
   };
-  //comentaro
+
   useEffect(() => {
-    fetch(`${link}/get-clients?id=${client}`)
+    fetch(link + '/get-clients')
       .then(res => res.json())
       .then(data => {
         setClientsList(data.client);
@@ -136,7 +131,16 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   }, [])
 
   useEffect(() => {
-  }, [clientsContext?.setCurrentClient(String(client))]);
+    //@ts-ignore
+    if (clientIDInt === NaN || clientIDInt === null) { 
+      setClient(0);
+      clientsContext?.setCurrentClient(""); 
+    }
+    else {
+      setClient(clientIDInt)
+      clientsContext?.setCurrentClient(String(clientIDInt));
+    }
+  }, [clientIDInt]);
 
   const handleChangeClientName = (e: any | null) => {
     if (e === null) {
@@ -153,7 +157,7 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
   }
 
   return (
-    <>{userInfo?.idposition === 1 &&
+    <>
       <Container>
         <Row>
           <Col>
@@ -176,7 +180,9 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
               <Select
                 onChange={handleChangeClientName}
                 //@ts-ignore
-                value={(client === undefined || client === 0) ? client = clientIDInt && listOfClients.find((obj) => obj.value === clientIDInt) && clientsContext?.setCurrentClient(clientIDInt) : listOfClients.find((obj) => obj.value === client)}
+            //    value={(client === NaN || client === 0) ? client = clientIDInt && listOfClients.find((obj) => obj.value === clientIDInt) && clientsContext?.setCurrentClient(clientIDInt) : listOfClients.find((obj) => obj.value === client)}
+         //     value={options.find((obj) => obj.value === erased) || ""}
+                value={listOfClients.find((obj) => obj.value === client) || ''}
                 options={listOfClients}
                 isClearable
                 id="client-select"
@@ -186,45 +192,54 @@ const ProjectSearch = (clientID: string | string[] | undefined) => {
               <div>Loading...</div>
             )}
           </Col>
-          <Col>
-            <label className="form-label">Order Status:</label>
-            <Select
-              onChange={handleDropdownSelect}
-              value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)}
-              options={listOfStatus}
-              isClearable
-              id="order-status-select"
-            />
-          </Col>
-          <Col>
-            <label className="form-label">&nbsp;</label>
-            <button
-              className="btn btn-primary w-100"
-              onClick={() => setCollapse(!collapse)}
-              aria-controls="collapseProjectCreation"
-              aria-expanded={collapse}
-              data-test="add-project-button"
-            >
-              {collapse ? (
-                <>
-                  <FaIcons.FaTimes className="mb-1" />
-                  &nbsp;&nbsp;Close
-                </>
-              ) : (
-                <>
-                  <FaIcons.FaClipboardList className="mb-1" />
-                  &nbsp;&nbsp;Add Project
-                </>
-              )}
-            </button>
-          </Col>
-          <Collapse in={collapse}>
-            <div id="collapseProjectCreation" className="my-3">
-              <ProjectCreation />
-            </div>
-          </Collapse>
+          {userInfo?.idposition === 1 ? (
+            <Col>
+              <label className="form-label">Order Status:</label>
+              <Select
+                onChange={handleDropdownSelect}
+                value={listOfStatus.find((obj) => obj.valueOf() === orderStatus)}
+                options={listOfStatus}
+                isClearable
+                id="order-status-select"
+              />
+            </Col>
+            ) : <div></div>
+          }
+          {userInfo?.idposition === 1 ? (
+            <Col>
+              <label className="form-label">&nbsp;</label>
+              <button
+                className="btn btn-primary w-100"
+                onClick={() => setCollapse(!collapse)}
+                aria-controls="collapseProjectCreation"
+                aria-expanded={collapse}
+                data-test="add-project-button"
+              >
+                {collapse ? (
+                  <>
+                    <FaIcons.FaTimes className="mb-1" />
+                    &nbsp;&nbsp;Close
+                  </>
+                ) : (
+                  <>
+                    <FaIcons.FaClipboardList className="mb-1" />
+                    &nbsp;&nbsp;Add Project
+                  </>
+                )}
+              </button>
+            </Col>
+            ) : <div></div>
+          }
+          {userInfo?.idposition === 1 ? (
+            <Collapse in={collapse}>
+              <div id="collapseProjectCreation" className="my-3">
+                <ProjectCreation />
+              </div>
+            </Collapse>
+            ) : <div></div>
+          }
         </Row>
-      </Container>}
+      </Container>
     </>
   );
 };

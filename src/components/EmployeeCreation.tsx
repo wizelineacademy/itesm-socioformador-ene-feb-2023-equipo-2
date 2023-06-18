@@ -16,7 +16,7 @@
 // We will display a table showing all the users in the system.
 // This table will include basic information about each user, such as their name, email, and role.
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { GroupBase } from 'react-select';
 import * as FaIcons from "react-icons/fa";
@@ -43,6 +43,36 @@ const EmployeeCreation = () => {
   const [department, setDepartment] = useState("");
   const [token, setToken] = useState("")
   const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
+  const [userRegistration, setUserRegistration] = useState(false)
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    // credentials to generate the auth0 token necessary to create new users
+    // @ts-ignore
+    var auth0 = new AuthenticationClient({
+      domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
+      clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
+      clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
+    });
+
+    // method to geerate the auth0 token necessary to create new users
+    auth0.clientCredentialsGrant(
+      {
+        audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
+        scope: 'create:users read:users update:users read:roles',
+      },
+      function (err: any, response: any) {
+        if (err) {
+          console.error(err)
+          console.error(response)
+        } else {
+          setToken(response?.access_token)
+        }
+
+      }
+    );
+  })
 
   function generateRandomPassword(): string {
     const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
@@ -69,32 +99,6 @@ const EmployeeCreation = () => {
 
   const handleSubmit = async (event: any) => {
 
-    // credentials to generate the auth0 token necessary to create new users
-    // @ts-ignore
-    var auth0 = new AuthenticationClient({
-      domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
-      clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
-      clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
-    });
-
-    // method to geerate the auth0 token necessary to create new users
-    auth0.clientCredentialsGrant(
-      {
-        audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
-        scope: 'create:users read:users update:users read:roles',
-      },
-      function (err: any, response: any) {
-        if (err) {
-          console.error(err)
-          console.error(response)
-        } else {
-          console.log(response?.access_token);
-          setToken(response?.access_token)
-        }
-
-      }
-    );
-
     //method to create new users in the auth0 app
     const requestOptionsAuth0NewUser = {
       method: 'POST',
@@ -107,7 +111,7 @@ const EmployeeCreation = () => {
           email: email,
           user_id: userId.toString(),
           connection: "Username-Password-Authentication",
-          password: generateRandomPassword(),
+          password: "wizeline000",
           email_verified: true,
           name: name
         }
@@ -128,17 +132,21 @@ const EmployeeCreation = () => {
               email: email,
               userId: userId,
               position: role,
-              name: name
+              name: name,
             }
           )
         };
-
-        fetch('http://localhost:3000/api/createUsers', requestOptions)
+        //sdfgh
+        fetch(link + '/createUsers', requestOptions)
           .then(response => response.json())
-          .then(data => console.log("Usuario guardado correctamente"))
-          .catch(error => console.error("Error al guardar usuario"));
-
-        setUserRegistrationErrorModal(true)
+          .then(data => {
+            console.log("Usuario guardado correctamente en BD")
+            setUserRegistration(true)
+          })
+          .catch(error => {
+            console.error(error, "Error al guardar usuario en BD")
+            setUserRegistrationErrorModal(true)
+          });
 
 
         event.preventDefault();
@@ -150,19 +158,9 @@ const EmployeeCreation = () => {
   };
 
   const roleOptions = [
-    { value: "1", label: "Administrador" },
-    { value: "2", label: "Empleado General" },
+    { value: "1", label: "Wizeliner" },
+    { value: "2", label: "Administrador" },
     { value: "3", label: "Cliente" }
-  ];
-
-  const departmentOptions = [
-    { value: "monterrey", label: "Monterrey" },
-    { value: "saltillo", label: "Saltillo" },
-    { value: "reynosa", label: "Reynosa" },
-    { value: "victoria", label: "Ciudad Victoria" },
-    { value: "lapaz", label: "La Paz" },
-    { value: "guadalajara", label: "Guadalajara" },
-    { value: "queretaro", label: "Queretaro" },
   ];
 
   if (!hasMounted) {
@@ -171,13 +169,11 @@ const EmployeeCreation = () => {
 
   const handleRoleSelect = (e: any | null) => {
     if (e === null) {
-      setName("");
+      setRole("");
     } else {
       setRole(e.value);
     }
   };
-
-  console.log("role", role)
 
   return (
     <>
@@ -213,8 +209,9 @@ const EmployeeCreation = () => {
               Role:
             </label>
             <Select
+              id = "selectRoleBtn"
               isClearable
-              value={role}
+              value={roleOptions.find((obj) => obj.value === role) || ""}
               onChange={handleRoleSelect}
               // @ts-ignore
               options={roleOptions}
@@ -225,13 +222,15 @@ const EmployeeCreation = () => {
           <div className="col-md"></div>
           <div className="col-md"></div>
           <div className="col-md">
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+            <button id = "employeeCreationBtn"  className="btn btn-primary w-100" onClick={handleSubmit}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>
           </div>
         </div>
       </div>
+
+      {/* user register error modal */}
       <Modal
         show={
           userRegistrationErrorModal ? true : false
@@ -249,6 +248,26 @@ const EmployeeCreation = () => {
             Cancel
           </Button>
           <Button variant="primary" onClick={(e) => setUserRegistrationErrorModal(false)}>
+            Continue
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* user register succesfully modal */}
+      <Modal
+        show={
+          userRegistration ? true : false
+        }
+        backdrop="static"
+      >
+        <Modal.Header>
+          <Modal.Title>Usuario creado correctamente</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>El usuario registrado ya puede acceder a la plataforma usando su correo electronico y la contraseña default <b>wizeline000</b>. Se recomienda cambiar la contraseña por una propia dentro de la plataforma</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button id = "btnContinue" variant="primary" onClick={(e) => setUserRegistration(false)}>
             Continue
           </Button>
         </Modal.Footer>

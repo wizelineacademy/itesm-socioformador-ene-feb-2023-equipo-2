@@ -34,8 +34,13 @@ const perfil = () => {
   const hasMounted = useHasMounted();
   const [userData, setUserData] = useState<perfilInterface>();
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [imgURL, setImgURL] = useState<any>()
+
+
 
   const { user, error, isLoading } = useUser();
+
+  console.log("user", user?.picture)
 
   const idUser = getAuth0Id(user?.sub)
   console.log(idUser)
@@ -53,32 +58,76 @@ const perfil = () => {
     }
   }, [isLoading]);
 
-  useEffect(() => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: 29518,
-      }),
+  const getParsedJson = (string: string) => {
+    //removing breakpoints and "/" characters
+    let cleanString = string.replace(/\\n|\\r|\//gm, "");
+
+    const replacements = {
+      'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a', 'å': 'a',
+      'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+      'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+      'ñ': 'n',
+      'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o',
+      'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u', 'ý': 'y', 'ÿ': 'y'
+    };
+  
+    const replaceAccentedCharacters = (text: string): string => {
+        const pattern = /[àáâãäåèéêëìíîïñòóôõöùúûüýÿ]/g;
+        // @ts-ignore
+        return text.replace(pattern, (match) => replacements[match] || match);
     };
 
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/get-userInfoProfile", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Información de usuario obtneida correcatmente");
-        console.log("Data received:", data);
-        const parsedData = parseJsonStringProfile(data.infoabout);
-        console.log("Info parseada", parsedData);
-        setUserData(parsedData);
-        setIsLoadingData(false);
+    cleanString = replaceAccentedCharacters(cleanString);
 
-      })
-      .catch((error) => {
-        console.error("Error al obtener informacion de usuario", error);
-        setIsLoadingData(false);
-      });
+    //removing non printable characters
+    let printableStr = cleanString.replace(/[^\x20-\x7E]/g, '');
 
-  }, [])
+    //removing non ASCII characters
+    let finalString = printableStr.replace(/[^\x00-\x7F]/g, '');
+
+    finalString = finalString.replace(/ /g, " ");
+
+
+    let parsedJson = JSON.parse(finalString)
+
+    return parsedJson;
+
+  }
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+  
+  useEffect(() => {
+    if (!isLoading) {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: idUser,
+        }),
+      };
+
+      fetch(link + "/get-userInfoProfile", requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Información de usuario obtneida correcatmente");
+          console.log("Data received:", data);
+          const parsedData = getParsedJson(data.infoabout);
+          console.log("Info parseada", parsedData);
+
+          setUserData(JSON.parse(parsedData));
+          setIsLoadingData(false);
+
+        })
+        .catch((error) => {
+          console.error("Error al obtener informacion de usuario", error);
+          setIsLoadingData(false);
+        });
+
+      setImgURL(user?.picture)
+
+    }
+
+  }, [isLoading])
 
 
   if (userData !== undefined) {
@@ -111,7 +160,7 @@ const perfil = () => {
             <div className="container bg-light border p-4">
               <div className="d-flex flex-row">
                 <div className="col-3">
-                  <Image src={imgExample}
+                  <Image src={imgURL === undefined ? imgExample : imgURL}
                     alt="Wizeline Background"
                     loading="eager"
                     width={200}
@@ -133,13 +182,14 @@ const perfil = () => {
               </div>
             </div>
           </div>
+          
           {/* Section of showing the Experience*/}
           {userData?.Experience.map((experience, index) => (
             <div key={index} className="row">
               <div className="container bg-light border p-4">
                 <div className="d-flex flex-row">
                   <div className="col-3">
-                    <h4>Past Work</h4>
+                    {index === 0 ? <h4>Past Work</h4> : " "}
                   </div>
                   <div className="col-5">
                     <h5>Experience #{index + 1}:</h5>
@@ -148,11 +198,11 @@ const perfil = () => {
                     <p>Duration: {experience.job_duration}</p>
                     <p>Location: {experience.job_location}</p>
                   </div>
-
                 </div>
               </div>
             </div>
           ))}
+
 
           {/* Display skills */}
           <div className="row">

@@ -1,9 +1,9 @@
-import {NextApiRequest, NextApiResponse} from 'next'
+import { NextApiRequest, NextApiResponse } from "next";
 
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
-export default async function handler (req:any, res:any) {
+export default async function handler(req: any, res: any) {
   const { name, email, phone } = req.body;
 
   try {
@@ -15,11 +15,12 @@ export default async function handler (req:any, res:any) {
         erased: false
       }
     });
-  res.status(201).json(newClient);
+    res.status(201).json(newClient);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred." });
-  } finally {
+  } 
+  finally {
     await prisma.$disconnect();
   }
 }

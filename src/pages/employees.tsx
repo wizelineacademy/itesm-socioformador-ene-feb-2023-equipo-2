@@ -1,19 +1,3 @@
-// TODO:
-
-// The presentation of the user management features has not been decided yet.
-// It could be implemented as a pop-up, another page, or as part of the same page.
-// Some of the features that we want to include are:
-//   - Add button: This button will allow the user to add new accounts to the system.
-//   - Edit button: This button will allow the user to edit existing accounts.
-//   - Delete button: This button will allow the user to delete accounts from the system.
-// For now, add form to add / edit / erase at the boton of page
-
-// To make it easier for users to find specific employees, we will also include the EmployeeSearch.tsx component.
-// This component will allow users to search for employees by name, department, or other criteria.
-
-// We will display a table showing all the users in the system.
-// This table will include basic information about each user, such as their name, email, and role.
-
 import React, { useState, useEffect } from "react";
 import EmployeeSearch from "@/components/EmployeeSearch";
 import EmployeeTable from "@/components/EmployeeTable";
@@ -34,10 +18,8 @@ const employees = () => {
   const [userInfo, setUserInfo] = useState<any>()
 
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+  const { user, isLoading } = useUser();
   let link = process.env.NEXT_PUBLIC_API_URL;
-
-  console.log("userInfo -> ", userInfo)
 
   useEffect(() => {
     // Redirect logic here
@@ -75,7 +57,7 @@ const employees = () => {
     </div>
       :
       <>
-        <Menu titulo={"Employees"} descripcion={" "} />
+        <Menu titulo={"Users"} descripcion={" "} />
         <RoleContext>
           <EmployeeContext>
             <EmployeeListContext>

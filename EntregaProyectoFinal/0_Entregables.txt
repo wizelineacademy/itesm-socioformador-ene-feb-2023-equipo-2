@@ -1,0 +1,22 @@
+    1. Documentación de diseño
+    2. Producto funcional y código
+    3. Diseño de pruebas
+    4. Bitácora de ejecución de pruebas
+    5. Solución implantada
+        5.1 Por lo menos 1 ambiente implementado en AWS.
+        5.2 ReadMe actualizado.
+        5.3 Especificación de si hay 2 ambientes implementados.
+        5.4 Especificación del nivel de implementación CI/CD logrado.
+    6. Plan de proyecto
+        6.1 Documento de Planeación actualizado.
+        6.2 Documento de Requerimientos actualizado.
+        6.3 Lecciones Aprendidas.
+        6.4 Resultado de la encuesta a los Stakeholders.
+        6.5 Carta de Agradecimiento y Entrega del Proyecto a Stakeholders.
+        6.6 Presentaciones de avance por Sprint.
+        6.7 Actualización del valor ganado.
+    7. Video de Funcionalidad y Presentaciones
+        7.1 Video de la funcionalidad de la aplicación.
+        7.2 Presentación final utilizada.
+
+Esta es la lista de los entregables que se deben completar como parte del proyecto. Cada elemento incluye diferentes documentos, productos o resultados esperados para asegurar una implementación exitosa.

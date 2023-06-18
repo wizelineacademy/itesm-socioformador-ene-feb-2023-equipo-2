@@ -11,6 +11,9 @@ import { projectContext, projectListContext, statusContext } from '@/context/pro
 import { clientContext, clientListContext } from "@/context/clientContext";
 import { useRouter } from 'next/router';
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
 interface projectListInterface {
   value: string;
   label: string;
@@ -23,11 +26,8 @@ interface projectListInterface {
   teamname: string;
 }
 
-interface CardProps {
-  clientID: string;
-}
-
-const ProjectTable = (props: CardProps) => {
+// @ts-ignore
+const ProjectTable = ({ clientID }) => {
   const projectsContext = useContext(projectContext);
   const projectsListContext = useContext(projectListContext);
   const statusesContext = useContext(statusContext);
@@ -35,6 +35,31 @@ const ProjectTable = (props: CardProps) => {
   const clientsListContext = useContext(clientListContext);
 
   const projectTableRouter = useRouter();
+
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
+
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
+
+  useEffect(() => {
+  }, [clientID]);
 
   const handleEraseFromSystem = () => {
     alert("se va a eliminar el usuario de la lista de la orden");
@@ -54,7 +79,8 @@ const ProjectTable = (props: CardProps) => {
     },
   };
 
-  const columns: TableColumn<projectListInterface>[] = [
+  const columns: TableColumn<projectListInterface>[] = React.useMemo(
+    () => [
     {
       cell: (row) => (
         <Fragment>
@@ -62,10 +88,16 @@ const ProjectTable = (props: CardProps) => {
             className={`status-icon-size ${
               row.orderstatus === "Approved" ? "state-active" : row.orderstatus === "Pending" ? "state-pending" : "state-inactive"
             }`}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title={
+              String(row.orderstatus) === 'Approved' ? 'Project was approved' : row.orderstatus === 'Pending' ? 'Project was rejected' : 'Project is Pending'
+            }
           />
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       name: "Project",
@@ -93,46 +125,34 @@ const ProjectTable = (props: CardProps) => {
       cell: (row) => (
         <Fragment>
           <div onClick={() => {projectTableRouter.push({pathname: '/project-modification',query: { slug: row.value },});}}>
-            <FaIcons.FaPencilAlt style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
+            <FaIcons.FaPencilAlt 
+              style={{ color: "black", fontSize: "18px", cursor: "pointer" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Edit project information"
+            />
           </div>
-          {/*
-          href="/project-overview"
-          <FaIcons.FaInfoCircle
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleSeeProjects()}
-      />*/}
         </Fragment>
       ),
       width: "50px",
+      omit: userInfo?.idposition === 1 ? false : true,
     },
     {
       cell: (row) => (
         <Fragment>
           <div onClick={() => {projectTableRouter.push({pathname: '/project-overview',query: { slug: row.value },});}}>
-            <FaIcons.FaInfoCircle style={{ color: "black", fontSize: "18px", cursor: "pointer" }}/>
+            <FaIcons.FaInfoCircle 
+              style={{ color: "black", fontSize: "18px", cursor: "pointer" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="View project information"
+            />
           </div>
-          {/*
-          href="/project-overview"
-          <FaIcons.FaInfoCircle
-            style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-            onClick={() => handleSeeProjects()}
-      />*/}
         </Fragment>
       ),
       width: "50px",
     },
-    // {
-    //   cell: (row) => (
-    //     <Fragment>
-    //       <FaIcons.FaTrash
-    //         style={{ color: "black", fontSize: "50px", cursor: "pointer" }}
-    //         onClick={() => handleEraseFromSystem()}
-    //       />
-    //     </Fragment>
-    //   ),
-    //   width: "50px",
-    // },
-  ];
+  ], [userInfo]);
 
   let projects = projectsListContext?.selectedProject;
   //let clients = clientsListContext?.selectedClient;
@@ -161,17 +181,17 @@ const ProjectTable = (props: CardProps) => {
   let selectedClientIDInt = parseInt(clientsContext?.currentClient);
   
   // @ts-ignore
-  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+  let filteredProjectData = (selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "NaN" && selectedProjectID != "0" && selectedClientID != "0" && selectedStatus) ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
                         // @ts-ignore
-                        selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "undefined" && selectedProjectID != "0" && selectedClientID != "0" ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
+                        selectedProjectID != "" && selectedClientID != "" && selectedProjectID != "undefined" && selectedClientID != "NaN" && selectedProjectID != "0" && selectedClientID != "0" ? data?.filter(project => project.value === selectedProjectIDInt && project.idclient === selectedClientIDInt) :
                         // @ts-ignore
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" && selectedStatus ? data?.filter(project => project.value === selectedProjectIDInt && project.orderstatus === selectedStatus) :
                         // @ts-ignore
-                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" && selectedStatus ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
+                        selectedClientID != "" && selectedClientID != "NaN" && selectedClientID != "0" && selectedStatus ? data?.filter(project => project.idclient === selectedClientIDInt && project.orderstatus === selectedStatus) :
                         // @ts-ignore
                         selectedProjectID != "" && selectedProjectID != "undefined" && selectedProjectID != "0" ? data?.filter(project => project.value === selectedProjectIDInt) :
                         // @ts-ignore
-                        selectedClientID != "" && selectedClientID != "undefined" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) :
+                        selectedClientID != "" && selectedClientID != "NaN" && selectedClientID != "0" ? data?.filter(project => project.idclient === selectedClientIDInt) :
                         // @ts-ignore
                         selectedStatus != "" && selectedStatus != "undefined" && selectedStatus != null ? data?.filter(project => project.orderstatus === selectedStatus) : data;
 

@@ -17,27 +17,54 @@ import { propTypes } from "react-bootstrap/esm/Image";
 import { getAuth0Id } from '../utils/getAuth0Id'
 import { useRouter } from "next/router";
 import { useUser } from '@auth0/nextjs-auth0/client';
+import {
+  Navbar,
+  Nav,
+  Button,
+  Modal,
+  Container,
+  NavDropdown,
+} from "react-bootstrap";
+
+var AuthenticationClient = require('auth0').AuthenticationClient;
+
+interface apiResponse {
+  id: number,
+  name: string,
+  linkedinlink: string,
+  cvfile: string,
+  profileimage: string,
+  inforoadmap: string
+}
 
 const generarPerfil: React.FC = () => {
   const hasMounted = useHasMounted();
   // React Hooks for managing component state
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const [password, setPassword] = useState("")
   const [jobExperience, setJobExperience] = useState("");
   const [skills, setSkills] = useState("");
   const [linkLinkedin, setLinkLinkedin] = useState<string>("");
   const [resLinkLinkedin, setResLinkLinkedin] = useState("");
   const [responseRoadmap, setResponseRoadmap] = useState<any>("");
-  const [responseCV, setResponseCV] = useState<any>("")
+  const [responseCV, setResponseCV] = useState<any>()
+  const [roadmap, setRoadmap] = useState();
+  const [userInfo, setUserInfo] = useState<any>();
+  const [userRegistrationErrorModal, setUserRegistrationErrorModal] = useState(false)
+  const [fetchingGPTinfo, setFetchingGPTinfo] = useState(false)
+  const [token, setToken] = useState("")
+  const [position, setPosition] = useState<number>()
+  const [isUserDataUpdate, setIsUserDataUpdate] = useState(false)
+  const [stringPosition, setStringPosition] = useState("")
+
+  console.log("token", token)
 
   let link = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   const { user, error, isLoading } = useUser();
   const userId = getAuth0Id(user?.sub)
-  console.log(userId)
-
-  console.log(user)
 
   useEffect(() => {
     // Redirect logic here
@@ -48,8 +75,78 @@ const generarPerfil: React.FC = () => {
         router.push("/");
       }
     }
+
+    // credentials to generate the auth0 token necessary to create new users
+    // @ts-ignore
+    var auth0 = new AuthenticationClient({
+      domain: 'dev-xo3qm08sbje0ntri.us.auth0.com',
+      clientId: 'R5DfLlk2CIEX69qaGi0Zf2DgMvQB3oeE',
+      clientSecret: 'LaXptxqYUYJhmzssip6CLz4L1oA5c21iLBM5gRA5uexQBV84R8AOxWkX2obX4Pdp'
+    });
+
+    // method to geerate the auth0 token necessary to create new users
+    auth0.clientCredentialsGrant(
+      {
+        audience: 'https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/',
+        scope: 'create:users read:users update:users read:roles update:users_app_metadata',
+      },
+      function (err: any, response: any) {
+        if (err) {
+          console.error(err, "error al generar token de auth0")
+          console.error(response)
+        } else {
+          setToken(response?.access_token)
+        }
+
+      }
+    );
+
+    let id: number = getAuth0Id(user?.sub)
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        setUserInfo(data)
+        setResponseCV(data?.infoabout)
+        setResponseRoadmap(data?.inforoadmap)
+        setName(data?.name)
+        setLocation(data?.location)
+        setPosition(data?.idposition)
+      })
+      .catch((error) => console.error("Error obtener informacion de usuario"));
+
+    if (userInfo !== undefined) {
+
+    }
+
+    switch (position) {
+      case 1: {
+        setStringPosition("Administrador");
+        break;
+      }
+      case 2: {
+        setStringPosition("Colaborador");
+        break;
+      }
+      case 3: {
+        setStringPosition("Cliente");
+        break;
+      }
+      default: {
+        setStringPosition("Administrador");;
+        break;
+      }
+    }
   }, [isLoading]);
 
+  console.log("userInfo", userInfo)
 
   const flaskLinkedin = (linkLinkedin: string) => {
     return new Promise((resolve, reject) => {
@@ -75,8 +172,70 @@ const generarPerfil: React.FC = () => {
     });
   };
 
+  const handleUserInfoModification = async (event: any) => {
+    //method to create new users in the auth0 app
+    const requestOptionsAuth0NewUser = {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      mode: 'no-cors' as RequestMode,
+      body: JSON.stringify(
+        {
+          password: password,
+          name: name,
+          connection: "Username-Password-Authentication"
+        }
+      )
+    };
+
+    console.log("url => ", `https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users/${userId}`)
+    console.log(user?.sub)
+
+    fetch(`https://dev-xo3qm08sbje0ntri.us.auth0.com/api/v2/users/${userId}`, requestOptionsAuth0NewUser)
+      .then(response => response.json())
+      .then(data => {
+        console.log("Usuario actualizado correctamente en Auth0")
+
+        //method to create users in db (only executed if auth0 registration is correct)
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(
+            {
+              id: userId,
+              position: position,
+              name: name,
+            }
+          )
+        };
+        //sdfgh
+        fetch(link + '/update-userInfo', requestOptions)
+          .then(response => response.json())
+          .then(data => {
+            console.log("Usuario actualizado correctamente en BD")
+            setIsUserDataUpdate(true)
+          })
+          .catch(error => {
+            console.error(error, "Error al actualizar usuario en BD")
+            setUserRegistrationErrorModal(true)
+          });
+
+
+        event.preventDefault();
+      })
+      .catch(error => {
+        console.error("Error al guardar usuario en Auth0")
+        setUserRegistrationErrorModal(true)
+      });
+
+  }
+
   const handleOpenAIResponse = async (e: any) => {
     console.log(e.target.id);
+
+    setFetchingGPTinfo(true)
 
     const requestOptions = {
       method: "GET",
@@ -90,7 +249,10 @@ const generarPerfil: React.FC = () => {
 
     fetch(link + "/save-employee-information", requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
+      .then((data) => {
+        console.log("Ruta de aprendizaje guardada exitosamente")
+
+      })
       .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
 
     let text = "";
@@ -145,10 +307,12 @@ const generarPerfil: React.FC = () => {
 
     getChatResponse(messageRoadmap).then((res) => {
       setResponseRoadmap(res);
+      setFetchingGPTinfo(false)
     });
   };
 
   const handleSubmit = () => {
+
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -163,6 +327,8 @@ const generarPerfil: React.FC = () => {
       .then((response) => response.json())
       .then((data) => console.log("Ruta de aprendizaje guardada exitosamente"))
       .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+
+    setUserRegistrationErrorModal(true)
   };
 
   // useHasMounted.tsx ensures correct server-side rendering in Next.JS when using the react-select library.
@@ -195,16 +361,6 @@ const generarPerfil: React.FC = () => {
               />
             </div>
             <div className="col-md">
-              <label className="form-label">Position:</label>
-              <input
-                className="form-control"
-                type="text"
-                onChange={(e: any) => setName(e.target.value)}
-                value={name}
-                disabled
-              />
-            </div>
-            <div className="col-md">
               <label className="form-label">Location:</label>
               <input
                 className="form-control"
@@ -213,6 +369,26 @@ const generarPerfil: React.FC = () => {
                 value={location}
               />
             </div>
+            <div className="col-md">
+              <label className="form-label">Password:</label>
+              <input
+                className="form-control"
+                type="text"
+                onChange={(e: any) => setPassword(e.target.value)}
+                value={password}
+              />
+            </div>
+            <div className="col-md">
+              <label className="form-label">Position:</label>
+              <input
+                className="form-control"
+                type="text"
+                onChange={(e: any) => setPosition(e.target.value)}
+                value={stringPosition}
+                disabled
+              />
+            </div>
+
           </div>
 
           <div className="mt-4 mb-4">
@@ -333,10 +509,58 @@ const generarPerfil: React.FC = () => {
               id="buttonManual"
             >
               <FaIcons.FaSave className="mb-1" />
-              &nbsp;&nbsp;Guardar
+              &nbsp;&nbsp;Save
             </button>
           </div>
         </div>
+        <Modal
+          show={
+            userRegistrationErrorModal ? true : false
+          }
+          backdrop="static"
+          centered
+        >
+          <Modal.Header>
+            <Modal.Title>User Profile & Roadmap Generated Succesfully!</Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={(e) => setUserRegistrationErrorModal(false)}>
+              Accept
+            </Button>
+            <Button variant="primary" onClick={
+              (e) => {
+                setUserRegistrationErrorModal(false)
+                router.push("/profile")
+              }
+            }>
+              Go to profile menu
+            </Button>
+            <Button variant="primary" onClick={
+              (e) => {
+                setUserRegistrationErrorModal(false)
+                router.push("/roadmap")
+              }
+            }>
+              Go to roadmap menu
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={
+            fetchingGPTinfo ? true : false
+          }
+          backdrop="static"
+          centered
+        >
+          <Modal.Header>
+            <Modal.Title>Generating roadmap and profile...</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>This can take some time, sorry :D</p>
+            <div className="spinner-border text-danger" role="status"></div>
+          </Modal.Body>
+        </Modal>
       </>
   );
 };

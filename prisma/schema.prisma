@@ -31,6 +31,7 @@ model employees {
 model teams {
   id Int @id @default(autoincrement()) @unique
   name String
+  isactive Boolean
   employees teamemployees[]
   orders orders[]
 }
@@ -40,6 +41,7 @@ model teamemployees {
   idteam  Int
   employee employees  @relation(fields: [idemployee], references: [id], onDelete: Cascade, onUpdate: Cascade)
   idemployee Int
+  isactivemember Boolean
 
   @@id([idteam, idemployee])
 }

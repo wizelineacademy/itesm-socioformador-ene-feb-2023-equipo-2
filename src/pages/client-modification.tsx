@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import * as FaIcons from "react-icons/fa";
-import { Container, Row, Col, Collapse } from "react-bootstrap";
 import Menu from "@/components/Menu";
 import { useHasMounted } from "@/components/useHasMounted";
 import Select from "react-select";
@@ -24,8 +23,8 @@ const clientModification = () => {
   let link = process.env.NEXT_PUBLIC_API_URL;
 
   const options = [
-    { value: false, label: "Disable" },
-    { value: true, label: "Enable" },
+    { value: true, label: "Disable" },
+    { value: false, label: "Enable" },
   ];
 
   const handleSendForm = () => {
@@ -43,8 +42,10 @@ const clientModification = () => {
     fetch(link + "/updateCurrentClient", requestOptions)
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data);
+        router.push('/clients')
       });
+
+    window.location.href = '/clients';
   };
 
   useEffect(() => {
@@ -85,6 +86,7 @@ const clientModification = () => {
               <label className="form-label">Client Name:</label>
               <input
                 className="form-control"
+                id="#client-modification-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -108,11 +110,12 @@ const clientModification = () => {
               />
             </div>
             <div className="col-md">
-              <label className="form-label">Email:</label>
+              <label className="form-label">Status:</label>
               <Select
                 onChange={handleChangeSelect}
                 value={options.find((obj) => obj.value === erased) || ""}
                 options={options}
+                id="client-status-change"
                 isClearable
               />
             </div>

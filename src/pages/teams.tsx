@@ -33,6 +33,7 @@ const teams = () => {
 
   // React Hooks for managing component state
   const [collapse, setCollapse] = useState(false);
+  const [teamChange, setTeamChange] = useState(false);
 
   var isAdmin: Boolean = true;
 
@@ -60,11 +61,11 @@ const teams = () => {
                   <div className="container">
                     <div className="d-flex flex-row">
                       <div className='col-3'>
-                        <TeamList />
+                        <TeamList setTeamChange={setTeamChange} teamChange={teamChange}/>
                       </div>
                       <div className='col-1'></div>
                       <div className='col-8'>
-                        <TeamTable />
+                        <TeamTable teamChange={teamChange}/>
                       </div>
                     </div>
                   </div>

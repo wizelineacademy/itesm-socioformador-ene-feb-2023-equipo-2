@@ -2,14 +2,23 @@
 // Poner una imagen de placeholden en caso de que no haya foto de perfil
 // Arreglar para la vista tipo telefono
 
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState, useContext, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import DataTable, { TableColumn} from 'react-data-table-component';
 import TextBox from "./TextBox";
-
+import { useRouter } from 'next/router';
 import { employeeContext, employeeListContext } from "@/context/employeeContext";
 import { roleContext } from "@/context/roleContext";
 
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { getAuth0Id } from "@/utils/getAuth0Id";
+
+
+const roleOptions = [
+  { value: "1", label: "Administrator" },
+  { value: "2", label: "Wizeliner" },
+  { value: "3", label: "Cliente" },
+];
 
 interface CardProps {
   //pageType: string;     //   listForAdmin, listForEmployee, addToOrder, OrderSummary
@@ -21,28 +30,46 @@ const EmployeeTable = (props: CardProps) => {
   const employeesListContext = useContext(employeeListContext);
   const rolesContext = useContext(roleContext);
 
-  const [hideStatusIcon] = useState<boolean>(props.pageType === 'listForEmployee' ? true : false);
-  const [hideTrashCan] = useState<boolean>(props.pageType === 'listForAdmin' ? false : true);
-  const [hidePlusSign] = useState<boolean>(props.pageType === 'addToOrder' ? false : true);
-  const [hideMinusSign] = useState<boolean>(props.pageType === 'OrderSummary' ? false : true);
+  const router = useRouter();
 
-  // BORRAR ESTAS 4 AL FINAL Y PONER LAS 4 DE ARRIBA, SON PARA MOSTRAR TODAS
-  // const [hideStatusIcon] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  // const [hideTrashCan] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  // const [hidePlusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
-  // const [hideMinusSign] = useState<boolean>(props.pageType === 'showAll' ? false : true);
+  const [userInfo, setUserInfo] = useState<any>()
+  const { user, error: errorAuth0, isLoading } = useUser();
 
+  let link = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    let id: number = getAuth0Id(user?.sub)
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: id
+      }),
+    };
+
+    fetch(link + "/getUserInfoFromDB", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setUserInfo(data))
+      .catch((error) => console.error("Error al guardar ruta de aprendizaje"));
+  }, [isLoading])
 
   const handleEmployeeSeeInfo = (id: any) => {
     //alert("se va a redireccionar al perfil del usuario");
     const encodedInfo = encodeURIComponent(id);
-    window.location.href = `/profileInformation?info=${encodedInfo}`;
+    window.location.href = `/profile-information?info=${encodedInfo}`;
     //console.log(id);
   };
 
   const handleEmployeeDelete = () => {
     alert("se va a eliminar el usuario del sistema");
   };
+
+  const getPositionName = (positionId: any) => {
+    const position = roleOptions.find(option => Number(option.value) === positionId);
+    return position ? position.label : "";
+  };
+  
 
 
   const customStyles = {
@@ -85,10 +112,14 @@ const EmployeeTable = (props: CardProps) => {
               className={`status-icon-size ${
                 String(row.status) === 'true' ? "state-active" : "state-inactive" 
               }`}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title={String(row.status) === 'true' ? 'Employee is active' : 'Employee is not active' }
             />
           </Fragment>
         ),
         width: "50px",
+        omit: userInfo?.idposition === 1 ? false : true,
       },
       {
         cell: (row) => (
@@ -104,23 +135,35 @@ const EmployeeTable = (props: CardProps) => {
         sortable: true,
       },
       {
-        name: 'Location',
-        selector: row => row.location,
-      },
-      {
         name: 'Email',
         selector: row => row.email,
       },
+      /*{
+        name: 'Rol',
+        selector: row => getPositionName(row.idposition),
+      },*/
       {
         name: 'LinkedIn Link',
         selector: row => row.linkedinlink,
       },
       {
         cell: (row) => (
+          <Fragment>{row.idposition === 1 ? "admin" : ""}</Fragment>
+        ),
+        width: "150px",
+        omit: userInfo?.idposition === 1 ? false : true,
+      },
+      {
+        cell: (row) => (
           <Fragment>
             <FaIcons.FaInfoCircle
+              data-testid = {"info_Option" + String(row.value)}
               style={{color: 'black', fontSize: '50px', cursor: 'pointer'}} 
-              onClick={() => handleEmployeeSeeInfo(row.value)}/>
+              onClick={() => handleEmployeeSeeInfo(row.value)}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="View employee information"
+            />
           </Fragment>
         ),
         width: '50px',
@@ -128,16 +171,21 @@ const EmployeeTable = (props: CardProps) => {
       {
         cell: (row) => (
           <Fragment>
-            <FaIcons.FaTrash
+            <FaIcons.FaPencilAlt
+              data-testid = {"editOption" + String(row.value)}
               style={{color: 'black', fontSize: '18px', cursor: 'pointer'}} 
-              onClick={() => handleEmployeeDelete()}/>
+              onClick={() => router.push({pathname: '/employee-modification', query: { slug: row.value }})}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Edit employee information"
+            />
           </Fragment>
         ),
-        omit: hideTrashCan,
         width: '70px',
+        omit: userInfo?.idposition === 1 ? false : true,
       },
     ],
-    [hideTrashCan, hidePlusSign, hideMinusSign],
+    [userInfo],
   );
 
   const data = employees?.map((employee) => {
@@ -173,6 +221,7 @@ const EmployeeTable = (props: CardProps) => {
     <>
       <div className='container my-4'>
         <DataTable
+          data-testid = "tableUsersInfo"
           columns={columns}
           // @ts-ignore
           data={filteredEmployeeData}

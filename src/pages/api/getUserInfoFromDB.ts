@@ -14,7 +14,10 @@ export default async function handler(req: any, res: any) {
         },
         select:{
             name: true,
-            idposition: true
+            idposition: true,
+            infoabout: true,
+            inforoadmap: true,
+            location: true
         }
     })
    

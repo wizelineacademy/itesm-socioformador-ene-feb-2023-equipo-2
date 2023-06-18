@@ -17,6 +17,7 @@ import { getAuth0Id } from "@/utils/getAuth0Id";
 interface teamSelectionInterface {
   value: string,
   label: string,
+  isactive: string,
 }
 
 //Interface for employee
@@ -61,11 +62,6 @@ const TeamSearch = () => {
 
   const router = useRouter();
   const { user, error: errorAuth0, isLoading } = useUser();
-
-  console.log("userInfo -> ", userInfo)
-
-  var isAdmin: Boolean = true;
-
 
   let link = process.env.NEXT_PUBLIC_API_URL;
 
@@ -139,7 +135,6 @@ const TeamSearch = () => {
 
   return (
     <>
-      {userInfo?.idposition === 1 &&
         <div className="container">
           {/*for searching employees by their name*/}
           <div className="row">
@@ -147,6 +142,7 @@ const TeamSearch = () => {
               <label className="form-label">Name:</label>
               {teamList ? (
                 <Select
+                  id="team-names-select"
                   onChange={handleChangeSelect}
                   value={teamList.find((obj) => obj.value === name) || ""}
                   options={teamList}
@@ -160,6 +156,7 @@ const TeamSearch = () => {
               <label className="form-label">Members</label>
               {employeesList ? (
                 <Select
+                  id="members-names-select"
                   onChange={handleChangeSelectEmployeeName}
                   value={employeesList.find(
                     (obj) => obj.value === employeeName
@@ -171,11 +168,12 @@ const TeamSearch = () => {
                 <div>Loading...</div>
               )}
             </div>
-            <div className="col-md-2">
-              <label className="form-label">&nbsp;</label>
-              {isAdmin ?
+            {userInfo?.idposition === 1 ? (
+              <div className="col-md-2">
+                <label className="form-label">&nbsp;</label>
                 <Container className="mt">
                   <button
+                    id="team-creation-button"
                     className="btn btn-primary w-100"
                     onClick={() => setCollapse(!collapse)}
                     aria-controls="collapseProjectCreation"
@@ -193,23 +191,20 @@ const TeamSearch = () => {
                       </>
                     )}
                   </button>
-                </Container> : <div></div>
-              }
-              {/* Botón anteriormente ejecutado previo al call */}
-              {/* <button className="btn btn-primary w-100" onClick={handleSearch}>
-              <FaIcons.FaSearch className="mb-1" />
-              &nbsp;&nbsp;Search
-            </button> */}
-            </div>
-            {isAdmin ?
+                </Container>
+              </div>
+              ) : <div></div>
+            }
+            {userInfo?.idposition === 1 ? (
               <Collapse in={collapse}>
                 <div id="collapseProjectCreation" className="my-3">
                   <TeamCreation setCollapse={setCollapse} />
                 </div>
-              </Collapse> : <div></div>
+              </Collapse>
+              ) : <div></div>
             }
           </div>
-        </div>}
+        </div>
     </>
   );
 };
