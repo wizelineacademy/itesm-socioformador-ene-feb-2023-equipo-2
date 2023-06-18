@@ -1,0 +1,2 @@
+Todo el proyecto esta implementado en el ambiente de desarrollo de AWS. Todo se manaejo desde una misma instancia
+en Lightsail y RDS.

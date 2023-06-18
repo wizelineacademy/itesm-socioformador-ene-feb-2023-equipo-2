@@ -1,0 +1,2 @@
+El proyecto fue deplogueado en AWS utilizando el servicio de AWS Lightsail. La base de datos en el servicio de RDS.
+Luis Aguirre tiene los accesos. Favor de contactarlo
