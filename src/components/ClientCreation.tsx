@@ -106,7 +106,7 @@ const ClientCreation = () => {
             <label htmlFor="name" className="form-label">
               &nbsp;
             </label>
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
+            <button id="create-client-button" className="btn btn-primary w-100" onClick={handleSubmit}>
               <FaIcons.FaPlus className="mb-1" />
               &nbsp;&nbsp;Add
             </button>

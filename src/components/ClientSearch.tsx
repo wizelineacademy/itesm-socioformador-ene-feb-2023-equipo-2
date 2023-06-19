@@ -107,6 +107,7 @@ const ClientSearch = () => {
               <div className="col-md-2">
                 <label className="form-label">&nbsp;</label>
                 <button
+                  id="client-creation-button"
                   className="btn btn-primary w-100"
                   data-test="add-client-button"
                   onClick={() => setAddEmployee(!addEmployee)}
