@@ -95,6 +95,7 @@ const clientModification = () => {
               <label className="form-label">Email:</label>
               <input
                 className="form-control"
+                id="#changeEmailTest"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
